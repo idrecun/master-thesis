@@ -17,8 +17,9 @@
 
 % Teoreme, definicije
 \newtheorem{lemma}{Lema}
-\theoremstyle{proof} \newtheorem{proof}{Dokaz}
-\theoremstyle{definition} \newtheorem*{definition}{Definicija}
+
+\theoremstyle{definition}
+\newtheorem*{definition}{Definicija}
 
 % Paket koji definiše sve specifičnosti master rada Matematičkog fakulteta
 \usepackage[latinica]{matfmaster} 
@@ -255,11 +256,15 @@
   \end{itemize}
  \end{definition}
 
- Iz definicije je jasno da je čvor stabla $\nu$ list ako i samo ako je bojenje
- $R(G, \pi_0, \nu)$ diskretno.
+ % Iz definicije je jasno da je čvor stabla $\nu$ list ako i samo ako je bojenje
+ % $R(G, \pi_0, \nu)$ diskretno.
+
+ Naredna lema pokazuje da je ovako definisano stablo invarijantno na imenovanje
+ čvorova grafa.
 
  \begin{lemma}
-	 Za svaki obojen graf $(G, \pi_0)$ i svako $g \in S_n$ važi $\mathcal{T}(G^g, \pi_0^g) = \mathcal{T}(G, \pi_0)^g$.
+	 Za svaki obojen graf $(G, \pi_0)$ i svako $g \in S_n$ važi
+	 $\mathcal{T}(G^g, \pi_0^g) = \mathcal{T}(G, \pi_0)^g$.
  \end{lemma}
 
  \begin{proof}
