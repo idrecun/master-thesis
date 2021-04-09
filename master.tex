@@ -13,6 +13,10 @@
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{amsfonts}
+\usepackage{amsthm}
+
+% Teoreme, definicije
+\theoremstyle{definition} \newtheorem*{definition}{Definicija}
 
 % Paket koji definiše sve specifičnosti master rada Matematičkog fakulteta
 \usepackage[latinica]{matfmaster} 
@@ -149,7 +153,7 @@
   strukture:
   \begin{itemize}
 	  \item $W^g = \{w^g \mid w \in W\}$ za skup $W \subseteq V$
-	  \item $w^g = (v_1^g, v_2^g, \dots, v_k^g)$ za uređenu torku $w \in V^*$
+	  \item $w^g = (v_1^g, v_2^g, \dots, v_k^g)$ za uređenu $k$-torku $w$
 	  \item $G^g = (V, E')$ za graf $G$ i $E' = \{e^g \mid e \in E\}$
 	  \item Ako je $\pi$ bojenje, $\pi^g$ je bojenje za koje važi
 		  $\pi^g(v^g)=\pi(v)$
@@ -173,8 +177,8 @@
   \subsection{Kanonska forma}
 
   Neka je $f : \mathcal{G} \times \Pi \to S$ preslikavanje iz skupa svih
-  obojenih grafova u proizvoljan skup $S$.  Kažemo da je $f$ invarijantno u
-  odnosu na imenovanje čvorova ukoliko za svaki obojen graf $(G, \pi)$ i svaku
+  obojenih grafova u proizvoljan skup $S$.  Kažemo da je $f$ invarijantno na
+  imenovanje čvorova ukoliko za svaki obojen graf $(G, \pi)$ i svaku
   permutaciju $g \in S_n$ važi $f(G^g, \pi^g) = f(G, \pi)$. Neformalno, to
   znači da vrednost funkcije $f$ ne zavisi od konkretnog imenovanja čvorova
   grafa, već samo od njegove unutrašnje strukture. \\
@@ -184,11 +188,66 @@
   \begin{enumerate}
    \item Za svaki obojen graf $(G, \pi)$ važi $\mathcal{C}(G, \pi) \cong (G,
 	   \pi)$
-   \item $\mathcal{C}$ je invarijantno u odnosu na imenovanje čvorova
+   \item $\mathcal{C}$ je invarijantno na imenovanje čvorova
   \end{enumerate}
 
 
  \section{Stablo pretrage}
+
+ Označimo sa $V^*$ skup svih konačnih nizova elemenata skupa $V$. Ako je $\nu
+ \in V^*$ sa $|\nu|$ označavamo dužinu niza $\nu$. Ako je $\nu = (v_1, v_2,
+ \dots, v_k) \in V^*$ i $w \in V$, onda $\nu \| w$ označava niz $(v_1, v_2,
+ \dots, v_k, w)$. Za $0 \leq s \leq k$ prefiks niza $\nu$ dužine $s$ označavamo
+ sa $[\nu]_s = (v_1, v_2, \dots, v_s)$. Uređenje $\leq$ na skupu $V^*$
+ predstavlja leksikografski poredak.
+
+ Čvorovi stabla pretrage  predstavljeni su nizovima elemenata skupa $V$, pri
+ čemu korenu stabla odgovara prazan niz. U nastavku definišemo funkcije na
+ osnovu kojih ćemo definisati pravila grananja u stablu.
+
+ \begin{definition}
+  \emph{Funkcija profinjavanja} je bilo koja funkcija $R : \mathcal{G} \times
+	 \Pi \times V^* \to \Pi$ koja za svaki obojen graf $(G, \pi_0)$ i svako
+	 $\nu \in V^*$ zadovoljava sledeće uslove:
+ 
+  \begin{enumerate}
+     \item $R(G, \pi_0, \nu) \leq \pi_0$
+     \item Ako je $v \in \nu$, onda je $\{v\}$ ćelija bojenja $R(G, \pi_0, \nu)$
+     \item Za svako $g \in S_n$ važi $R(G^g, \pi_0^g, \nu^g) = R(G, \pi_0, \nu)^g$
+  \end{enumerate}
+ \end{definition}
+
+ \begin{definition}
+  \emph{Funkcija odabira ciljne ćelije} je bilo koja funkcija $T : \mathcal{G}
+	 \times \Pi \times V^* \to \mathcal{P}(V)$ koja za svaki obojen graf $(G,
+	 \pi_0)$ i svako $\nu \in V^*$ zadovoljava sledeće uslove:
+ 
+  \begin{enumerate}
+	  \item Ako je $R(G, \pi_0, \nu)$ diskretno, onda je $T(G, \pi_0, \nu) = \emptyset$
+	  \item Ako $R(G, \pi_0, \nu)$ nije diskretno, onda je $T(G, \pi_0, \nu)$ nejedinična ćelija od $R(G, \pi_0, \nu)$
+     \item Za svako $g \in S_n$ važi $T(G^g, \pi_0^g, \nu^g) = T(G, \pi_0, \nu)^g$
+  \end{enumerate}
+ \end{definition}
+
+ Kako je graf fiksan, ove funkcije možemo smatrati funkcijama čvorova stabla.
+ Funkcija profinjavanja obezbeđuje postojanje bojenja pridruženog svakom čvoru
+ stabla (koje postaje finije kako se spuštamo niz stablo). Funkcija odabira
+ ciljne ćelije nam omogućava da odaberemo skup čvorova grafa koji nam služi za
+ konstrukciju dece tog čvora u stablu. Treći uslov u obe definicije je
+ varijanta pomenute invarijantnosti na imenovanje čvorova. On govori da
+ funkcije treba da zavise samo od unutrašnje strukture grafa i da
+ transformacije koje one vrše ne zavise od imenovanja čvorova grafa.
+
+ \begin{definition}
+	 \emph{Stablo pretrage} $\mathcal{T}(G, \pi_0)$ određeno je sledećim uslovima:
+ 
+  \begin{enumerate}
+    \item Koren stabla $\mathcal{T}(G, \pi_0)$ je prazan niz $()$
+	\item Ako je $\nu$ čvor stabla $\mathcal{T}(G, \pi_0)$, njegova deca u stablu su $\{$\nu$ \| w \mid w \in T(G, \pi_0, \nu)\}$
+  \end{enumerate}
+ \end{definition}
+
+ Iz definicije je jasno da je čvor stabla $\nu$ list ako i samo ako je bojenje $R(G, \pi_0, \nu)$ diskretno.
 
  \section{Invarijanta stabla i kanonska forma}
 
