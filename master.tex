@@ -16,6 +16,8 @@
 \usepackage{amsthm}
 
 % Teoreme, definicije
+\newtheorem{lemma}{Lema}
+\theoremstyle{proof} \newtheorem{proof}{Dokaz}
 \theoremstyle{definition} \newtheorem*{definition}{Definicija}
 
 % Paket koji definiše sve specifičnosti master rada Matematičkog fakulteta
@@ -185,11 +187,11 @@
   \\
   \emph{Kanonska forma} je funkcija $\mathcal{C} : \mathcal{G} \times \Pi \to
   \mathcal{G} \times \Pi$ koja ispunjava sledeće uslove:
-  \begin{enumerate}
-   \item Za svaki obojen graf $(G, \pi)$ važi $\mathcal{C}(G, \pi) \cong (G,
+  \begin{itemize}
+	  \item[($\mathcal{C}1$)] Za svaki obojen graf $(G, \pi)$ važi $\mathcal{C}(G, \pi) \cong (G,
 	   \pi)$
-   \item $\mathcal{C}$ je invarijantno na imenovanje čvorova
-  \end{enumerate}
+   \item[($\mathcal{C}2$)] $\mathcal{C}$ je invarijantno na imenovanje čvorova
+  \end{itemize}
 
 
  \section{Stablo pretrage}
@@ -210,11 +212,13 @@
 	 \Pi \times V^* \to \Pi$ koja za svaki obojen graf $(G, \pi_0)$ i svako
 	 $\nu \in V^*$ zadovoljava sledeće uslove:
  
-  \begin{enumerate}
-     \item $R(G, \pi_0, \nu) \leq \pi_0$
-     \item Ako je $v \in \nu$, onda je $\{v\}$ ćelija bojenja $R(G, \pi_0, \nu)$
-     \item Za svako $g \in S_n$ važi $R(G^g, \pi_0^g, \nu^g) = R(G, \pi_0, \nu)^g$
-  \end{enumerate}
+  \begin{itemize}
+	  \item[(R1)] $R(G, \pi_0, \nu) \leq \pi_0$
+	  \item[(R2)] Ako je $v \in \nu$, onda je $\{v\}$ ćelija bojenja $R(G,
+		  \pi_0, \nu)$
+	  \item[(R3)] Za svako $g \in S_n$ važi $R(G^g, \pi_0^g, \nu^g) = R(G,
+		 \pi_0, \nu)^g$
+  \end{itemize}
  \end{definition}
 
  \begin{definition}
@@ -222,11 +226,14 @@
 	 \times \Pi \times V^* \to \mathcal{P}(V)$ koja za svaki obojen graf $(G,
 	 \pi_0)$ i svako $\nu \in V^*$ zadovoljava sledeće uslove:
  
-  \begin{enumerate}
-	  \item Ako je $R(G, \pi_0, \nu)$ diskretno, onda je $T(G, \pi_0, \nu) = \emptyset$
-	  \item Ako $R(G, \pi_0, \nu)$ nije diskretno, onda je $T(G, \pi_0, \nu)$ nejedinična ćelija od $R(G, \pi_0, \nu)$
-     \item Za svako $g \in S_n$ važi $T(G^g, \pi_0^g, \nu^g) = T(G, \pi_0, \nu)^g$
-  \end{enumerate}
+  \begin{itemize}
+	  \item[(T1)] Ako je $R(G, \pi_0, \nu)$ diskretno, onda je $T(G, \pi_0, \nu) =
+		  \emptyset$
+	  \item[(T2)] Ako $R(G, \pi_0, \nu)$ nije diskretno, onda je $T(G, \pi_0, \nu)$
+		  nejedinična ćelija od $R(G, \pi_0, \nu)$
+	  \item[(T3)] Za svako $g \in S_n$ važi $T(G^g, \pi_0^g, \nu^g) = T(G, \pi_0,
+		 \nu)^g$
+  \end{itemize}
  \end{definition}
 
  Kako je graf fiksan, ove funkcije možemo smatrati funkcijama čvorova stabla.
@@ -241,13 +248,43 @@
  \begin{definition}
 	 \emph{Stablo pretrage} $\mathcal{T}(G, \pi_0)$ određeno je sledećim uslovima:
  
-  \begin{enumerate}
-    \item Koren stabla $\mathcal{T}(G, \pi_0)$ je prazan niz $()$
-	\item Ako je $\nu$ čvor stabla $\mathcal{T}(G, \pi_0)$, njegova deca u stablu su $\{$\nu$ \| w \mid w \in T(G, \pi_0, \nu)\}$
-  \end{enumerate}
+  \begin{itemize}
+	  \item[($\mathcal{T}1$)] Koren stabla $\mathcal{T}(G, \pi_0)$ je prazan niz $()$
+	  \item[($\mathcal{T}2$)] Ako je $\nu$ čvor stabla $\mathcal{T}(G, \pi_0)$, njegova deca u
+		stablu su $\{$\nu$ \| w \mid w \in T(G, \pi_0, \nu)\}$
+  \end{itemize}
  \end{definition}
 
- Iz definicije je jasno da je čvor stabla $\nu$ list ako i samo ako je bojenje $R(G, \pi_0, \nu)$ diskretno.
+ Iz definicije je jasno da je čvor stabla $\nu$ list ako i samo ako je bojenje
+ $R(G, \pi_0, \nu)$ diskretno.
+
+ \begin{lemma}
+	 Za svaki obojen graf $(G, \pi_0)$ i svako $g \in S_n$ važi $\mathcal{T}(G^g, \pi_0^g) = \mathcal{T}(G, \pi_0)^g$.
+ \end{lemma}
+
+ \begin{proof}
+	 Dokažimo da za svaki čvor $\nu$ stabla $\mathcal{T}(G, \pi_0)$ važi da je
+	 $\nu^g$ čvor stabla $\mathcal{T}(G^g, \pi_0^g)$. Dokaz izvodimo indukcijom
+	 po strukturi stabla.
+	 \begin{itemize}
+		 \item[] \textbf{Baza indukcije} Prazan niz je koren stabla
+			 $\mathcal{T}(G^g, \pi_0^g)$, pa tvrđenje trivijalno važi.
+		 \item[] \textbf{Induktivni korak} Pretpostavimo da tvrđenje važi za
+			 čvor $\nu$. Neka je $\nu \| w$ dete čvora $\nu$ za neko $w \in
+			 T(G, \pi_0, \nu)$. Tada je $(\nu \| w)^g = \nu^g \| w^g$, ali kako
+			 važi $w^g \in T(G, \pi_0, \nu)^g =_{(T3)} T(G^g, \pi_0^g, \nu^g)$
+			 to je $\nu^g \| w^g$ dete čvora $\nu^g$ u stablu $\mathcal{T}(G^g,
+			 \pi_0^g)$.
+	 \end{itemize}
+	 Time smo dokazali da je stablo $\mathcal{T}(G, \pi_0)^g$ podstablo od
+	 $\mathcal{T}(G^g, \pi_0^g)$ ($\mathcal{T}(G, \pi_0)^g \subseteq
+	 \mathcal{T}(G^g, \pi_0^g)$). Prema prethodno dokazanom važi
+	 $\mathcal{T}(G^g, \pi_0^g)^{g^{-1}} \subseteq \mathcal{T}(G, \pi_0)$, pa
+	 primenom $g$ na obe strane konačno dobijamo $\mathcal{T}(G^g, \pi_0^g)
+	 \subseteq \mathcal{T}(G, \pi_0)^g$.
+ \end{proof}
+
+ %Podstablo sa korenom u čvoru stabla $\nu$ označavamo sa $\mathcal{T}(G, \pi_0, \nu)$.
 
  \section{Invarijanta stabla i kanonska forma}
 
