@@ -301,7 +301,7 @@
 
   \begin{lemma}
       Neka je $\nu$ čvor stabla $\mathcal{T}(G, \pi_0)$ i $\pi = R(G, \pi_0,
-      \nu)$. Tada je $Aut(G, \pi) = \Sigma_\nu$.
+      \nu)$. Tada je $Aut(G, \pi) = \Sigma_\nu^{Aut(G, \pi_0)}$.
   \end{lemma}
 
   \begin{proof}
@@ -370,6 +370,15 @@
 	  \pi_0)$.
   \end{proof}
 
+	Prethodna teorema pokazuje da je otkrivanjem svih čvorova ekvivalentnih
+	jednom čvoru moguće odrediti grupu automorfizama datog grafa. Naravno, ovakav
+	način određivanja grupe automorfizama nije veoma efikasan pošto se u ovom
+	slučaju grupa generiše član po član. Ovo se može poboljšati odsecanjem
+	pretrage o čemu će biti reči u narednom odeljku.
+
+	Druga teorema tiče se mogućnosti korektnog definisanja kanonske forme na
+	osnovu invarijante stabla.
+
   \begin{definition}
 	  Neka je $\nu^*$ list stabla $\mathcal{T}(G, \pi_0)$ u kom invarijanta
 	  $\phi(G, \pi_0, \nu)$ dostiže maksimum. \emph{Kanonska forma} obojenog
@@ -378,22 +387,29 @@
   \end{definition}
 
   Primetimo da zbog uslova $(\phi2)$ definicija ne zavisi od izbora lista
-  $v^*$. Naredna teorema opravdava naziv funkcije.
+  $\nu^*$. Naredna teorema opravdava naziv i oznaku funkcije.
 
   \begin{theorem}
 	  Funkcija $\mathcal{C}(G, \pi_0)$ je kanonska forma.
   \end{theorem}
 
   \begin{proof}
-	  Dokazujemo da ovako definisana funkcija ispunjava uslove kanonske forme.
+		Dokazujemo da ovako definisana funkcija ispunjava uslove kanonske forme za
+		svaki obojen graf $(G, \pi)$.
 	  \begin{itemize}
-		  \item [] ($\mathcal{C}1$) Za svaki obojen graf $(G, \pi)$ je
-			  $\mathcal{C}(G, \pi) = (G, \pi)^{\pi_{\nu^*}}$ pa je
-			  $\mathcal{C}(G, \pi) \cong (G, \pi)$.
-		  \item [] ($\mathcal{C}2$) Neka je $\mathcal{C}(G, \pi) = (G, \pi)^{\pi_{\nu^*}}$. \dots
+			\item [] ($\mathcal{C}1$) Kako je $\mathcal{C}(G, \pi) = (G,
+					\pi)^{\pi_{\nu^*}}$ to je $\mathcal{C}(G, \pi) \cong (G, \pi)$ za
+			izomorfizam $\pi_{\nu^*}$.
+			\item [] ($\mathcal{C}2$) Za svako $g \in S_n$ i svako $\nu \in
+			\mathcal{T}(G, \pi)$ važi $\nu^g \in \mathcal{T}(G, \pi)^g =
+			\mathcal{T}(G^g, \pi^g)$ kao i $\phi(G^g, \pi^g, \nu^g) = \phi(G, \pi,
+					\nu)$, pa je $\nu^*^g$ čvor u kom invarijanta stabla
+			$\mathcal{T}(G^g, \pi^g)$ dostiže maksimalnu vrednost. Odatle sledi
+			$\mathcal{C}(G^g, \pi^g) = (G^g, \pi^g)^{R(G^g, \pi^g, \nu^*^g)} = (G,
+					\pi)^g^{\pi_{v^*}^g} = (G, \pi)^{\pi_{v^*}} = \mathcal{C}(G, \pi)$ pa
+			je $\mathcal{C}$ invarijantno na imenovanje čvorova.
 	  \end{itemize}
   \end{proof}
-
 
  \section{Odsecanje pretrage}
 
