@@ -117,9 +117,11 @@
  U ovoj glavi predstavljeni su osnovni matematički pojmovi neophodni za dalje
  razumevanje konstrukcije opšteg algoritma za određivanje kanonske forme grafa.
  Uvedeni su pojmovi \emph{bojenja} i \emph{obojenog grafa}, nakon čega je
- prikazana konstrukcija stabla pretrage koja leži u osnovi algoritma i na
- osnovu koje je precizno definisana kanonska forma. Prikazana je i uloga
- automorfizama u pretrazi, kao i mehanizmi za odsecanje pretrage.
+ prikazana konstrukcija stabla pretrage koja leži u osnovi algoritma. Nad
+ stablom pogodno je definisana invarijanta koja omogućava određivanje grupe
+ automorfizama grafa i kanonske forme. Na kraju su prikazani i mehanizmi
+ odsecanja pretrage koji omogućavaju praktično izvršavanje algoritma u razumnom
+ vremenu.
 
  \section{Osnovni pojmovi}
 
@@ -128,11 +130,11 @@
    \emph{Graf} $G = (V, E)$ je uređeni par konačnog \emph{skupa čvorova} $V$ i
    \emph{skupa grana} $E \subseteq {V \choose 2}$. U nastavku pretpostavljamo da
    je $V = \{1, 2, \dots, n\}$ za neki prirodan broj $n > 0$. Označimo skup svih
-   grafova sa $\mathcal{G}$ i skup svih grafova sa $n$ čvorova sa $\mathcal{G}_n$.
+   grafova sa $n$ čvorova sa $\mathcal{G}_n$ (nadalje $\mathcal{G}$).
 
    \emph{Bojenje} grafa $G$ je surjekcija $\pi : V \to \{1, 2, \dots, k\}$ za
-   neki prirodan broj $k > 0$. Označimo skup svih bojenja sa $\Pi$ i skup svih
-   bojenja grafa sa $n$ čvorova sa $\Pi_n$.
+   neki prirodan broj $k > 0$. Označimo skup svih bojenja grafa sa $n$ čvorova
+   sa $\Pi_n$ (nadalje $\Pi$).
 
    Broj $k$ zovemo brojem boja i označavamo ga sa $|\pi|$.  Ćelija bojenja $\pi$
    boje $c$ je skup svih čvorova te boje, odnosno $\pi^{-1}(c)$ za $c \in \{1,
@@ -147,13 +149,15 @@
    grafa $G$.
 
 
-   \subsection{Dejstvo grupe $S_n$}
+   \subsection{Dejstvo grupe}
 
-   Neka $S_n$ označava simetričnu grupu stepena $n$. Sliku čvora $v \in V$ pod
-   permutacijom $g \in S_n$ označavamo sa $v^g$. Ovim je definisano jedno
-   dejstvo grupe $S_n$ na skup $V$. Orbita čvora $v$ pod tim dejstvom je skup
-   $\Omega_v = \{ v^g \mid g \in S_n \}$. Stabilizator čvora $v$ je skup
-   $\Sigma_v = \{ g \in S_n \mid v^g = v \}$ koji čini jednu podgrupu od $S_n$.
+   Neka je $G$ grupa i $S$ skup na kom je definisano dejstvo grupe $G$ označeno
+   sa $s^g$ za $s \in S$ i $g \in G$. Orbita elementa $s$ je skup $\Omega_s^G =
+   \{s^g \mid g \in G\}$.  Stabilizator elementa $s$ je skup $\Sigma_s^G = \{g
+   \in G \mid s^g=s\}$ koji čini jednu podgrupu od $G$.
+
+   Neka $S_n$ označava simetričnu grupu stepena $n$. Na skupu čvorova $V$
+   definisano je dejstvo grupe sa $v^g = g(v)$ za $v \in V$ i $g \in S_n$.
    Definiciju dejstva grupe permutacija možemo proširiti i na složenije
    strukture:
    \begin{itemize}
@@ -182,19 +186,29 @@
    \subsection{Kanonska forma}
 
    Neka je $f : \mathcal{G} \times \Pi \to S$ preslikavanje iz skupa svih
-   obojenih grafova u proizvoljan skup $S$.  Kažemo da je $f$ invarijantno na
-   imenovanje čvorova ukoliko za svaki obojen graf $(G, \pi)$ i svaku
-   permutaciju $g \in S_n$ važi $f(G^g, \pi^g) = f(G, \pi)$. Neformalno, to
-   znači da vrednost funkcije $f$ ne zavisi od konkretnog imenovanja čvorova
-   grafa, već samo od njegove unutrašnje strukture. \\
-   \\
-   \emph{Kanonska forma} je funkcija $\mathcal{C} : \mathcal{G} \times \Pi \to
-   \mathcal{G} \times \Pi$ koja ispunjava sledeće uslove:
-   \begin{itemize}
-       \item[($\mathcal{C}1$)] Za svaki obojen graf $(G, \pi)$ važi $\mathcal{C}(G, \pi) \cong (G,
-        \pi)$
-    \item[($\mathcal{C}2$)] $\mathcal{C}$ je invarijantno na imenovanje čvorova
-   \end{itemize}
+   obojenih grafova u proizvoljan skup $S$.  Kažemo da je $f$ \emph{funkcija
+   invarijantna na imenovanje čvorova} ukoliko za svaki obojen graf $(G, \pi)$
+   i svaku permutaciju $g \in S_n$ važi $f(G^g, \pi^g) = f(G, \pi)$.
+   Neformalno, to znači da vrednost funkcije $f$ ne zavisi od konkretnog
+   imenovanja čvorova grafa, već samo od njegove unutrašnje strukture.
+
+   Ako na skupu $S$ postoji definisano dejstvo grupe $S_n$, kažemo da je $f$
+   \emph{transformacija invarijantna na imenovanje čvorova} ukoliko za svaki
+   obojen graf $(G, \pi)$ i svaku permutaciju $g \in S_n$ važi $f(G^g, \pi^g) =
+   f(G, \pi)^g$.
+
+
+   \begin{definition}
+	   \emph{Kanonska forma} je preslikavanje $\mathcal{C} : \mathcal{G} \times \Pi \to
+	   \mathcal{G} \times \Pi$ koje ispunjava sledeće uslove:
+	   \begin{itemize}
+		   \item[($\mathcal{C}1$)] Za svaki obojen graf $(G, \pi)$ važi
+			   $\mathcal{C}(G, \pi) \cong (G,
+			\pi)$
+		\item[($\mathcal{C}2$)] $\mathcal{C}$ je funkcija invarijantna na
+			imenovanje čvorova
+	   \end{itemize}
+   \end{definition}
 
 
  \section{Stablo pretrage}
@@ -211,30 +225,31 @@
   osnovu kojih ćemo definisati pravila grananja u stablu.
 
   \begin{definition}
-   \emph{Funkcija profinjavanja} je bilo koja funkcija $R : \mathcal{G} \times
-      \Pi \times V^* \to \Pi$ koja za svaki obojen graf $(G, \pi_0)$ i svako
-      $\nu \in V^*$ zadovoljava sledeće uslove:
+   \emph{Funkcija profinjavanja} je bilo koje preslikavanje $R : \mathcal{G}
+	  \times \Pi \times V^* \to \Pi$ koje za svaki obojen graf $(G, \pi)$ i
+	  svako $\nu \in V^*$ zadovoljava sledeće uslove:
   
    \begin{itemize}
-       \item[(R1)] $R(G, \pi_0, \nu) \leq \pi_0$
+       \item[(R1)] $R(G, \pi, \nu) \leq \pi$
        \item[(R2)] Ako je $v \in \nu$, onda je $\{v\}$ ćelija bojenja $R(G,
-     	  \pi_0, \nu)$
-       \item[(R3)] Za svako $g \in S_n$ važi $R(G^g, \pi_0^g, \nu^g) = R(G,
-     	 \pi_0, \nu)^g$
+     	  \pi, \nu)$
+       \item[(R3)] Za svako $g \in S_n$ važi $R(G^g, \pi^g, \nu^g) = R(G,
+     	 \pi, \nu)^g$
    \end{itemize}
   \end{definition}
 
   \begin{definition}
-   \emph{Funkcija odabira ciljne ćelije} je bilo koja funkcija $T : \mathcal{G}
-      \times \Pi \times V^* \to \mathcal{P}(V)$ koja za svaki obojen graf $(G,
-      \pi_0)$ i svako $\nu \in V^*$ zadovoljava sledeće uslove:
+   \emph{Funkcija odabira ciljne ćelije} je bilo koje preslikavanje $T :
+	  \mathcal{G} \times \Pi \times V^* \to \mathcal{P}(V)$ koje za svaki
+	  obojen graf $(G, \pi)$ i svako $\nu \in V^*$ zadovoljava sledeće
+	  uslove:
   
    \begin{itemize}
-       \item[(T1)] Ako je $R(G, \pi_0, \nu)$ diskretno, onda je $T(G, \pi_0, \nu) =
+       \item[(T1)] Ako je $R(G, \pi, \nu)$ diskretno, onda je $T(G, \pi, \nu) =
      	  \emptyset$
-       \item[(T2)] Ako $R(G, \pi_0, \nu)$ nije diskretno, onda je $T(G, \pi_0, \nu)$
-     	  nejedinična ćelija od $R(G, \pi_0, \nu)$
-       \item[(T3)] Za svako $g \in S_n$ važi $T(G^g, \pi_0^g, \nu^g) = T(G, \pi_0,
+       \item[(T2)] Ako $R(G, \pi, \nu)$ nije diskretno, onda je $T(G, \pi, \nu)$
+     	  nejedinična ćelija od $R(G, \pi, \nu)$
+       \item[(T3)] Za svako $g \in S_n$ važi $T(G^g, \pi^g, \nu^g) = T(G, \pi,
      	 \nu)^g$
    \end{itemize}
   \end{definition}
@@ -243,113 +258,109 @@
   Funkcija profinjavanja obezbeđuje postojanje bojenja pridruženog svakom čvoru
   stabla (koje postaje finije kako se spuštamo niz stablo). Funkcija odabira
   ciljne ćelije nam omogućava da odaberemo skup čvorova grafa koji nam služi za
-  konstrukciju dece tog čvora u stablu. Treći uslov u obe definicije je
-  varijanta pomenute invarijantnosti na imenovanje čvorova. On govori da
-  funkcije treba da zavise samo od unutrašnje strukture grafa i da
-  transformacije koje one vrše ne zavise od imenovanja čvorova grafa.
+  konstrukciju dece tog čvora u stablu. Treći uslov u obe definicije govori da
+  su u pitanju transformacije invarijantne na imenovanje čvorova.
 
   \begin{definition}
-      \emph{Stablo pretrage} $\mathcal{T}(G, \pi_0)$ određeno je sledećim uslovima:
+      \emph{Stablo pretrage} $\mathcal{T}(G, \pi)$ određeno je sledećim uslovima:
   
    \begin{itemize}
-       \item[($\mathcal{T}1$)] Koren stabla $\mathcal{T}(G, \pi_0)$ je prazan niz $()$
-       \item[($\mathcal{T}2$)] Ako je $\nu$ čvor stabla $\mathcal{T}(G, \pi_0)$, njegova deca u
-     	stablu su $\{$\nu$ \| w \mid w \in T(G, \pi_0, \nu)\}$
+       \item[($\mathcal{T}1$)] Koren stabla $\mathcal{T}(G, \pi)$ je prazan niz $()$
+       \item[($\mathcal{T}2$)] Ako je $\nu$ čvor stabla $\mathcal{T}(G, \pi)$, njegova deca u
+     	stablu su $\{$\nu$ \| w \mid w \in T(G, \pi, \nu)\}$
    \end{itemize}
   \end{definition}
-
-  % Iz definicije je jasno da je čvor stabla $\nu$ list ako i samo ako je bojenje
-  % $R(G, \pi_0, \nu)$ diskretno.
 
   Dejstvo grupe $S_n$ na stablo definiše se slično kao za bilo koju drugu
   strukturu. Naredna lema pokazuje da je ovako definisano stablo invarijantno na
   imenovanje čvorova grafa.
 
   \begin{lemma}
-      Za svaki obojen graf $(G, \pi_0)$ i svako $g \in S_n$ važi
-      $\mathcal{T}(G^g, \pi_0^g) = \mathcal{T}(G, \pi_0)^g$.
+      Za svaki obojen graf $(G, \pi)$ i svako $g \in S_n$ važi
+      $\mathcal{T}(G^g, \pi^g) = \mathcal{T}(G, \pi)^g$.
   \end{lemma}
 
   \begin{proof}
-      Dokažimo da za svaki čvor $\nu$ stabla $\mathcal{T}(G, \pi_0)$ važi da je
-      $\nu^g$ čvor stabla $\mathcal{T}(G^g, \pi_0^g)$. Dokaz izvodimo indukcijom
+      Dokažimo da za svaki čvor $\nu$ stabla $\mathcal{T}(G, \pi)$ važi da je
+      $\nu^g$ čvor stabla $\mathcal{T}(G^g, \pi^g)$. Dokaz izvodimo indukcijom
       po strukturi stabla.
       \begin{itemize}
      	 \item[] \textbf{Baza indukcije} Prazan niz je koren stabla
-     		 $\mathcal{T}(G^g, \pi_0^g)$, pa tvrđenje trivijalno važi.
+     		 $\mathcal{T}(G^g, \pi^g)$, pa tvrđenje trivijalno važi.
      	 \item[] \textbf{Induktivni korak} Pretpostavimo da tvrđenje važi za
      		 čvor $\nu$. Neka je $\nu \| w$ dete čvora $\nu$ za neko $w \in
-     		 T(G, \pi_0, \nu)$. Tada je $(\nu \| w)^g = \nu^g \| w^g$, ali kako
-     		 važi $w^g \in T(G, \pi_0, \nu)^g =_{(T3)} T(G^g, \pi_0^g, \nu^g)$
+     		 T(G, \pi, \nu)$. Tada je $(\nu \| w)^g = \nu^g \| w^g$, ali kako
+     		 važi $w^g \in T(G, \pi, \nu)^g =_{(T3)} T(G^g, \pi^g, \nu^g)$
      		 to je $\nu^g \| w^g$ dete čvora $\nu^g$ u stablu $\mathcal{T}(G^g,
-     		 \pi_0^g)$.
+     		 \pi^g)$.
       \end{itemize}
-      Time smo dokazali da je stablo $\mathcal{T}(G, \pi_0)^g$ podstablo od
-      $\mathcal{T}(G^g, \pi_0^g)$ ($\mathcal{T}(G, \pi_0)^g \subseteq
-      \mathcal{T}(G^g, \pi_0^g)$). Prema prethodno dokazanom važi
-      $\mathcal{T}(G^g, \pi_0^g)^{g^{-1}} \subseteq \mathcal{T}(G, \pi_0)$, pa
-      primenom $g$ na obe strane konačno dobijamo $\mathcal{T}(G^g, \pi_0^g)
-      \subseteq \mathcal{T}(G, \pi_0)^g$.
+      Time smo dokazali da je stablo $\mathcal{T}(G, \pi)^g$ podstablo od
+      $\mathcal{T}(G^g, \pi^g)$ ($\mathcal{T}(G, \pi)^g \subseteq
+      \mathcal{T}(G^g, \pi^g)$). Prema prethodno dokazanom važi
+      $\mathcal{T}(G^g, \pi^g)^{g^{-1}} \subseteq \mathcal{T}(G, \pi)$, pa
+      primenom $g$ na obe strane konačno dobijamo $\mathcal{T}(G^g, \pi^g)
+      \subseteq \mathcal{T}(G, \pi)^g$.
   \end{proof}
 
   \begin{corrolary}
-      Neka je $\nu$ čvor stabla $\mathcal{T}(G, \pi_0)$ i neka $\mathcal{T}(G,
-      \pi_0, \nu)$ označava njegovo podstablo sa korenom u $\nu$. Ako je $g
-      \in Aut(G, \pi_0)$, onda je $\nu^g$ čvor stabla $\mathcal{T}(G, \pi)$ i
-      važi $\mathcal{T}(G, \pi_0, \nu^g) = \mathcal{T}(G, \pi_0, \nu)^g$.
+      Neka je $\nu$ čvor stabla $\mathcal{T}(G, \pi)$ i neka $\mathcal{T}(G,
+      \pi, \nu)$ označava njegovo podstablo sa korenom u $\nu$. Ako je $g
+      \in Aut(G, \pi)$, onda je $\nu^g$ čvor stabla $\mathcal{T}(G, \pi)$ i
+      važi $\mathcal{T}(G, \pi, \nu^g) = \mathcal{T}(G, \pi, \nu)^g$.
   \end{corrolary}
 
   \begin{lemma}
-      Neka je $\nu$ čvor stabla $\mathcal{T}(G, \pi_0)$ i $\pi = R(G, \pi_0,
-      \nu)$. Tada je $Aut(G, \pi) = \Sigma_\nu^{Aut(G, \pi_0)}$.
+      Neka je $\nu$ čvor stabla $\mathcal{T}(G, \pi)$ i $\pi_\nu = R(G, \pi,
+      \nu)$. Tada je $Aut(G, \pi_\nu) = \Sigma_\nu^{Aut(G, \pi)}$.
   \end{lemma}
 
   \begin{proof}
-      Na osnovu uslova (R2) bilo koji automorfizam obojenog grafa $(G, \pi)$
-      stabilizuje $\nu$. Sa druge strane, neka $g \in Aut(G, \pi_0)$ stabilizuje
-      $\nu$. Tada po (R3) važi $\pi^g = R(G, \pi_0, \nu)^g = R(G, \pi_0, \nu) =
-      \pi$, pa je $g \in Aut(G, \pi)$.
+	  Na osnovu uslova (R2) bilo koji automorfizam obojenog grafa $(G,
+	  \pi_\nu)$ stabilizuje $\nu$. Sa druge strane, neka $g \in Aut(G, \pi)$
+	  stabilizuje $\nu$. Tada po (R3) važi $\pi_\nu^g = R(G, \pi, \nu)^g = R(G,
+	  \pi, \nu) = \pi_\nu$, pa je $g \in Aut(G, \pi_\nu)$.
   \end{proof}
 
  \section{Invarijanta stabla}
 
   \begin{definition}
-	  \emph{Invarijanta stabla} je funkcija $\phi : \mathcal{G} \times \Pi
-	  \times V^* \to F$ za neki potpuno uređen skup $F$ koji za sve obojene
-	  grafove $(G, \pi_0)$ i različite čvorove $\nu_1, \nu_2 \in \mathcal{T}(G,
-	  \pi_0)$ ispunjava sledeće uslove:
+	  \emph{Invarijanta stabla} je preslikavanje $\phi : \mathcal{G} \times \Pi
+	  \times V^* \to F$ za neki potpuno uređen skup $F$ koje za sve obojene
+	  grafove $(G, \pi)$ i različite čvorove $\nu_1, \nu_2 \in \mathcal{T}(G,
+	  \pi)$ ispunjava sledeće uslove:
 
 	  \begin{itemize}
-		  \item[(\phi1)] Ako su $\nu_1, \nu_2 \in \mathcal{T}(G, \pi_0)$ takvi
-			  da je $|\nu_1|=|\nu_2|$ i $\phi(G, \pi_0, \nu_1) < \phi(G,
-			  \phi_0, \nu_2)$, onda za sve $\omega_1 \in \mathcal{T}(G, \pi_0,
-			  \nu_1)$ i $\omega_2 \in \mathcal{T}(G, \pi_0, \nu_2)$ važi
-			  $\phi(G, \pi_0, \omega_1) < \phi(G, \pi_0, \omega_2)$
-		  \item[(\phi2)] Ako su $\nu_1, \nu_2 \in \mathcal{T}(G, \pi_0)$ takvi
-			  da su $\pi_1 = R(G, \pi_0, \nu_1)$ i $\pi_2 = R(G, \pi_0, \nu_2)$
-			  diskretna bojenja, onda je $\phi(G, \pi_0, \nu_1) = \phi(G,
-			  \pi_0, \nu_2) \iff G^{\pi_1} = G^{\pi_2}$
-		  \item[(\phi3)] $\phi$ je invarijantno na imenovanje čvorova grafa
+		  \item[(\phi1)] Ako su $\nu_1, \nu_2 \in \mathcal{T}(G, \pi)$ takvi
+			  da je $|\nu_1|=|\nu_2|$ i $\phi(G, \pi, \nu_1) < \phi(G,
+			  \phi_0, \nu_2)$, onda za sve $\omega_1 \in \mathcal{T}(G, \pi,
+			  \nu_1)$ i $\omega_2 \in \mathcal{T}(G, \pi, \nu_2)$ važi
+			  $\phi(G, \pi, \omega_1) < \phi(G, \pi, \omega_2)$
+		  \item[(\phi2)] Ako su $\nu_1, \nu_2 \in \mathcal{T}(G, \pi)$ takvi
+			  da su $\pi_1 = R(G, \pi, \nu_1)$ i $\pi_2 = R(G, \pi, \nu_2)$
+			  diskretna bojenja, onda je $\phi(G, \pi, \nu_1) = \phi(G,
+			  \pi, \nu_2) \iff G^{\pi_1} = G^{\pi_2}$
+		  \item[(\phi3)] $\phi$ je funkcija invarijantna na imenovanje čvorova
+			  grafa
 	  \end{itemize}
 
 	  Listovi $\nu_1$ i $\nu_2$ su \emph{ekvivalentni} ako i samo ako $\phi(G,
-	  \pi_0, \nu_1) = \phi(G, \pi_0, \nu_2)$.
+	  \pi, \nu_1) = \phi(G, \pi, \nu_2)$.
   \end{definition}
 
   U nastavku ćemo kroz dve teoreme prikazati značaj ovako definisane
   invarijante stabla. Označimo za proizvoljan čvor stabla $\nu$ njegovo bojenje
-  dobijeno funkcijom profinjavanja sa $\pi_\nu = R(G, \pi_0, \nu)$. 
+  dobijeno funkcijom profinjavanja sa $\pi_\nu = R(G, \pi, \nu)$. 
 
   \begin{lemma}
-	  Neka je $g \in Aut(G, \pi_0)$ i listovi $\nu_1$ i $\nu_2$ takvi da je
+	  Neka je $g \in Aut(G, \pi)$ i listovi $\nu_1$ i $\nu_2$ takvi da je
 	  $\nu_1^g = \nu_2$. Tada su $\nu_1$ i $\nu_2$ ekvivalentni i $g =
 	  \pi_{\nu_2}^{-1}\pi_{\nu_1}$.
   \end{lemma}
 
   \begin{proof}
 	  Na osnovu svojstva ($\phi3$) invarijante stabla i činjenice da je $g$
-	  automorfizam sledi $\phi(G, \pi_0, \nu_1) =_{(\phi_3)} \phi(G^g, \pi_0^g,
-	  \nu_1^g) =_{g \in Aut(G, \pi_0)} \phi(G, \pi_0, \nu_1^g) = \phi(G, \pi_0,
+	  automorfizam sledi $\phi(G, \pi, \nu_1) =_{(\phi_3)} \phi(G^g, \pi^g,
+	  \nu_1^g) =_{g \in Aut(G, \pi)} \phi(G, \pi, \nu_1^g) = \phi(G, \pi,
 	  \nu_2)$, odnosno $\nu_1$ i $\nu_2$ su ekvivalentni. Dalje, važi
 	  $\pi_{\nu_2}^{-1}\pi_{\nu_1} = \pi_{\nu_1^g}^{-1}\pi_{\nu_1} =_{(R3)}
 	  (\pi_{\nu_1}^g)^{-1}\pi_{\nu_1} = (\pi_{\nu_1} g^{-1})^{-1} \pi_{\nu_1} = g
@@ -357,61 +368,140 @@
   \end{proof}
 
   \begin{theorem}
-	  Za svaki list $\nu$ važi $Aut(G, \pi_0) = \{\pi_{\omega}^{-1}\pi_{\nu}
+	  Za svaki list $\nu$ važi $Aut(G, \pi) = \{\pi_{\omega}^{-1}\pi_{\nu}
 	  \mid \text{$\nu$ i $\omega$ su ekvivalentni} \}$.
   \end{theorem}
   
   \begin{proof}
-	  Neka je $g \in Aut(G, \pi_0)$. Tada je po posledici 1 $\nu^g$ list stabla
-	  $\mathcal{T}(G, \pi_0)$. Po prethodno dokazanoj lemi 3 su $\nu$ i $\nu^g$
-	  ekvivalentni i $g = \pi_{\nu^g}^{-1}\pi_\nu$ što je element desne strane.
-	  Sa druge strane, ako su $\nu$ i $\omega$ ekvivalentni, onda je
-	  $G^{\pi_\nu} = G^{\pi_\omega}$, pa je $\pi_\omega^{-1}\pi_\nu \in Aut(G,
-	  \pi_0)$.
+	  Neka je $g \in Aut(G, \pi)$. Tada je po posledici 1 $\nu^g$ list stabla
+	  $\mathcal{T}(G, \pi)$. Po prethodno dokazanoj lemi 3 su $\nu$ i $\nu^g$
+	  ekvivalentni i $g = \pi_{\nu^g}^{-1}\pi_\nu$ što je element skupa sa
+	  desne strane jednakosti.  Sa druge strane, ako su $\nu$ i $\omega$
+	  ekvivalentni, onda je $G^{\pi_\nu} = G^{\pi_\omega}$, pa je
+	  $\pi_\omega^{-1}\pi_\nu \in Aut(G, \pi)$ {\color{red} (dokazati, nije trivijalno!)}.
   \end{proof}
 
 	Prethodna teorema pokazuje da je otkrivanjem svih čvorova ekvivalentnih
-	jednom čvoru moguće odrediti grupu automorfizama datog grafa. Naravno, ovakav
-	način određivanja grupe automorfizama nije veoma efikasan pošto se u ovom
-	slučaju grupa generiše član po član. Ovo se može poboljšati odsecanjem
-	pretrage o čemu će biti reči u narednom odeljku.
-
-	Druga teorema tiče se mogućnosti korektnog definisanja kanonske forme na
-	osnovu invarijante stabla.
+	jednom čvoru moguće odrediti grupu automorfizama datog grafa. Naravno,
+	ovakav način određivanja grupe automorfizama nije veoma efikasan pošto se
+	grupa generiše član po član. Ovo se može poboljšati odsecanjem pretrage o
+	čemu će biti reči u narednom odeljku.
 
   \begin{definition}
-	  Neka je $\nu^*$ list stabla $\mathcal{T}(G, \pi_0)$ u kom invarijanta
-	  $\phi(G, \pi_0, \nu)$ dostiže maksimum. \emph{Kanonska forma} obojenog
-	  grafa $(G, \pi_0)$ je funkcija $\mathcal{C}(G, \pi_0) = (G,
-	  \pi_0)^{\pi_{\nu^*}}$.
+	  Neka je $\nu^*$ list stabla $\mathcal{T}(G, \pi)$ u kom invarijanta
+	  $\phi(G, \pi, \nu)$ dostiže maksimum. \emph{Kanonska forma} obojenog
+	  grafa $(G, \pi)$ je funkcija $\mathcal{C}(G, \pi) = (G,
+	  \pi)^{\pi_{\nu^*}}$.
   \end{definition}
 
   Primetimo da zbog uslova $(\phi2)$ definicija ne zavisi od izbora lista
   $\nu^*$. Naredna teorema opravdava naziv i oznaku funkcije.
 
   \begin{theorem}
-	  Funkcija $\mathcal{C}(G, \pi_0)$ je kanonska forma.
+	  Funkcija $\mathcal{C}(G, \pi)$ je kanonska forma.
   \end{theorem}
 
   \begin{proof}
 		Dokazujemo da ovako definisana funkcija ispunjava uslove kanonske forme za
 		svaki obojen graf $(G, \pi)$.
 	  \begin{itemize}
-			\item [] ($\mathcal{C}1$) Kako je $\mathcal{C}(G, \pi) = (G,
-					\pi)^{\pi_{\nu^*}}$ to je $\mathcal{C}(G, \pi) \cong (G, \pi)$ za
-			izomorfizam $\pi_{\nu^*}$.
-			\item [] ($\mathcal{C}2$) Za svako $g \in S_n$ i svako $\nu \in
-			\mathcal{T}(G, \pi)$ važi $\nu^g \in \mathcal{T}(G, \pi)^g =
-			\mathcal{T}(G^g, \pi^g)$ kao i $\phi(G^g, \pi^g, \nu^g) = \phi(G, \pi,
-					\nu)$, pa je $\nu^*^g$ čvor u kom invarijanta stabla
-			$\mathcal{T}(G^g, \pi^g)$ dostiže maksimalnu vrednost. Odatle sledi
-			$\mathcal{C}(G^g, \pi^g) = (G^g, \pi^g)^{R(G^g, \pi^g, \nu^*^g)} = (G,
-					\pi)^g^{\pi_{v^*}^g} = (G, \pi)^{\pi_{v^*}} = \mathcal{C}(G, \pi)$ pa
-			je $\mathcal{C}$ invarijantno na imenovanje čvorova.
+		  \item [($\mathcal{C}1$)] Kako je $\mathcal{C}(G, \pi) = (G,
+			  \pi)^{\pi_{\nu^*}}$ to je $\mathcal{C}(G, \pi) \cong (G, \pi)$ za
+			  izomorfizam $\pi_{\nu^*}$.
+		  \item [($\mathcal{C}2$)] Za svako $g \in S_n$ i svako $\nu \in
+			  \mathcal{T}(G, \pi)$ važi $\nu^g \in \mathcal{T}(G, \pi)^g =
+			  \mathcal{T}(G^g, \pi^g)$ kao i $\phi(G^g, \pi^g, \nu^g) = \phi(G,
+			  \pi, \nu)$, pa je $\nu^*^g$ list u kom invarijanta stabla
+			  $\mathcal{T}(G^g, \pi^g)$ dostiže maksimalnu vrednost.  Odatle
+			  sledi $\mathcal{C}(G^g, \pi^g) = (G^g, \pi^g)^{R(G^g, \pi^g,
+			  \nu^*^g)} = (G^g, \pi^g)^{\pi_{v^*}^g} = (G, \pi)^{\pi_{v^*}} =
+			  \mathcal{C}(G, \pi)$ pa je $\mathcal{C}$ funkcija invarijantna na
+			  imenovanje čvorova.
 	  \end{itemize}
   \end{proof}
 
  \section{Odsecanje pretrage}
+
+  Stablo pretrage može biti veoma veliko, pa pretraga kompletnog stabla nije
+  poželjna. To možemo rešiti uvođenjem tri različite operacije odsecanja.
+  \begin{itemize}
+	  \item Neka su $\nu_1$ i $\nu_2$ različiti čvorovi stabla $\mathcal{T}(G,
+		  \pi)$ takvi da je $|\nu_1|=|\nu_2|$ i $\phi(G, \pi, \nu_1) >
+		  \phi(G, \pi, \nu_2)$. Operacija $P_A(\nu_1, \nu_2)$ podrazumeva
+		  odsecanje podstabla $\mathcal{T}(G, \pi, \nu_2)$.
+	  \item Neka su $\nu_1$ i $\nu_2$ različiti čvorovi stabla $\mathcal{T}(G,
+		  \pi)$ takvi da je $|\nu_1|=|\nu_2|$ i $\phi(G, \pi, \nu_1) \neq
+		  \phi(G, \pi, \nu_2)$. Operacija $P_B(\nu_1, \nu_2)$ podrazumeva
+		  odsecanje podstabla $\mathcal{T}(G, \pi, \nu_2)$.
+	  \item Neka su $\nu_1$ i $\nu_2$ različiti čvorovi stabla $\mathcal{T}(G,
+		  \pi)$ takvi da je $\nu_1 < \nu_2$ i $\nu_1^g=\nu_2$ za neko $g \in
+		  Aut(G, \pi)$. Operacija $P_C(\nu_1, g)$ podrazumeva odsecanje
+		  podstabla $\mathcal{T}(G, \pi, \nu_2)$.
+  \end{itemize}
+
+  Naredna teorema opravdava uvođenje ovih operacija odsecanja i pokazuje da one
+  ne narušavaju rezultate teorema o određivanju grupe automorfizama i kanonske
+  forme iz prethodnog odeljka.
+
+  \begin{theorem}
+	  Neka je $(G, \pi)$ obojen graf.
+	  \begin{enumerate}
+		  \item Neka je nad stablom $\mathcal{T}(G, \pi)$ izvršen proizvoljan
+			  niz operacija $P_A$ i $P_C$. Tada u dobijenom stablu postoji bar
+			  jedan list $\nu$ takav da je $\phi(G, \pi, \nu) = \phi(G, \pi,
+			  \nu^*)$.
+		  \item Neka je $\nu_0$ list stabla $\mathcal{T}(G, \pi)$ i neka je nad
+			  stablom izvršen proizvoljan niz operacija $P_B(\nu_1, \nu_2)$ i
+			  $P_C$ gde je $|\nu_2| > |\nu_0|$ ili $\phi(G, \pi, \nu_2) \neq
+			  \phi(G, \pi, [\nu_0]_{|\nu_2|})$ i neka su $g_1, \dots, g_k$ svi
+			  automorfizmi korišćeni u izvršenim operacijama $P_C$.  Tada je
+			  grupa automorfizama $Aut(G, \pi)$ generisana skupom $\{g \in
+			  Aut(G, \pi) \mid \nu_0^g \text{ pripada dobijenom stablu}\} \cup
+			  \{g_1, \dots, g_k\} $.
+	  \end{enumerate}
+  \end{theorem}
+
+  \begin{proof}
+	  Dokažimo za početak nekoliko pomoćnih tvrđenja.
+
+	  Nijedna operacija $P_A$ ne uklanja listove u kojima je vrednost
+	  invarijante maksimalna. Pretpostavimo suprotno. Neka je $\nu_1$ list u
+	  kom invarijanta stabla dostiže maksimum i neka je $\nu'_1$ predak od
+	  $\nu_1$. Operacija $P_A(\nu'_2, \nu'_1)$ uklanja $\nu'_1$ ako je $\phi(G,
+	  \pi, \nu'_1) < \phi(G, \pi, \nu'_2)$, pa po svojstvu $(\phi1)$ za
+	  proizvoljan list $\nu_2$ u $\mathcal{T}(G, \pi, \nu'_2)$ važi $\phi(G,
+	  \pi, \nu_1) < \phi(G, \pi, \nu_2)$, što je u kontradikciji sa
+	  pretpostavkom da je vrednost invarijante maksimalna u $\nu_1$.
+
+	  Nijedna operacija $P_B$ ne uklanja nijedan list $\nu$ ekvivalentan listu
+	  $\nu_0$ (iz drugog dela teoreme). Iz pretpostavke teoreme nijedna
+	  operacija $P_B(\nu_1, \nu_2)$ ne uklanja čvor $\nu_2$ takav da je
+	  $\phi(G, \pi, [\nu_0]_{|\nu_2|}) = \phi(G, \pi, \nu_2)$, pa samim tim ne
+	  uklanja nijedan čvor $[\nu]_{s}$ za $0 \leq s \leq |\nu|$.
+
+	  Nijedna operacija $P_C$ ne uklanja leksikografski najmanji među
+	  ekvivalentnim listovima. Štaviše, nijedna operacija $P_C$ ne uklanja
+	  leksikografski najmanji list iz $\Omega_\nu^{<g_1, \dots, g_k>}$ za bilo
+	  koje $\nu$. Neka je bez umanjenja opštosti $\nu$ leksikografski najmanji
+	  list u svojoj orbiti. Operacija $P_C(\omega, g)$ uklanja čvor $\omega^g$
+	  ako je $\omega < \omega^g$, pa je $[\nu]_{|\omega|} \neq \omega^g$ pošto
+	  je ili $[\nu]_{|\omega|} < \omega$ ili su $\omega$ i $[\nu]_{|\omega|}$ iz
+	  različitih orbita.
+
+	  \begin{enumerate}
+		  \item Na osnovu dokazanih svojstava operacija $P_A$ i $P_C$ iz stabla
+			  se ne uklanja leksikografski najmanji list $\nu$ ekvivalentan
+			  listu $\nu^*$.
+		  \item Ako je $g \in Aut(G, \pi)$, onda na osnovu dokazanih svojstva
+			  operacija $P_B$ i $P_C$ važi da iz stabla nije uklonjen
+			  leksikografski najmanji list oblika $\nu_0^{hg}$ za neko $h \in <
+			  \negmedspace g_1, \dots, g_k \negmedspace >$, izborom $\omega =
+			  \nu_0^g$. Odatle sledi da je $hg \in < \negmedspace \{g_1, \dots,
+			  g_k\} \cup \{g \in Aut(G, \pi) \mid \nu_0^g \text{ pripada
+			  dobijenom stablu}\} \negmedspace >$, pa je i $g$ element
+			  generisane grupe.
+	  \end{enumerate}
+  \end{proof}
 
 % ------------------------------------------------------------------------------
 \chapter{Realizacija algoritma}
