@@ -104,8 +104,8 @@ lemma all_k_colors:
   assumes "n_vertex G" "is_k_colored G k"
   shows "all_k_colors (num_vertices G) (coloring G)"
 proof -
-  have "all_colors (num_vertices G) (coloring G) = {0..<num_colors G}"
-    by (metis (no_types, lifting) all_colors_def assms(1) assms(2) atLeastLessThan_iff coloring_lt image_cong is_k_colored_def n_vertex_def nth_image num_colors_k order_refl take_all)
+  have "set (all_colors (num_vertices G) (coloring G)) = {0..<num_colors G}"
+    by (metis (no_types, lifting) all_colors_def assms(1) assms(2) atLeastLessThan_iff coloring_lt image_cong is_k_colored_def map_nth n_vertex_def num_colors_k set_map set_upt)
   thus ?thesis
     using num_colors_c[OF assms]
     unfolding all_k_colors_def
@@ -392,8 +392,8 @@ locale refinement_function =
     "\<And> V G p v. \<lbrakk>is_vertex_list G V; 
                  perm_dom p = num_vertices G;
                  vertex G v\<rbrakk> \<Longrightarrow> 
-                   (\<R> (perm_graph p g) (perm_fun_list p V)) v = 
-                   (perm_coloring p (\<R> g V)) v"
+                   (\<R> (perm_graph p G) (perm_fun_list p V)) v = 
+                   (perm_coloring p (\<R> G V)) v"
 begin
 
 lemma \<R>_perm_perm:
@@ -439,7 +439,7 @@ proof-
     then have "fset (\<T> G V) \<in> set (cells (num_vertices G) (\<R> G V))"
       using \<T>_non_discrete[OF assms(1)]
       by auto
-    then obtain c where "c < Coloring.num_colors (num_vertices G) (\<R> G V)"
+    then obtain c where "c \<in> set (all_colors (num_vertices G) (\<R> G V))"
                         "v' \<in> cell (num_vertices G) (\<R> G V) c"
       using \<open>v' \<in> fset (\<T> G V)\<close>
       unfolding cells_def
@@ -1732,5 +1732,275 @@ proof-
 qed
 
 end
+
+definition individualize :: "coloring \<Rightarrow> nat \<Rightarrow> coloring" where 
+ "individualize \<pi> v = (\<lambda> w. if \<pi> w < \<pi> v \<or> w = v then \<pi> w else \<pi> w + 1)"
+
+lemma finer_individualize:
+  shows "finer n (individualize \<pi> v) \<pi>"
+  unfolding finer_def individualize_def
+  by auto
+
+lemma individualize_retains_color:
+  assumes "v < n" 
+  shows "\<pi> v \<in> set (all_colors n (individualize \<pi> v))"
+  unfolding all_colors_def individualize_def
+  by (simp add: assms)
+
+lemma individualize_singleton:
+  assumes "v < n"
+  shows "{v} \<in> set (cells n (individualize \<pi> v))"
+  using assms
+proof-
+  have "cell n (individualize \<pi> v) (\<pi> v) = {v}"
+    using \<open>v < n\<close>
+    unfolding cell_def individualize_def
+    by auto
+  then show ?thesis
+    unfolding cells_def
+    by (metis assms image_eqI image_set individualize_retains_color)
+qed
+
+lemma individualize_singleton_preserve:
+  assumes  "{v'} \<in> set (cells n \<pi>)" "v' < n"
+  shows "{v'} \<in> set (cells n (individualize \<pi> v))"
+proof-
+  obtain c where c: "c \<in> set (all_colors n \<pi>)" "cell n \<pi> c = {v'}"
+    using assms                                 
+    unfolding cells_def
+    by auto
+  show ?thesis
+  proof (cases "\<pi> v' < \<pi> v \<or> v' = v")
+    case True
+    then have "individualize \<pi> v v' = c"
+      using c(2) cell_def individualize_def by auto
+    moreover
+    have "\<forall> v''. v'' < n \<and> v'' \<noteq> v' \<longrightarrow> individualize \<pi> v v'' \<noteq> c"
+    proof safe
+      fix v''
+      assume *: "v'' < n" "v'' \<noteq> v'" "c = individualize \<pi> v v''"
+      have "\<pi> v'' \<noteq> c"
+        using \<open>v'' < n\<close> \<open>v'' \<noteq> v'\<close> c(2) cell_def by blast
+      then show False
+        using *
+        unfolding individualize_def
+        by (metis True \<open>individualize \<pi> v v' = c\<close> add.commute individualize_def less_asym' not_less_eq plus_1_eq_Suc)
+    qed
+    ultimately
+    have "cell n (individualize \<pi> v) c = {v'}"
+      using \<open>v' < n\<close>
+      unfolding cell_def   
+      by auto
+    then show ?thesis
+      using c
+      unfolding cells_def 
+      by (metis \<open>individualize \<pi> v v' = c\<close> all_colors_def assms(2) image_eqI lessThan_atLeast0 lessThan_iff set_map set_upt)
+  next
+    case False
+    then have "\<pi> v' \<ge> \<pi> v" "v' \<noteq> v"
+      by auto
+    then have "individualize \<pi> v v' = c + 1"
+      using c(2) cell_def individualize_def
+      by auto
+    moreover
+    have "\<forall> v''. v'' < n \<and> v'' \<noteq> v' \<longrightarrow> individualize \<pi> v v'' \<noteq> c + 1"
+    proof safe
+      fix v''
+      assume *: "v'' < n" "v'' \<noteq> v'" "individualize \<pi> v v'' = c + 1"
+      then have "\<pi> v'' \<noteq> c"
+        using c
+        using cell_def
+        by blast
+      then show False
+        using *
+        by (smt (z3) False add_right_cancel calculation dual_order.strict_trans individualize_def less_add_one)
+    qed
+    ultimately 
+    have "cell n (individualize \<pi> v) (c + 1) = {v'}"
+      using \<open>v' < n\<close>
+      unfolding cell_def
+      by auto
+    moreover
+    have "c + 1 \<in> set (all_colors n (individualize \<pi> v))"
+      by (metis \<open>individualize \<pi> v v' = c + 1\<close> all_colors_def assms(2) atLeast_upt imageI lessThan_iff set_map)
+    ultimately
+    show ?thesis
+      using c
+      unfolding cells_def 
+      by auto
+  qed    
+qed
+
+locale refinement_function' =
+  fixes \<F> :: "colored_graph  \<Rightarrow> coloring"
+  assumes \<F>_finer: 
+    "\<And> G. finer (num_vertices G) (\<F> G) (coloring G)"
+  assumes \<F>_perm:
+    "\<And> p G v pc c. 
+       \<lbrakk>perm_dom p = num_vertices G; vertex G v; 
+        \<And> v. vertex G v \<Longrightarrow> pc v = perm_coloring p c v\<rbrakk> \<Longrightarrow> 
+             \<F> (recolor (perm_graph p G) pc) v = 
+             perm_coloring p (\<F> (recolor G c)) v"
+begin
+definition \<R>' :: "colored_graph \<Rightarrow> vertex_list \<Rightarrow> coloring" where
+  "\<R>' G V = fold (\<lambda> v c. \<F> (recolor G (individualize c v))) V (coloring G)"
+
+lemma \<R>'_Nil [simp]:
+  shows "\<R>' G [] = coloring G"
+  by (simp add: \<R>'_def)
+
+lemma \<R>'_Snoc [simp]:
+  shows "\<R>' G (V @ [v]) = \<F> (recolor G (individualize (\<R>' G V) v))"
+  by (simp add: \<R>'_def)
+
+lemma \<F>_singleton:
+  assumes "{v} \<in> set (cells (num_vertices G) (coloring G))" "vertex G v"
+  shows "{v} \<in> set (cells (num_vertices G) (\<F> G))"
+proof-
+  obtain c where c: "c \<in> set (all_colors (num_vertices G) (coloring G))" "coloring G v = c" "cell (num_vertices G) (coloring G) c = {v}"
+    using assms
+    by (smt (z3) cell_def cells_def in_set_conv_nth length_map mem_Collect_eq nth_map singletonI)
+  let ?c = "\<F> G v"
+  have "cell (num_vertices G)(\<F> G) ?c = {v}"
+  proof-
+    have "\<forall> v' < num_vertices G. v' \<noteq> v \<longrightarrow> \<F> G v' \<noteq> ?c"
+    proof safe
+      fix v'
+      assume "vertex G v'" "\<F> G v' = \<F> G v" "v' \<noteq> v"
+      then have "coloring G v' = coloring G v"
+        using \<F>_finer assms(2) finer_same_color by blast
+      then have "v' \<in> cell (num_vertices G) (coloring G) c"
+        by (simp add: \<open>vertex G v'\<close> c(2) cell_def)
+      then show False
+        using assms c \<open>v' \<noteq> v\<close>
+        by blast
+    qed
+    then show ?thesis
+      using c(3) cell_def by fastforce
+  qed
+  then show ?thesis
+    by (metis all_colors_def assms(2) cells_def image_eqI lessThan_atLeast0 lessThan_iff set_map set_upt)
+qed    
+
+end
+
+lemma finer_trans:
+  assumes "finer n \<pi>1 \<pi>2" "finer n \<pi>2 \<pi>3"
+  shows "finer n \<pi>1 \<pi>3"
+  using assms
+  using finer_def 
+  by auto
+
+lemma num_vertices_recolor [simp]:
+  shows "num_vertices (recolor G \<pi>) = num_vertices G"
+  by (simp add: recolor_def)
+
+lemma cells_coloring_recolor [simp]:
+  shows "cells (num_vertices G) (coloring (recolor G \<pi>)) = cells (num_vertices G) \<pi>"
+  unfolding cells_def cell_def all_colors_def recolor_def
+  by (auto simp add: color_list_def)
+
+lemma individualize_perm:
+  assumes "perm_dom p = n" "\<And> v. v < n \<Longrightarrow> pc v = perm_coloring p c v" "v < n" "v' < n"
+  shows "individualize pc (perm_fun p v') v =
+         perm_coloring p (individualize c v') v"
+proof (cases "pc v < pc (perm_fun p v') \<or> v = perm_fun p v'")
+  case True
+  thus ?thesis
+    using assms
+    unfolding individualize_def
+    by (smt (z3) atLeast0LessThan comp_def lessThan_iff nth_mem perm_coloring_def perm_dom.rep_eq perm_fun'_def perm_fun.rep_eq perm_fun_perm_inv2 perm_list_set)
+next
+  case False
+  then have "perm_coloring p c v \<ge> perm_coloring p c (perm_fun p v') \<and> v \<noteq> perm_fun p v'"
+    using assms
+    by (metis not_le_imp_less perm_dom_perm_inv perm_fun_perm_inv_range perm_inv_inv)
+  then have "\<not> c (perm_fun (perm_inv p) v) < c v' \<and> perm_fun (perm_inv p) v \<noteq> v'"
+    unfolding perm_coloring_def
+    by (metis assms(1) assms(3) assms(4) comp_def leD perm_dom_perm_inv perm_fun_perm_inv2 perm_inv_inv)
+  thus ?thesis
+    using False assms
+    unfolding individualize_def perm_coloring_def
+    by auto
+qed
+
+
+sublocale refinement_function' \<subseteq> refinement_function "\<R>'"
+proof
+  fix V G
+  assume "is_vertex_list G V"
+  show "finer (num_vertices G) (\<R>' G V) (coloring G)"
+  proof (induction V rule: rev_induct)
+    case Nil
+    then show ?case
+      using \<R>'_Nil finer_def 
+      by presburger
+  next
+    case (snoc v V)
+    show ?case
+    proof (rule finer_trans)
+      show "finer (num_vertices G) (\<R>' G (V @ [v])) (\<R>' G V)"
+      proof (rule finer_trans)
+        show "finer (num_vertices G) (individualize (\<R>' G V) v) (\<R>' G V)"
+          by (simp add: finer_individualize)
+      next
+        show "finer (num_vertices G) (\<R>' G (V @ [v])) (individualize (\<R>' G V) v)"
+          using \<F>_finer[of "recolor G (individualize (\<R>' G V) v)"]
+          using coloring_recolor finer_def by force
+      qed
+    next
+      show "finer (num_vertices G) (\<R>' G V) (coloring G)"
+        by fact
+    qed
+  qed
+next
+  fix v V G
+  assume "is_vertex_list G V" "v \<in> set V"
+  then show "{v} \<in> set (cells (num_vertices G) (\<R>' G V))"
+  proof (induction V rule: rev_induct)
+    case Nil
+    then show ?case
+      by simp
+  next
+    case (snoc v' V)
+    have "vertex G v'" "vertex G v"
+      using snoc.prems
+      by auto
+    show ?case
+    proof (cases "v = v'")
+      case True      
+      then show ?thesis
+        using \<F>_singleton[of v "recolor G (individualize (\<R>' G V) v')"] \<open>vertex G v'\<close>
+        using individualize_singleton
+        using \<open>vertex G v'\<close>
+        by simp
+    next
+      case False
+      then show ?thesis
+        using snoc \<open>vertex G v\<close>
+        using individualize_singleton_preserve
+        using \<F>_singleton[of v "recolor G (individualize (\<R>' G V) v')"] \<open>vertex G v'\<close>
+        by auto
+    qed
+  qed
+next
+  fix V G p v
+  assume "is_vertex_list G V" "perm_dom p = num_vertices G" "vertex G v"
+  then show "\<R>' (perm_graph p G) (perm_fun_list p V) v = perm_coloring p (\<R>' G V) v"
+  proof (induction V arbitrary: v rule: rev_induct)
+    case Nil
+    show ?case
+      using Nil.prems(2) Nil.prems(3) color_list_def coloring_perm_graph
+      using perm_fun_list_def by force
+  next
+    case (snoc v' V)
+    thus ?case
+      apply (simp add: perm_fun_list_def)
+      apply (subst \<F>_perm, simp, simp)
+       apply (subst individualize_perm, auto)
+      done
+  qed
+qed
+
 
 end

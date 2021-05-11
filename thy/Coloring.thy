@@ -18,12 +18,12 @@ lemma color_list_eq:
   by auto
 
 text \<open>All colors used in a coloring\<close>
-definition all_colors :: "nat \<Rightarrow> coloring \<Rightarrow> nat set" where
-  "all_colors n \<pi> = \<pi> ` {0..<n}"
+definition all_colors :: "nat \<Rightarrow> coloring \<Rightarrow> nat list" where
+  "all_colors n \<pi> = map \<pi> [0..<n]"
 
 text \<open>Number of colors used\<close>
 definition num_colors :: "nat \<Rightarrow> coloring \<Rightarrow> nat" where
-  "num_colors n \<pi> = card (all_colors n \<pi>)"
+  "num_colors n \<pi> = card (set (all_colors n \<pi>))"
 
 text \<open>Cell of a coloring is the set of all vertices colored by the given color\<close>
 definition cell :: "nat \<Rightarrow> coloring \<Rightarrow> nat \<Rightarrow> nat set" where
@@ -31,7 +31,7 @@ definition cell :: "nat \<Rightarrow> coloring \<Rightarrow> nat \<Rightarrow> n
 
 text \<open>The list of all cells of a given coloring (some might be empty)\<close>
 definition cells :: "nat \<Rightarrow> coloring \<Rightarrow> (nat set) list" where
-  "cells n \<pi> = map (\<lambda> c. cell n \<pi> c) [0..<num_colors n \<pi>]" 
+  "cells n \<pi> = map (\<lambda> c. cell n \<pi> c) (all_colors n \<pi>)" 
 
 lemma cells_disjunct:
   assumes "a \<in> c1" "a \<in> c2" "c1 \<in> set (cells n \<pi>)" "c2 \<in> set (cells n \<pi>)"
@@ -42,14 +42,14 @@ lemma cells_disjunct:
 
 text \<open>Nodes 0 to n-1 are colored using all colors from 0 to k-1 for some k\<close>
 definition all_k_colors :: "nat \<Rightarrow> coloring \<Rightarrow> bool" where
-  "all_k_colors n \<pi> \<longleftrightarrow> all_colors n \<pi> = {0..<num_colors n \<pi>}"
+  "all_k_colors n \<pi> \<longleftrightarrow> set (all_colors n \<pi>) = {0..<num_colors n \<pi>}"
 
 lemma all_k_colors_ex_color:
   assumes "all_k_colors n \<pi>"
   shows "\<forall> c < num_colors n \<pi>. \<exists> k < n. \<pi> k = c"
   using assms
   unfolding all_k_colors_def all_colors_def
-  by (metis atLeast0LessThan image_iff lessThan_iff)
+  by (metis (mono_tags, lifting) atLeast0LessThan image_iff lessThan_iff set_map set_upt)
 
 text \<open>Check if the color \<pi>' refines the coloring \<pi> - each cells of \<pi>' is a subset of a cell of \<pi>\<close>
 definition finer :: "nat \<Rightarrow> coloring \<Rightarrow> coloring \<Rightarrow> bool" where
@@ -110,7 +110,7 @@ qed
 
 text \<open>A coloring is discrete if each vertex is colored by a different color {0..<n}\<close>
 definition discrete :: "nat \<Rightarrow> coloring \<Rightarrow> bool" where
-  "discrete n \<pi> \<longleftrightarrow> all_colors n \<pi> = {0..<n}"
+  "discrete n \<pi> \<longleftrightarrow> set (all_colors n \<pi>) = {0..<n}"
 
 lemma discrete_coloring_is_permutation:
   assumes "discrete n \<pi>"
@@ -132,7 +132,7 @@ proof-
     by (metis assms bij_betw_def is_perm_fun is_perm_fun_def perm_dom_perm_inv)
   then show ?thesis
     unfolding Coloring.num_colors_def all_colors_def perm_coloring_def is_perm_fun_def
-    by (metis image_comp)
+    by (metis image_comp image_set set_upt)
 qed
 
 text \<open>Permute coloring based on its discrete refinement\<close>
@@ -152,7 +152,7 @@ proof-
   show ?thesis
     using assms(1)
     unfolding all_k_colors_def all_colors_def perm_coloring_def
-    by (simp only: image_comp[symmetric])
+    by (metis image_comp image_set set_upt)
 qed
 
 lemma \<C>_id_finer:
@@ -195,7 +195,7 @@ proof-
     by (simp add: assms(2) assms(4) \<C>_all_k_colors discrete_coloring_is_permutation)
   moreover
   have "num_colors n ?c > 0"
-    by (metis all_colors_def assms(2) assms(3) assms(4) all_k_colors_def discrete_coloring_is_permutation image_iff lessThan_atLeast0 lessThan_iff less_nat_zero_code neq0_conv num_colors_perm_coloring perm_dom_make_perm)
+    by (metis all_colors_def all_k_colors_def assms(2) assms(3) assms(4) atLeastLessThan_upt discrete_coloring_is_permutation image_iff lessThan_atLeast0 lessThan_iff less_nat_zero_code neq0_conv num_colors_perm_coloring perm_dom_make_perm set_map)
   ultimately obtain x where "x < n" "?c x = 0"
     using all_k_colors_ex_color[of n ?c]
     by blast
@@ -232,7 +232,7 @@ proof-
       moreover
       have "?c x + 1 < num_colors n ?c"
         using \<open>?c x + 1 < ?c (x + 1)\<close> \<open>x + 1 < n\<close>
-        by (metis all_colors_def all_k_colors_def atLeast0LessThan calculation image_eqI lessThan_iff less_le_trans less_or_eq_imp_le)
+        by (smt (z3) all_colors_def all_k_colors_def atLeastLessThan_upt calculation image_eqI image_set le_less_trans lessThan_atLeast0 lessThan_iff not_le_imp_less not_less_iff_gr_or_eq)
       ultimately show ?thesis
         using all_k_colors_ex_color
         by auto
