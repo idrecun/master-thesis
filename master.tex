@@ -367,6 +367,71 @@
 	  \pi_{\nu_1}^{-1} \pi_{\nu_1} = g$.
   \end{proof}
 
+  \begin{lemma}
+	  Neka su $\alpha$ i $\beta$ diskretna bojenja finija od bojenja $\pi$.
+	  Tada je $\pi^\alpha = \pi^\beta$.
+  \end{lemma}
+
+  \begin{proof}
+	  Dokaz izvodimo nizom sitnih tvrđenja.
+
+	  \begin{enumerate}
+		  \item $id \leq \pi^\alpha$
+
+			  Neka su $x$ i $y$ proizvoljni. Važi $\pi^\alpha(x) <
+			  \pi^\alpha(y) \iff \pi(\alpha^{-1}(x)) < \pi(\alpha^{-1}(y))$, pa
+			  kako je $\alpha \leq \pi$ sledi $\alpha(\alpha^{-1}(x)) <
+			  \alpha(\alpha^{-1}(y))$ odnosno $x < y$. Kontrapozicijom dobijamo
+			  i $x \leq y \implies \pi^\alpha(x) \leq \pi^\alpha(y)$.
+
+		  \item $(\pi^\alpha)^{-1}(c) = [n, m]$ za neko $n, m \in \mathbb{N}$
+			  gde je $[n, m] = \{k \in \mathbb{N} \mid n \leq k \leq m\}$
+
+			  Za svako $x, y, z $ važi $x \leq y \leq z \implies \pi^\alpha(x)
+			  \leq \pi^\alpha(y) \leq \pi^\alpha(z)$, pa ako je $\pi^\alpha(x)
+			  = \pi^\alpha(z) = c$, onda je i $\pi^\alpha(y) = c$.
+
+		  \item $\pi^\alpha(n + 1) = \pi^\alpha(n)$ ili $\pi^\alpha(n+1) =
+			  \pi^\alpha(n) + 1$
+
+			  Neka je $\pi^\alpha(n+1) \neq \pi^\alpha(n)$. Tada je $n + 1 \geq
+			  n \implies \pi^\alpha(n+1) \geq \pi^\alpha(n)$, pa je
+			  $\pi^\alpha(n+1) > \pi^\alpha(n)$ jer su po pretpostavci
+			  različiti. Pretpostavimo da je $\pi^\alpha(n+1) > \pi^\alpha(n) +
+			  1$. Tada postoji $m$ takvo da je $\pi^\alpha(m) = \pi^\alpha(n) +
+			  1$, ali iz $\pi^\alpha(n) < \pi^\alpha(m) < \pi^\alpha(n+1)
+			  \implies n < m < n + 1$ sledi kontradikcija.
+
+		  \item $|(\pi^\alpha)^{-1}(c)| = |\pi^{-1}(c)|$
+
+			  Važi da je $(\pi^\alpha)^{-1}(c) = \{m \mid \pi^\alpha(m) = c\} =
+			  \{m^\alpha \mid \pi^\alpha(m^\alpha) = c\} = \{m^\alpha \mid
+			  \pi(m) = c\} = \pi^{-1}(c)^\alpha$. Odatle je
+			  $|(\pi^\alpha)^{-1}(c)| = |\pi^{-1}(c)^\alpha| = |\pi^{-1}(c)|$.
+
+		  \item $(\pi^\alpha)^{-1}(c) = (\pi^\beta)^{-1}(c)$
+
+			  Dokaz izvodimo indukcijom po $c$.
+
+			  \begin{itemize}
+				  \item[] \textbf{Baza indukcije} Kako je $1 \leq x$ za sve
+					  $x$, onda iz $id \leq \pi^\alpha$ sledi $\pi^\alpha(1)
+					  \leq \pi^\alpha(x)$ za sve $x$ pa je $\pi^\alpha(1) = 1$.
+					  Dalje, kako je $|(\pi^\alpha)^{-1}(1)| = |\pi^{-1}(1)|$,
+					  mora važiti $(\pi^\alpha)^{-1}(1) = [1, |\pi^{-1}(1)|]$.
+					  Analogno se pokazuje i za $\beta$.
+
+				  \item[] \textbf{Induktivni korak} Neka je po induktivnoj
+					  pretpostavci $(\pi^\alpha)^{-1}(c) = (\pi^\beta)^{-1}(c)
+					  = [n, m]$. Tada je $\pi^\alpha(m+1) \neq \pi^\alpha(m)$,
+					  pa je $\pi^\alpha(m+1) = \pi^\alpha(m) + 1$ i $m+1$ je
+					  najmanje u $(\pi^\alpha)^{-1}(c+1)$. Odatle važi
+					  $(\pi^\alpha)^{-1}(c+1) = [m + 1, m + |\pi^{-1}(c+1)|]$.
+					  Analogno se pokazuje i za $\beta$.
+			  \end{itemize}
+	  \end{enumerate}
+  \end{proof}
+
   \begin{theorem}
 	  Za svaki list $\nu$ važi $Aut(G, \pi) = \{\pi_{\omega}^{-1}\pi_{\nu}
 	  \mid \text{$\nu$ i $\omega$ su ekvivalentni} \}$.
@@ -378,7 +443,7 @@
 	  ekvivalentni i $g = \pi_{\nu^g}^{-1}\pi_\nu$ što je element skupa sa
 	  desne strane jednakosti.  Sa druge strane, ako su $\nu$ i $\omega$
 	  ekvivalentni, onda je $G^{\pi_\nu} = G^{\pi_\omega}$, pa je
-	  $\pi_\omega^{-1}\pi_\nu \in Aut(G, \pi)$ {\color{red} (dokazati, nije trivijalno!)}.
+	  $\pi_\omega^{-1}\pi_\nu \in Aut(G, \pi)$.
   \end{proof}
 
 	Prethodna teorema pokazuje da je otkrivanjem svih čvorova ekvivalentnih
