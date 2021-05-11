@@ -344,6 +344,16 @@ proof (rule perm_inv_solve[symmetric])
 qed (simp_all add: assms)
 
 
+lemma perm_comp_perm_inv_make_perm1 [simp]:
+  assumes "is_perm_fun n \<alpha>" "v < n"
+  shows "\<alpha> (perm_fun (perm_inv (make_perm n \<alpha>)) v) = v"
+  by (smt (verit, ccfv_SIG) assms(1) assms(2) comp_def perm_dom_make_perm perm_dom_perm_inv perm_fun_make_perm perm_fun_perm_inv2 perm_fun_perm_inv_range perm_inv_inv)
+
+lemma perm_comp_perm_inv_make_perm2 [simp]:
+  assumes "is_perm_fun n \<alpha>" "v < n"
+  shows "(perm_fun (perm_inv (make_perm n \<alpha>)) (\<alpha> v)) = v"
+  by (smt (verit, ccfv_SIG) assms(1) assms(2) comp_def perm_dom_make_perm perm_dom_perm_inv perm_fun_make_perm perm_fun_perm_inv2 perm_fun_perm_inv_range perm_inv_inv)
+
 subsection \<open>Action on collections (lists, sets, finite sets)\<close>
 
 definition perm_fun_list_f :: "(nat \<Rightarrow> nat) \<Rightarrow> nat list \<Rightarrow> nat list" where

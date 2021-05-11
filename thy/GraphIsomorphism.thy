@@ -100,15 +100,15 @@ lemma num_colors_c:
   by (auto simp add: nth_image)
 
 
-lemma consecutive:
+lemma all_k_colors:
   assumes "n_vertex G" "is_k_colored G k"
-  shows "consecutive (num_vertices G) (coloring G)"
+  shows "all_k_colors (num_vertices G) (coloring G)"
 proof -
   have "all_colors (num_vertices G) (coloring G) = {0..<num_colors G}"
     by (metis (no_types, lifting) all_colors_def assms(1) assms(2) atLeastLessThan_iff coloring_lt image_cong is_k_colored_def n_vertex_def nth_image num_colors_k order_refl take_all)
   thus ?thesis
     using num_colors_c[OF assms]
-    unfolding consecutive_def
+    unfolding all_k_colors_def
     by simp
 qed
 
@@ -119,10 +119,6 @@ definition perm_edges :: "perm \<Rightarrow> (nat \<times> nat) set \<Rightarrow
        (let pf = perm_fun p 
          in (\<lambda> (v1, v2). (pf v1, pf v2)) ` es)"
                                                                       
-text\<open>The effect of vertices perm on colors\<close>
-definition perm_coloring :: "perm \<Rightarrow> coloring \<Rightarrow> coloring" where
-  "perm_coloring p coloring_fun = coloring_fun \<circ> (perm_fun (perm_inv p))"
-
 text \<open>The effect of vertices perm on the colored graph\<close>
 definition perm_graph :: "perm \<Rightarrow> colored_graph \<Rightarrow> colored_graph" where
   "perm_graph p G = 
@@ -359,11 +355,11 @@ lemma coloring_permute_node_automorphism:
 
 definition is_canon_form :: "(colored_graph \<Rightarrow> colored_graph) \<Rightarrow> bool" where
   "is_canon_form C \<longleftrightarrow> 
-   (\<forall> G. n_vertex G \<longrightarrow> G \<simeq> C G \<and> 
+   (\<forall> G. n_vertex G \<and> (\<exists> k. is_k_colored G k) \<longrightarrow> G \<simeq> C G \<and> 
          (\<forall> p. perm_dom p = num_vertices G \<longrightarrow> C (perm_graph p G) = C G))"
 
 lemma isomorphic_same_canon_form:
-  assumes "is_canon_form C" "n_vertex G" "n_vertex G'"
+  assumes "is_canon_form C" "n_vertex G" "n_vertex G'" "\<exists> k. is_k_colored G k" "\<exists> k. is_k_colored G' k"
   shows "G \<simeq> G' \<longleftrightarrow> C G = C G'"
 proof
   assume "G \<simeq> G'"
@@ -418,11 +414,11 @@ locale target_cell_selector = refinement_function +
   fixes \<T> :: "colored_graph \<Rightarrow> vertex_list \<Rightarrow> nat fset"
   assumes \<T>_discrete: 
     "\<And> V G. \<lbrakk>is_vertex_list G V; 
-             is_discrete_coloring (num_vertices G) (\<R> G V)\<rbrakk> \<Longrightarrow> 
+             discrete (num_vertices G) (\<R> G V)\<rbrakk> \<Longrightarrow> 
                \<T> G V =  {||}"
   assumes \<T>_non_discrete:
     "\<And> V G. \<lbrakk>is_vertex_list G V;
-              \<not> is_discrete_coloring (num_vertices G) (\<R> G V)\<rbrakk> \<Longrightarrow> 
+              \<not> discrete (num_vertices G) (\<R> G V)\<rbrakk> \<Longrightarrow> 
                fset (\<T> G V) \<in> set (cells (num_vertices G) (\<R> G V)) \<and> 
                fcard (\<T> G V) > 1"
   assumes \<T>_perm:
@@ -437,7 +433,7 @@ lemma is_vertex_list_T_extend:
 proof-
   have "vertex G v'"
   proof-
-    have "\<not> is_discrete_coloring (num_vertices G) (\<R> G V)"
+    have "\<not> discrete (num_vertices G) (\<R> G V)"
       using \<T>_discrete[OF assms(1)] assms(2)
       by auto
     then have "fset (\<T> G V) \<in> set (cells (num_vertices G) (\<R> G V))"
@@ -461,7 +457,7 @@ proof-
     then have "{v'} \<in> set (cells (num_vertices G) (\<R> G V))"
       using \<R>_cells[OF assms(1)]
       by simp
-    have "\<not> is_discrete_coloring (num_vertices G) (\<R> G V)"
+    have "\<not> discrete (num_vertices G) (\<R> G V)"
       using \<T>_discrete[OF assms(1)] assms(2)
       by auto
     then have "fset (\<T> G V) \<in> set (cells (num_vertices G) (\<R> G V))" 
@@ -545,12 +541,61 @@ lemma tree_is_vertex_list:
   shows "is_vertex_list g V"
   by (metis assms atLeastLessThan0 distinct.simps(1) empty_set expand_tree_is_vertex_list ivl_subset le_numeral_extra(3) tree_def)
 
+lemma finite_leaves_expand_tree:
+  assumes "is_vertex_list G V"
+  shows "finite (leaves G (expand_tree G V))"
+  using assms
+proof (induction G V rule: expand_tree.induct)
+  case (1 G V)
+  show ?case
+  proof (cases "\<T> G V = {||}")
+    case True
+    then show ?thesis
+      using expand_tree.simps[of G V]
+      by simp
+  next
+    case False
+    then show ?thesis
+      using expand_tree.simps[of G V]
+      using 1 is_vertex_list_T_extend[of V G]
+      by auto
+  qed
+qed
+
+lemma finite_leaves_tree:
+  shows "finite (leaves G (tree G))"
+  by (simp add: finite_leaves_expand_tree tree_def)
+
+lemma not_empty_leaves_expand_tree:
+  assumes "is_vertex_list G V"
+  shows "leaves G (expand_tree G V) \<noteq> {}"
+  using assms
+proof (induction G V rule: expand_tree.induct)
+  case (1 G V)
+  show ?case
+  proof (cases "\<T> G V = {||}")
+    case True
+    then show ?thesis
+      by (simp add: expand_tree.simps)
+  next
+    case False
+    then show ?thesis
+      using expand_tree.simps[of G V]
+      using 1 local.is_vertex_list_T_extend[of V G]
+      by (auto simp add: fmember.rep_eq)
+  qed
+qed
+
+lemma not_empty_leaves_tree:
+  shows "leaves G (tree G) \<noteq> {}"
+  by (simp add: not_empty_leaves_expand_tree tree_def)  
+
 
 lemma leaves_iff_discrete_expand_tree:
   assumes "is_vertex_list G V" 
   shows "V' \<in> leaves G (expand_tree G V) \<longleftrightarrow> 
            V' \<in> nodes (expand_tree G V) \<and>
-           is_discrete_coloring (num_vertices G) (\<R> G V')"
+           discrete (num_vertices G) (\<R> G V')"
   using assms
 proof (induction G V rule: expand_tree.induct)
   case (1 G V)
@@ -567,7 +612,7 @@ proof (induction G V rule: expand_tree.induct)
     let ?f = "(\<lambda>v. expand_tree G (v # V))"
     have "V' \<in> leaves G (Node V (?f |`| \<T> G V)) \<longleftrightarrow>
          (V' \<in> nodes (Node V (?f |`| \<T> G V)) \<and>
-         is_discrete_coloring (num_vertices G) (\<R> G V'))"
+         discrete (num_vertices G) (\<R> G V'))"
       using * 1(1)[OF False] 1(2) False \<T>_discrete
       by auto
     then show ?thesis
@@ -579,7 +624,7 @@ qed
 lemma leaves_iff_discrete:
   shows "V' \<in> leaves G (tree G) \<longleftrightarrow> 
            V' \<in> nodes (tree G) \<and>
-           is_discrete_coloring (num_vertices G) (\<R> G V')"
+           discrete (num_vertices G) (\<R> G V')"
   by (simp add: leaves_iff_discrete_expand_tree tree_def)
 
 lemma leaves_of_node:
@@ -827,18 +872,77 @@ locale node_invariant = target_cell_selector +
        \<lbrakk>is_vertex_list G V; is_vertex_list G V'; \<Phi> G V < \<Phi> G V' \<rbrakk> \<Longrightarrow>
         (\<forall> V1 \<in> leaves G (expand_tree G V). 
          \<forall> V1' \<in> leaves G (expand_tree G V'). \<Phi> G V1 < \<Phi> G V1')"
-  assumes \<Phi>_discrete: 
-    "\<And> G \<pi> \<pi>' V V'.
-       \<lbrakk>is_vertex_list G V; is_vertex_list G V';
+  assumes \<Phi>_discrete_weak: 
+    "\<And> G \<pi> \<pi>' V V' k.
+       \<lbrakk>n_vertex G; is_k_colored G k; is_vertex_list G V; is_vertex_list G V';
         \<pi> = \<R> G V; \<pi>' = \<R> G V';
-        is_discrete_coloring (num_vertices G) \<pi>; is_discrete_coloring (num_vertices G) \<pi>' \<rbrakk> \<Longrightarrow>
-        \<Phi> G V = \<Phi> G V' \<longleftrightarrow> perm_graph (leaf_perm G V) G = 
-                            perm_graph (leaf_perm G V') G"
+        discrete (num_vertices G) \<pi>; discrete (num_vertices G) \<pi>' \<rbrakk> \<Longrightarrow>
+        \<Phi> G V = \<Phi> G V' \<longleftrightarrow> perm_edges (leaf_perm G V) (edges G) = 
+                            perm_edges (leaf_perm G V') (edges G)"
   assumes \<Phi>_perm:
     "\<And> G V p. 
        \<lbrakk>is_vertex_list G V; perm_dom p = num_vertices G\<rbrakk> \<Longrightarrow>
         \<Phi> (perm_graph p G) (perm_fun_list p V) = \<Phi> G V" 
 begin
+
+lemma \<Phi>_discrete: 
+  assumes 
+    "n_vertex G" "is_k_colored G k"
+    "is_vertex_list G V" "is_vertex_list G V'"
+    "\<pi> = \<R> G V" "\<pi>' = \<R> G V'"
+    "discrete (num_vertices G) \<pi>" "discrete (num_vertices G) \<pi>'"
+  shows
+    "\<Phi> G V = \<Phi> G V' \<longleftrightarrow> perm_graph (leaf_perm G V) G = 
+                         perm_graph (leaf_perm G V')G"
+proof-
+  have "perm_graph (leaf_perm G V) G = perm_graph (leaf_perm G V') G \<longleftrightarrow>
+        perm_edges (leaf_perm G V) (edges G) = perm_edges (leaf_perm G V') (edges G)" (is "?lhs \<longleftrightarrow> ?rhs")
+  proof
+    assume ?lhs
+    then show ?rhs
+      by (simp add: perm_graph_def)
+  next
+    assume ?rhs
+    show ?lhs
+    proof-
+      have "color_list (num_vertices G) (perm_coloring (leaf_perm G V) (coloring G)) =
+            color_list (num_vertices G) (perm_coloring (leaf_perm G V') (coloring G))"
+      proof (rule color_list_eq, safe)
+        fix v
+        assume "vertex G v"
+        show "perm_coloring (leaf_perm G V) (coloring G) v =
+              perm_coloring (leaf_perm G V') (coloring G) v"
+          unfolding leaf_perm_def
+        proof (rule \<C>_\<alpha>_independent)
+          show "all_k_colors (num_vertices G) (coloring G)"
+            by (meson all_k_colors assms(1) assms(2))
+        next
+          show "finer (num_vertices G) (\<R> G V) (coloring G)"
+            by (meson \<R>_finer assms(3))
+        next
+          show "discrete (num_vertices G) (\<R> G V)"
+            using assms(5) assms(7) by auto
+        next
+          show "finer (num_vertices G) (\<R> G V') (coloring G)"
+            by (meson \<R>_finer assms(4))
+        next
+          show "discrete (num_vertices G) (\<R> G V')"
+            using assms(6) assms(8) by auto
+        next
+          show "vertex G v" 
+            by fact
+        qed
+      qed
+      thus ?thesis
+        using \<open>?rhs\<close>
+        unfolding perm_graph_def
+        by auto
+    qed
+  qed
+  thus ?thesis
+    using \<Phi>_discrete_weak[OF assms]
+    by simp
+qed
 
 definition equivalent_leaves where 
   "equivalent_leaves G V V' \<longleftrightarrow> \<Phi> G V = \<Phi> G V'" 
@@ -935,7 +1039,7 @@ qed
 
 
 theorem 
-  assumes "n_vertex G" "V \<in> leaves G (tree G)"
+  assumes "n_vertex G" "is_k_colored G k" "V \<in> leaves G (tree G)"
   shows "automorphisms G = { let \<pi> = leaf_perm G V;
                                  \<pi>' = leaf_perm G V'
                               in perm_comp (perm_inv \<pi>') \<pi> | V'. 
@@ -953,8 +1057,8 @@ proof
       using \<open>p \<in> automorphisms G\<close> assms automorphisms_def by blast
     have "p = perm_comp (perm_inv (leaf_perm G ?V')) (leaf_perm G V)"
          "equivalent_leaves G V ?V'"
-      using only_automorphism[OF assms(1) assms(2) \<open>?V' \<in> leaves G (tree G)\<close>]
-      using equivalent_leaves[OF assms(1) assms(2) \<open>?V' \<in> leaves G (tree G)\<close>]
+      using only_automorphism[OF assms(1) assms(3) \<open>?V' \<in> leaves G (tree G)\<close>]
+      using equivalent_leaves[OF assms(1) assms(3) \<open>?V' \<in> leaves G (tree G)\<close>]
       using \<open>p \<in> automorphisms G\<close> automorphisms_def by blast+
     then show "p \<in> ?rhs"
       using \<open>perm_fun_list p V \<in> leaves G (tree G)\<close> by auto
@@ -971,27 +1075,29 @@ next
       and "p = perm_comp (perm_inv \<pi>') \<pi>"
       by auto
     then have "is_vertex_list G V" "is_vertex_list G V'" 
-              "is_discrete_coloring ?n (\<R> G V)"
-              "is_discrete_coloring ?n (\<R> G V')"
-      using assms(2) leaves_iff_discrete tree_is_vertex_list by blast+
+              "discrete ?n (\<R> G V)"
+              "discrete ?n (\<R> G V')"
+      using assms(3) leaves_iff_discrete tree_is_vertex_list by blast+
 
       
     have "is_isomorphism p G G"
       unfolding is_isomorphism_def
     proof
       show "perm_dom p = ?n"
-        using \<open>V' \<in> leaves G (tree G)\<close> \<open>\<pi> = leaf_perm G V\<close> \<open>\<pi>' = leaf_perm G V'\<close> \<open>p = perm_comp (perm_inv \<pi>') \<pi>\<close> assms(2) discrete_coloring_is_permutation leaf_perm_def leaves_iff_discrete by force
+        using assms(3)
+        using \<open>V' \<in> leaves G (tree G)\<close> \<open>\<pi> = leaf_perm G V\<close> \<open>\<pi>' = leaf_perm G V'\<close> \<open>p = perm_comp (perm_inv \<pi>') \<pi>\<close> assms(2) discrete_coloring_is_permutation leaf_perm_def leaves_iff_discrete 
+        by force
     next
       show "perm_graph p G = G"
       proof-
         have "perm_graph \<pi> G = perm_graph \<pi>' G"
           using \<Phi>_discrete
-          using \<open>equivalent_leaves G V V'\<close> equivalent_leaves_def
-          by (simp add: \<open>\<pi> = leaf_perm G V\<close> \<open>\<pi>' = leaf_perm G V'\<close> \<open>is_discrete_coloring (num_vertices G) (\<R> G V')\<close> \<open>is_discrete_coloring (num_vertices G) (\<R> G V)\<close> \<open>is_vertex_list G V'\<close> \<open>is_vertex_list G V\<close>)
+          using \<open>equivalent_leaves G V V'\<close> equivalent_leaves_def assms(1-2)
+          by (simp add: \<open>\<pi> = leaf_perm G V\<close> \<open>\<pi>' = leaf_perm G V'\<close> \<open>discrete (num_vertices G) (\<R> G V')\<close> \<open>discrete (num_vertices G) (\<R> G V)\<close> \<open>is_vertex_list G V'\<close> \<open>is_vertex_list G V\<close>)
         then have "perm_graph (perm_inv \<pi>') (perm_graph \<pi> G) = perm_graph (perm_inv \<pi>') (perm_graph \<pi>' G)"
           by simp
         then have "perm_graph (perm_comp (perm_inv \<pi>') \<pi>) G = perm_graph (perm_comp (perm_inv \<pi>')  \<pi>') G"
-          by (simp add: \<open>\<pi> = leaf_perm G V\<close> \<open>\<pi>' = leaf_perm G V'\<close> \<open>is_discrete_coloring (num_vertices G) (\<R> G V')\<close> \<open>is_discrete_coloring (num_vertices G) (\<R> G V)\<close> assms(1) discrete_coloring_is_permutation leaf_perm_def perm_graph_perm_comp)
+          by (simp add: \<open>\<pi> = leaf_perm G V\<close> \<open>\<pi>' = leaf_perm G V'\<close> \<open>discrete (num_vertices G) (\<R> G V')\<close> \<open>discrete (num_vertices G) (\<R> G V)\<close> assms(1) discrete_coloring_is_permutation leaf_perm_def perm_graph_perm_comp)
         then show "perm_graph p G = G"
           by (simp add: \<open>p = perm_comp (perm_inv \<pi>') \<pi>\<close> assms(1) perm_comp_perm_inv perm_graph_permute_id)
       qed
@@ -1008,6 +1114,7 @@ definition canon_form :: "colored_graph \<Rightarrow> colored_graph" where
   "canon_form G = (let V = max_leaf G (tree G) in perm_graph (leaf_perm G V) G)"
 
 lemma canon_formI:
+  assumes "n_vertex G" "is_k_colored G k"
   assumes "V' \<in> leaves G (tree G)" "\<forall> V \<in> leaves G (tree G). \<Phi> G V' \<ge> \<Phi> G V"
   shows "canon_form G = perm_graph (leaf_perm G V') G"
   unfolding canon_form_def Let_def max_leaf_def
@@ -1031,54 +1138,6 @@ next
     by meson
 qed         
 
-lemma finite_leaves_expand_tree:
-  assumes "is_vertex_list G V"
-  shows "finite (leaves G (expand_tree G V))"
-  using assms
-proof (induction G V rule: expand_tree.induct)
-  case (1 G V)
-  show ?case
-  proof (cases "\<T> G V = {||}")
-    case True
-    then show ?thesis
-      using expand_tree.simps[of G V]
-      by simp
-  next
-    case False
-    then show ?thesis
-      using expand_tree.simps[of G V]
-      using 1 is_vertex_list_T_extend[of V G]
-      by auto
-  qed
-qed
-
-lemma finite_leaves_tree:
-  shows "finite (leaves G (tree G))"
-  by (simp add: finite_leaves_expand_tree tree_def)
-
-lemma not_empty_leaves_expand_tree:
-  assumes "is_vertex_list G V"
-  shows "leaves G (expand_tree G V) \<noteq> {}"
-  using assms
-proof (induction G V rule: expand_tree.induct)
-  case (1 G V)
-  show ?case
-  proof (cases "\<T> G V = {||}")
-    case True
-    then show ?thesis
-      by (simp add: expand_tree.simps)
-  next
-    case False
-    then show ?thesis
-      using expand_tree.simps[of G V]
-      using 1 local.is_vertex_list_T_extend[of V G]
-      by (auto simp add: fmember.rep_eq)
-  qed
-qed
-
-lemma not_empty_leaves_tree:
-  shows "leaves G (tree G) \<noteq> {}"
-  by (simp add: not_empty_leaves_expand_tree tree_def)  
 
 lemma ex_max_leaf:
   shows "\<exists> V' \<in> leaves G (tree G). \<forall> V \<in> leaves G (tree G). \<Phi> G V' \<ge> \<Phi> G V"
@@ -1130,17 +1189,19 @@ theorem canon_form:
   shows "is_canon_form canon_form"
   unfolding is_canon_form_def
 proof safe
-  fix G
+  fix G k
+  assume *: "n_vertex G" "is_k_colored G k"
   obtain V' where "V' \<in> leaves G (tree G)" "\<forall> V \<in> leaves G (tree G). \<Phi> G V' \<ge> \<Phi> G V"
     using ex_max_leaf
     by blast
   then show "isomorphic G (canon_form G)"
+    using *
     unfolding isomorphic_def is_isomorphism_def
     by (rule_tac x="leaf_perm G V'" in exI)
        (simp add: canon_formI discrete_coloring_is_permutation leaf_perm_def leaves_iff_discrete)
 next
-  fix G :: colored_graph and p
-  assume "perm_dom p = num_vertices G" "n_vertex G"
+  fix G :: colored_graph and k and p
+  assume "perm_dom p = num_vertices G" "n_vertex G" "is_k_colored G k"
   obtain V' where V': "V' \<in> leaves G (tree G)" "\<forall> V \<in> leaves G (tree G). \<Phi> G V' \<ge> \<Phi> G V"
     using ex_max_leaf
     by blast
@@ -1177,15 +1238,15 @@ next
   qed
 
   have "canon_form ?pG = perm_graph (leaf_perm ?pG ?pV') ?pG"
-    using canon_formI[OF pV'1 pV'2]
-    by simp
+    using canon_formI[OF _ _ pV'1 pV'2]
+    by (meson \<open>is_k_colored G k\<close> \<open>n_vertex G\<close> \<open>perm_dom p = num_vertices G\<close> is_isomorphism_def isomorphic_def isomorphic_k_colored isomorphic_n_vertex)
   also have "... = perm_graph (perm_comp (leaf_perm ?pG ?pV') p) G"
     using \<open>n_vertex G\<close> \<open>perm_dom p = num_vertices G\<close> discrete_coloring_is_permutation leaf_perm_def leaves_iff_discrete pV'1 perm_graph_def perm_graph_perm_comp by auto
   also have "... = perm_graph (leaf_perm G V') G"
     using V'(1) \<open>perm_dom p = num_vertices G\<close> perm_leaf_perm by presburger
   also have "... = canon_form G"
-    using canon_formI[OF V'(1-2)]
-    by simp
+    using canon_formI[OF _ _ V'(1-2)]
+    using \<open>is_k_colored G k\<close> \<open>n_vertex G\<close> by auto
   finally show "canon_form (perm_graph p G) = canon_form G"
     .
 qed
@@ -1577,7 +1638,7 @@ proof-
 qed
 
 lemma pruneACs_canon_form:
-  assumes "n_vertex G" "pruneACs G Vs"
+  assumes "n_vertex G" "is_k_colored G k" "pruneACs G Vs"
           "T = prune_nodes (tree G) (map (expand_tree G) Vs)"
   shows "canon_form G = perm_graph (leaf_perm G (max_leaf G T)) G"
 proof-
@@ -1607,7 +1668,8 @@ proof-
 
   have *: "rev ?v \<in> leaves G T"
           "\<forall>V'\<in>leaves G T. \<Phi> G V' \<le> \<Phi> G (rev ?v)"
-    using pruneACs_remain_max[OF assms(2) assms(1), of ?Phi ?MaxPhi] assms(3)
+    thm pruneACs_remain_max
+    using pruneACs_remain_max[OF assms(3) assms(1), of ?Phi ?MaxPhi] assms(4)
     using \<open>finite ?MaxPhi\<close> \<open>?MaxPhi \<noteq> {}\<close> \<open>finite ?Phi\<close> \<open>?Phi \<noteq> {}\<close> 
     by (smt (verit) Max_ge Min_in leaves_prune_nodes mem_Collect_eq rev_rev_ident subset_iff)+
 
@@ -1618,7 +1680,7 @@ proof-
 
   have "max_leaf G T \<in> leaves G (tree G)"
     using **
-    using assms(3) leaves_prune_nodes
+    using assms(4) leaves_prune_nodes
     by blast
     
   show ?thesis
@@ -1660,6 +1722,12 @@ proof-
         using \<open>\<forall>V\<in>leaves G (tree G). \<Phi> G V \<le> Max ?Phi\<close>
         by simp
     qed
+  next
+    show "n_vertex G"
+      by fact
+  next
+    show "is_k_colored G k"
+      by fact
   qed
 qed
 
