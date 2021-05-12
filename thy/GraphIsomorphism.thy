@@ -35,12 +35,21 @@ text \<open>Recolor graph by the given coloring\<close>
 definition recolor :: "colored_graph \<Rightarrow> coloring \<Rightarrow> colored_graph" where
   "recolor G \<pi> = G \<lparr> colors := color_list (num_vertices G) \<pi> \<rparr>"
 
+lemma num_vertices_recolor [simp]:
+  shows "num_vertices (recolor G \<pi>) = num_vertices G"
+  by (simp add: recolor_def)
+
 lemma coloring_recolor [simp]:
   assumes "vertex G v" 
   shows "coloring (recolor G \<pi>) v = \<pi> v"
   using assms
   unfolding coloring_def recolor_def color_list_def
   by auto
+
+lemma cells_coloring_recolor [simp]:
+  shows "cells (num_vertices G) (coloring (recolor G \<pi>)) = cells (num_vertices G) \<pi>"
+  unfolding cells_def cell_def all_colors_def recolor_def
+  by (auto simp add: color_list_def)
 
 text \<open>Graph is colored by colors 0, 1, ..., k-1\<close>
 definition is_k_colored :: "colored_graph \<Rightarrow> nat \<Rightarrow> bool" where
@@ -1736,7 +1745,7 @@ end
 definition individualize :: "coloring \<Rightarrow> nat \<Rightarrow> coloring" where 
  "individualize \<pi> v = (\<lambda> w. if \<pi> w < \<pi> v \<or> w = v then \<pi> w else \<pi> w + 1)"
 
-lemma finer_individualize:
+lemma individualize_finer:
   shows "finer n (individualize \<pi> v) \<pi>"
   unfolding finer_def individualize_def
   by auto
@@ -1764,72 +1773,8 @@ qed
 lemma individualize_singleton_preserve:
   assumes  "{v'} \<in> set (cells n \<pi>)" "v' < n"
   shows "{v'} \<in> set (cells n (individualize \<pi> v))"
-proof-
-  obtain c where c: "c \<in> set (all_colors n \<pi>)" "cell n \<pi> c = {v'}"
-    using assms                                 
-    unfolding cells_def
-    by auto
-  show ?thesis
-  proof (cases "\<pi> v' < \<pi> v \<or> v' = v")
-    case True
-    then have "individualize \<pi> v v' = c"
-      using c(2) cell_def individualize_def by auto
-    moreover
-    have "\<forall> v''. v'' < n \<and> v'' \<noteq> v' \<longrightarrow> individualize \<pi> v v'' \<noteq> c"
-    proof safe
-      fix v''
-      assume *: "v'' < n" "v'' \<noteq> v'" "c = individualize \<pi> v v''"
-      have "\<pi> v'' \<noteq> c"
-        using \<open>v'' < n\<close> \<open>v'' \<noteq> v'\<close> c(2) cell_def by blast
-      then show False
-        using *
-        unfolding individualize_def
-        by (metis True \<open>individualize \<pi> v v' = c\<close> add.commute individualize_def less_asym' not_less_eq plus_1_eq_Suc)
-    qed
-    ultimately
-    have "cell n (individualize \<pi> v) c = {v'}"
-      using \<open>v' < n\<close>
-      unfolding cell_def   
-      by auto
-    then show ?thesis
-      using c
-      unfolding cells_def 
-      by (metis \<open>individualize \<pi> v v' = c\<close> all_colors_def assms(2) image_eqI lessThan_atLeast0 lessThan_iff set_map set_upt)
-  next
-    case False
-    then have "\<pi> v' \<ge> \<pi> v" "v' \<noteq> v"
-      by auto
-    then have "individualize \<pi> v v' = c + 1"
-      using c(2) cell_def individualize_def
-      by auto
-    moreover
-    have "\<forall> v''. v'' < n \<and> v'' \<noteq> v' \<longrightarrow> individualize \<pi> v v'' \<noteq> c + 1"
-    proof safe
-      fix v''
-      assume *: "v'' < n" "v'' \<noteq> v'" "individualize \<pi> v v'' = c + 1"
-      then have "\<pi> v'' \<noteq> c"
-        using c
-        using cell_def
-        by blast
-      then show False
-        using *
-        by (smt (z3) False add_right_cancel calculation dual_order.strict_trans individualize_def less_add_one)
-    qed
-    ultimately 
-    have "cell n (individualize \<pi> v) (c + 1) = {v'}"
-      using \<open>v' < n\<close>
-      unfolding cell_def
-      by auto
-    moreover
-    have "c + 1 \<in> set (all_colors n (individualize \<pi> v))"
-      by (metis \<open>individualize \<pi> v v' = c + 1\<close> all_colors_def assms(2) atLeast_upt imageI lessThan_iff set_map)
-    ultimately
-    show ?thesis
-      using c
-      unfolding cells_def 
-      by auto
-  qed    
-qed
+  using assms(1) assms(2) individualize_finer finer_singleton
+  by blast
 
 locale refinement_function' =
   fixes \<F> :: "colored_graph  \<Rightarrow> coloring"
@@ -1837,8 +1782,9 @@ locale refinement_function' =
     "\<And> G. finer (num_vertices G) (\<F> G) (coloring G)"
   assumes \<F>_perm:
     "\<And> p G v pc c. 
-       \<lbrakk>perm_dom p = num_vertices G; vertex G v; 
-        \<And> v. vertex G v \<Longrightarrow> pc v = perm_coloring p c v\<rbrakk> \<Longrightarrow> 
+       \<lbrakk>perm_dom p = num_vertices G;  
+        \<And> v. vertex G v \<Longrightarrow> pc v = perm_coloring p c v; 
+        vertex G v\<rbrakk> \<Longrightarrow> 
              \<F> (recolor (perm_graph p G) pc) v = 
              perm_coloring p (\<F> (recolor G c)) v"
 begin
@@ -1853,52 +1799,13 @@ lemma \<R>'_Snoc [simp]:
   shows "\<R>' G (V @ [v]) = \<F> (recolor G (individualize (\<R>' G V) v))"
   by (simp add: \<R>'_def)
 
+
 lemma \<F>_singleton:
   assumes "{v} \<in> set (cells (num_vertices G) (coloring G))" "vertex G v"
   shows "{v} \<in> set (cells (num_vertices G) (\<F> G))"
-proof-
-  obtain c where c: "c \<in> set (all_colors (num_vertices G) (coloring G))" "coloring G v = c" "cell (num_vertices G) (coloring G) c = {v}"
-    using assms
-    by (smt (z3) cell_def cells_def in_set_conv_nth length_map mem_Collect_eq nth_map singletonI)
-  let ?c = "\<F> G v"
-  have "cell (num_vertices G)(\<F> G) ?c = {v}"
-  proof-
-    have "\<forall> v' < num_vertices G. v' \<noteq> v \<longrightarrow> \<F> G v' \<noteq> ?c"
-    proof safe
-      fix v'
-      assume "vertex G v'" "\<F> G v' = \<F> G v" "v' \<noteq> v"
-      then have "coloring G v' = coloring G v"
-        using \<F>_finer assms(2) finer_same_color by blast
-      then have "v' \<in> cell (num_vertices G) (coloring G) c"
-        by (simp add: \<open>vertex G v'\<close> c(2) cell_def)
-      then show False
-        using assms c \<open>v' \<noteq> v\<close>
-        by blast
-    qed
-    then show ?thesis
-      using c(3) cell_def by fastforce
-  qed
-  then show ?thesis
-    by (metis all_colors_def assms(2) cells_def image_eqI lessThan_atLeast0 lessThan_iff set_map set_upt)
-qed    
+  by (meson \<F>_finer assms(1) assms(2) finer_singleton)
 
 end
-
-lemma finer_trans:
-  assumes "finer n \<pi>1 \<pi>2" "finer n \<pi>2 \<pi>3"
-  shows "finer n \<pi>1 \<pi>3"
-  using assms
-  using finer_def 
-  by auto
-
-lemma num_vertices_recolor [simp]:
-  shows "num_vertices (recolor G \<pi>) = num_vertices G"
-  by (simp add: recolor_def)
-
-lemma cells_coloring_recolor [simp]:
-  shows "cells (num_vertices G) (coloring (recolor G \<pi>)) = cells (num_vertices G) \<pi>"
-  unfolding cells_def cell_def all_colors_def recolor_def
-  by (auto simp add: color_list_def)
 
 lemma individualize_perm:
   assumes "perm_dom p = n" "\<And> v. v < n \<Longrightarrow> pc v = perm_coloring p c v" "v < n" "v' < n"
@@ -1942,7 +1849,7 @@ proof
       show "finer (num_vertices G) (\<R>' G (V @ [v])) (\<R>' G V)"
       proof (rule finer_trans)
         show "finer (num_vertices G) (individualize (\<R>' G V) v) (\<R>' G V)"
-          by (simp add: finer_individualize)
+          by (simp add: individualize_finer)
       next
         show "finer (num_vertices G) (\<R>' G (V @ [v])) (individualize (\<R>' G V) v)"
           using \<F>_finer[of "recolor G (individualize (\<R>' G V) v)"]

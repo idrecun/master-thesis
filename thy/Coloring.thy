@@ -108,6 +108,43 @@ proof safe
   qed
 qed
 
+lemma finer_singleton:
+  assumes "{v} \<in> set (cells n \<pi>1)" "v < n" "finer n \<pi>2 \<pi>1"
+  shows "{v} \<in> set (cells n \<pi>2)"
+proof-
+  obtain c where c: "c \<in> set (all_colors n \<pi>1)" "\<pi>1 v = c" "cell n \<pi>1 c = {v}"
+    using assms
+    by (smt (z3) cell_def cells_def in_set_conv_nth length_map mem_Collect_eq nth_map singletonI)
+  let ?c = "\<pi>2 v"
+  have "cell n \<pi>2 ?c = {v}"
+  proof-
+    have "\<forall> v' < n. v' \<noteq> v \<longrightarrow> \<pi>2 v' \<noteq> ?c"
+    proof safe
+      fix v'
+      assume "v' < n" "\<pi>2 v' = \<pi>2 v" "v' \<noteq> v"
+      then have "\<pi>1 v' = \<pi>1 v"
+        using assms(2-3) finer_same_color by blast
+      then have "v' \<in> cell n \<pi>1 c"
+        by (simp add: \<open>v' < n\<close> c(2) cell_def)
+      then show False
+        using assms c \<open>v' \<noteq> v\<close>
+        by blast
+    qed
+    then show ?thesis
+      using c(3) cell_def by fastforce
+  qed
+  then show ?thesis
+    by (metis all_colors_def assms(2) cells_def image_eqI lessThan_atLeast0 lessThan_iff set_map set_upt)
+qed    
+
+lemma finer_trans:
+  assumes "finer n \<pi>1 \<pi>2" "finer n \<pi>2 \<pi>3"
+  shows "finer n \<pi>1 \<pi>3"
+  using assms
+  using finer_def 
+  by auto
+
+
 text \<open>A coloring is discrete if each vertex is colored by a different color {0..<n}\<close>
 definition discrete :: "nat \<Rightarrow> coloring \<Rightarrow> bool" where
   "discrete n \<pi> \<longleftrightarrow> set (all_colors n \<pi>) = {0..<n}"
