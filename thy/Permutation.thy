@@ -2,6 +2,8 @@ theory Permutation
 imports Main "HOL-Library.FSet" MoreList
 begin
 
+text \<open>Permutation type\<close>
+
 lemma distinct_perm [simp]:
   assumes "set p = {0..<length p}"
   shows "distinct p"
@@ -14,6 +16,7 @@ typedef perm = "{p::nat list. set p = {0..<length p}}"
 
 setup_lifting type_definition_perm
 
+text \<open>Domain of a permutation is always  the set of the form {0..<n}\<close>
 lift_definition perm_dom :: "perm \<Rightarrow> nat" is
   "length"
   done
@@ -21,7 +24,9 @@ lift_definition perm_dom :: "perm \<Rightarrow> nat" is
 lemma perm_list_set [simp]:
   shows "set (perm_list p) = {0..<perm_dom p}"
   by transfer simp
-  
+
+text \<open>Permutation as a function that acts on {0..<n}\<close>
+
 definition perm_fun' :: "nat list \<Rightarrow> nat \<Rightarrow> nat" where
   "perm_fun' p = (\<lambda> k. if k < length p then p ! k else undefined)"
 
@@ -30,15 +35,21 @@ lift_definition perm_fun :: "perm \<Rightarrow> nat \<Rightarrow> nat" is perm_f
 
 lemma permEqI:
   assumes "perm_dom p1 = n" "perm_dom p2 = n" 
-          "\<forall> i < n. perm_fun p1 i = perm_fun p2 i" 
+          "\<forall> v < n. perm_fun p1 v = perm_fun p2 v" 
   shows "p1 = p2"
   using assms
   by transfer (auto simp add: perm_fun'_def nth_equalityI)
 
+lemma perm_fun_inj:
+  assumes "perm_dom p = n" "v1 < n" "v2 < n" "perm_fun p v1 = perm_fun p v2"
+  shows "v1 = v2"
+  using assms
+  by (metis distinct_perm nth_eq_iff_index_eq perm_dom.rep_eq perm_fun'_def perm_fun.rep_eq perm_list_set)
+
 definition is_perm_fun :: "nat \<Rightarrow> (nat \<Rightarrow> nat) \<Rightarrow> bool" where
   "is_perm_fun n p \<longleftrightarrow> bij_betw p {0..<n} {0..<n}"
 
-lemma is_perm_fun: 
+lemma is_perm_fun [simp]: 
   "is_perm_fun (perm_dom p) (perm_fun p)"
 proof transfer
   fix p
@@ -68,7 +79,7 @@ proof transfer
   qed
 qed
 
-lemma is_perm_fun_comp:
+lemma is_perm_fun_comp [simp]:
   assumes "is_perm_fun n f" "is_perm_fun n g"
   shows "is_perm_fun n (f \<circ> g)"
   using assms
@@ -99,6 +110,7 @@ lemma inv_perm_fun_perm_fun:
   unfolding is_perm_fun_def bij_betw_def
   by (smt (z3) assms atLeastLessThan_iff f_the_inv_into_f image_cong image_iff inj_on_cong inj_on_the_inv_into inv_perm_fun the_inv_into_onto)
 
+text \<open>Each bijective function gives rise to a permutation\<close>
 
 definition make_perm' :: "nat \<Rightarrow> (nat \<Rightarrow> nat) \<Rightarrow> nat list" where
   "make_perm' n f = 
@@ -114,13 +126,13 @@ lemma perm_dom_make_perm[simp]:
   using assms
   by transfer (simp add: make_perm'_def)
 
-lemma perm_fun_make_perm:
+lemma perm_fun_make_perm [simp]:
   assumes "is_perm_fun n f" "x < n"
   shows "perm_fun (make_perm n f) x = f x"
   using assms
   by transfer (simp add: make_perm'_def perm_fun'_def)
 
-lemma make_perm_perm_fun:
+lemma make_perm_perm_fun [simp]:
   assumes "perm_dom p = n"
   shows "make_perm n (perm_fun p) = p"
 proof-
@@ -145,7 +157,7 @@ definition perm_id' :: "nat \<Rightarrow> nat list" where
 lift_definition perm_id :: "nat \<Rightarrow> perm" is perm_id'
   by (simp add: perm_id'_def)
 
-lemma perm_fun_perm_id:
+lemma perm_fun_perm_id [simp]:
   assumes "x < n"
   shows "perm_fun (perm_id n) x = x"
   using assms
@@ -175,7 +187,7 @@ lemma perm_dom_perm_inv [simp]:
   "perm_dom (perm_inv p) = perm_dom p"
   by transfer (auto simp add: perm_inv'_def)
 
-lemma perm_inv_inv:
+lemma perm_inv_inv [simp]:
   shows "perm_inv (perm_inv p) = p"
 proof transfer
   fix p
@@ -195,24 +207,53 @@ proof transfer
   qed
 qed
 
+lemma perm_inv_perm_id [simp]:
+  shows "perm_inv (perm_id n) = perm_id n"
+  by (smt (verit, ccfv_SIG) atLeast0LessThan diff_zero index_of_in_set length_upt lessThan_iff nth_map permEqI perm_dom.rep_eq perm_dom_perm_inv perm_fun'_def perm_fun.rep_eq perm_fun_perm_id perm_id'_def perm_id.rep_eq perm_inv'_def perm_inv.rep_eq perm_list_set)
+
 lemma perm_fun_perm_inv_range:
   assumes "perm_dom p = n"
   shows "\<forall> x < n. (perm_fun (perm_inv p)) x < n"
   using assms
   by transfer (auto simp add: perm_fun'_def perm_inv'_def index_of_in_set)
 
-lemma perm_fun_perm_inv1:
+lemma perm_fun_perm_inv1_comp:
   assumes "perm_dom p = n"
   shows "\<forall> x < n. ((perm_fun p) \<circ> (perm_fun (perm_inv p))) x = x"
   using assms
   by transfer (auto simp add: perm_fun'_def perm_inv'_def index_of_in_set)
 
-lemma perm_fun_perm_inv2:
+lemma perm_fun_perm_inv2_comp:
   assumes "perm_dom p = n"
   shows "\<forall> x < n. ((perm_fun (perm_inv p)) \<circ> (perm_fun p)) x = x"
   using assms
   by transfer (smt (verit, ccfv_threshold) add.left_neutral diff_zero distinct_Ex1 distinct_perm index_of_in_set length_map length_upt lessThan_atLeast0 lessThan_iff nth_map nth_mem nth_upt o_def perm_fun'_def perm_inv'_def)
 
+lemma perm_fun_perm_inv1 [simp]:
+  assumes "perm_dom p = n" "x < n"
+  shows "perm_fun p (perm_fun (perm_inv p) x) = x"
+  using assms
+  using perm_fun_perm_inv1_comp
+  by auto
+
+lemma perm_fun_perm_inv2 [simp]:
+  assumes "perm_dom p = n" "x < n"
+  shows "perm_fun (perm_inv p) (perm_fun p x) = x"
+  using assms
+  using perm_fun_perm_inv2_comp
+  by auto
+
+lemma perm_inv_make_perm1 [simp]:
+  assumes "is_perm_fun n f" "v < n"
+  shows "f (perm_fun (perm_inv (make_perm n f)) v) = v"
+  using assms
+  by (metis perm_dom_make_perm perm_fun_make_perm perm_fun_perm_inv1 perm_fun_perm_inv_range)
+
+lemma perm_inv_make_perm2 [simp]:
+  assumes "is_perm_fun n f" "v < n"
+  shows "perm_fun (perm_inv (make_perm n f)) (f v) = v"
+  using assms
+  by (metis perm_dom_make_perm perm_fun_make_perm perm_fun_perm_inv2)
 
 lemma make_perm_inv_perm_fun:
   assumes "is_perm_fun n f"
@@ -252,7 +293,7 @@ lemma perm_dom_perm_comp [simp]:
   using assms
   by transfer (auto simp add: perm_comp'_def)
 
-lemma perm_fun_perm_comp:
+lemma perm_fun_perm_comp [simp]:
   assumes "perm_dom p1 = n" "perm_dom p2 = n"
   shows "\<forall> x < n. perm_fun (perm_comp p1 p2) x = (perm_fun p1 \<circ> perm_fun p2) x"
   using assms
@@ -268,15 +309,15 @@ lemma perm_comp_assoc:
   shows "perm_comp (perm_comp p1 p2) p3 = perm_comp p1 (perm_comp p2 p3)"
   sorry
 
-lemma perm_comp_make_perm:
+lemma perm_comp_make_perm [simp]:
   assumes "is_perm_fun n p1" "is_perm_fun n p2" 
   shows "perm_comp (make_perm n p1) (make_perm n p2) = make_perm n (p1 \<circ> p2)"
   using assms
 proof-
   have "is_perm_fun n (p1 \<circ> p2)"
     using assms
-    by (simp add: is_perm_fun_comp)
-  thus ?thesis
+    by simp
+  then show ?thesis
     using assms
     by transfer (auto simp add: perm_comp'_def make_perm'_def perm_fun'_def is_perm_fun_def bij_betw_def)
 qed
@@ -293,7 +334,7 @@ lemma perm_comp_perm_id_2 [simp]:
   using assms
   by transfer (smt (z3) atLeast0LessThan distinct_card distinct_perm length_remdups_card_conv lessThan_iff map_eq_conv map_nth perm_comp'_def perm_fun'_def perm_id'_def remdups_upt set_upt)
 
-lemma perm_comp_perm_inv:
+lemma perm_comp_perm_inv1 [simp]:
   assumes "perm_dom p = n"
   shows "perm_comp (perm_inv p) p = perm_id n"
   using assms
@@ -329,32 +370,34 @@ proof transfer
     by (smt (verit, ccfv_SIG) atLeast0LessThan length_map lessThan_iff map_eq_conv)
 qed
 
+lemma perm_comp_perm_inv2 [simp]:
+  assumes "perm_dom p = n"
+  shows "perm_comp p (perm_inv p) = perm_id n"
+  by (metis assms perm_comp_perm_inv1 perm_dom_perm_inv perm_inv_inv)
+
 lemma perm_inv_solve:
   assumes "perm_dom p1 = n" "perm_dom p2 = n"  "perm_comp p1 p2 = perm_id n"
   shows "p1 = perm_inv p2"
   using assms
   sorry
 
-lemma perm_inv_perm_comp:
+lemma perm_inv_perm_comp [simp]:
   assumes "perm_dom p1 = n" "perm_dom p2 = n"
   shows "perm_inv (perm_comp p1 p2) = perm_comp (perm_inv p2) (perm_inv p1)"
 proof (rule perm_inv_solve[symmetric])
   show "perm_comp (perm_comp (perm_inv p2) (perm_inv p1)) (perm_comp p1 p2) = perm_id n"
-    by (metis assms(1) assms(2) perm_comp_assoc perm_comp_perm_id_1 perm_comp_perm_inv perm_dom_perm_comp perm_dom_perm_inv)
+    by (metis assms(1) assms(2) perm_comp_assoc perm_comp_perm_id_1 perm_comp_perm_inv1 perm_dom_perm_comp perm_dom_perm_inv)
 qed (simp_all add: assms)
 
-
-lemma perm_comp_perm_inv_make_perm1 [simp]:
-  assumes "is_perm_fun n \<alpha>" "v < n"
-  shows "\<alpha> (perm_fun (perm_inv (make_perm n \<alpha>)) v) = v"
-  by (smt (verit, ccfv_SIG) assms(1) assms(2) comp_def perm_dom_make_perm perm_dom_perm_inv perm_fun_make_perm perm_fun_perm_inv2 perm_fun_perm_inv_range perm_inv_inv)
-
-lemma perm_comp_perm_inv_make_perm2 [simp]:
-  assumes "is_perm_fun n \<alpha>" "v < n"
-  shows "(perm_fun (perm_inv (make_perm n \<alpha>)) (\<alpha> v)) = v"
-  by (smt (verit, ccfv_SIG) assms(1) assms(2) comp_def perm_dom_make_perm perm_dom_perm_inv perm_fun_make_perm perm_fun_perm_inv2 perm_fun_perm_inv_range perm_inv_inv)
-
 subsection \<open>Action on collections (lists, sets, finite sets)\<close>
+
+definition perm_fun_pair :: "perm \<Rightarrow> nat \<times> nat \<Rightarrow> nat \<times> nat" where
+  "perm_fun_pair p x = (perm_fun p (fst x), perm_fun p (snd x))"
+
+lemma perm_fun_pair [simp]:
+  shows "perm_fun_pair p (x, y) = (perm_fun p x, perm_fun p y)"
+  unfolding perm_fun_pair_def
+  by auto
 
 definition perm_fun_list_f :: "(nat \<Rightarrow> nat) \<Rightarrow> nat list \<Rightarrow> nat list" where
   "perm_fun_list_f p xs = map p xs"
@@ -374,15 +417,74 @@ definition perm_fun_fset_f :: "(nat \<Rightarrow> nat) \<Rightarrow> nat fset \<
 definition perm_fun_fset :: "perm \<Rightarrow> nat fset \<Rightarrow> nat fset" where
   "perm_fun_fset p S = (perm_fun p) |`| S"
 
-lemma perm_fun_list_perm_id:
+lemma perm_fun_list_Nil [simp]:
+  shows "perm_fun_list p [] = []"
+  by (simp add: perm_fun_list_def)
+
+lemma perm_fun_list_Cons [simp]:
+  shows "perm_fun_list p (x # xs) = (perm_fun p x) # perm_fun_list p xs"
+  by (simp add: perm_fun_list_def)
+
+lemma perm_fun_set_Empty [simp]:
+  shows "perm_fun_set p {} = {}"
+  by (simp add: perm_fun_set_def)
+
+lemma perm_fun_fset_Empty [simp]:
+  shows "perm_fun_fset p {||} = {||}"
+  by (simp add: perm_fun_fset_def)
+
+lemma perm_fun_pair_perm_id [simp]:
+  assumes "x < n" "y < n"
+  shows "perm_fun_pair (perm_id n) (x, y) = (x, y)"
+  using assms
+  by simp
+
+lemma perm_fun_list_perm_id [simp]:
   assumes "set l \<subseteq> {0..<n}"
   shows "perm_fun_list (perm_id n) l = l"
-  by (metis assms atLeast0LessThan lessThan_iff map_idI perm_fun_perm_id perm_fun_list_def subset_eq)
+  using assms
+  unfolding perm_fun_list_def
+  by (induction l, auto)
 
-lemma perm_fun_set_perm_id:
+lemma perm_fun_set_perm_id [simp]:
   assumes "S \<subseteq> {0..<n}"
   shows "perm_fun_set (perm_id n) S = S"
-  by (metis assms atLeastLessThan_iff id_apply image_cong image_id perm_fun_perm_id perm_fun_set_def psubsetD psubsetI)
+  using assms
+  unfolding perm_fun_set_def
+  by force
 
+lemma perm_fun_pair_perm_comp [simp]:
+  assumes "perm_dom p1 = n" "perm_dom p2 = n" "x < n" "y < n"
+  shows "perm_fun_pair (perm_comp p1 p2) (x, y) = 
+         perm_fun_pair p1 (perm_fun_pair p2 (x, y))"
+  using assms
+  by simp
+
+lemma perm_fun_list_perm_comp [simp]:
+  assumes "perm_dom p1 = n" "perm_dom p2 = n" "set l \<subseteq> {0..<n}"
+  shows "perm_fun_list (perm_comp p1 p2) l = perm_fun_list p1 (perm_fun_list p2 l)"
+  using assms
+  unfolding perm_fun_list_def
+  by (induction l) auto
+
+lemma perm_fun_set_perm_comp [simp]:
+  assumes "perm_dom p1 = n" "perm_dom p2 = n" "S \<subseteq> {0..<n}"
+  shows "perm_fun_set (perm_comp p1 p2) S = perm_fun_set p1 (perm_fun_set p2 S)"
+  using assms
+  unfolding perm_fun_set_def
+  by force
+
+lemma perm_inv_perm_list [simp]: 
+  assumes "perm_dom p = n"
+  shows "perm_fun_list (perm_inv p) [0..<n] = perm_list (perm_inv p)"
+  using assms
+  unfolding perm_fun_list_def
+  by transfer (auto simp add: perm_fun'_def perm_inv'_def)
+
+lemma perm_fun_list_perm_inv [simp]:
+  assumes "perm_dom p = n" "set xs \<subseteq> {0..<n}"
+  shows "perm_fun_list (perm_inv p) (perm_fun_list p xs) = xs"
+  using assms
+  by (metis perm_comp_perm_inv1 perm_dom_perm_inv perm_fun_list_perm_comp perm_fun_list_perm_id)
 
 end

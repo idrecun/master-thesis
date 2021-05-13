@@ -2,20 +2,47 @@ theory Coloring
   imports Main Permutation
 begin
 
-text \<open>Graph coloring as a function (only for convenience)\<close>
+text \<open>Graph coloring as a function\<close>
 type_synonym coloring = "nat \<Rightarrow> nat"
 
-text \<open>We assume that only relevant nodes are 0 to n-1 so this gives the colooring 
+text \<open>We assume that only relevant nodes are 0 to n-1 so this gives the coloring 
 representation in a form of a list\<close>
+
 definition color_list :: "nat \<Rightarrow> coloring \<Rightarrow> nat list" where
   "color_list n \<pi> = map \<pi> [0..<n]"
 
+lemma color_list [simp]: 
+  assumes "v < n"
+  shows "color_list n \<pi> ! v = \<pi> v"
+  using assms
+  by (simp add: color_list_def)
+
 lemma color_list_eq:
-  assumes "\<forall> x < n. f1 x = f2 x"
+  assumes "\<forall> v < n. f1 v = f2 v"
   shows "color_list n f1 = color_list n f2"
   using assms
   unfolding color_list_def
   by auto
+
+text \<open>Coloring from the color list\<close>
+definition coloring :: "nat \<Rightarrow> nat list \<Rightarrow> (nat \<Rightarrow> nat)" where
+  "coloring n colors = (\<lambda> v. if v < n then colors ! v else undefined)"
+
+lemma coloring [simp]:
+  assumes "v < n"
+  shows "coloring n colors v = colors ! v"
+  using assms
+  by (simp add: coloring_def)
+
+lemma coloring_color_list [simp]:
+  assumes "v < n"
+  shows "coloring n (color_list n \<pi>) v = \<pi> v"
+  by (simp add: assms color_list_def)
+
+lemma color_list_coloring [simp]:
+  assumes "length colors = n"
+  shows "color_list n (coloring n colors) = colors"
+  by (metis (mono_tags, lifting) assms color_list_def coloring lessThan_atLeast0 lessThan_iff map_eq_conv map_nth set_upt)
 
 text \<open>All colors used in a coloring\<close>
 definition all_colors :: "nat \<Rightarrow> coloring \<Rightarrow> nat list" where
@@ -40,20 +67,36 @@ lemma cells_disjunct:
   unfolding cells_def
   by (auto simp add: cell_def)
 
+lemma cells_coloring_color_list [simp]:
+  shows "cells n (coloring n (color_list n \<pi>)) = cells n \<pi>"
+  by (auto simp add: cells_def all_colors_def cell_def)
+
 text \<open>Nodes 0 to n-1 are colored using all colors from 0 to k-1 for some k\<close>
 definition all_k_colors :: "nat \<Rightarrow> coloring \<Rightarrow> bool" where
   "all_k_colors n \<pi> \<longleftrightarrow> set (all_colors n \<pi>) = {0..<num_colors n \<pi>}"
 
 lemma all_k_colors_ex_color:
   assumes "all_k_colors n \<pi>"
-  shows "\<forall> c < num_colors n \<pi>. \<exists> k < n. \<pi> k = c"
+  shows "\<forall> c < num_colors n \<pi>. \<exists> v < n. \<pi> v = c"
   using assms
   unfolding all_k_colors_def all_colors_def
   by (metis (mono_tags, lifting) atLeast0LessThan image_iff lessThan_iff set_map set_upt)
 
 text \<open>Check if the color \<pi>' refines the coloring \<pi> - each cells of \<pi>' is a subset of a cell of \<pi>\<close>
 definition finer :: "nat \<Rightarrow> coloring \<Rightarrow> coloring \<Rightarrow> bool" where
-  "finer n \<pi>' \<pi> \<longleftrightarrow> (\<forall> v < n. \<forall> w < n. \<pi> v < \<pi> w \<longrightarrow> \<pi>' v < \<pi>' w)"
+  "finer n \<pi>' \<pi> \<longleftrightarrow> (\<forall> v1 < n. \<forall> v2 < n. \<pi> v1 < \<pi> v2 \<longrightarrow> \<pi>' v1 < \<pi>' v2)"
+
+lemma finer_refl:
+  shows "finer n \<pi> \<pi>"
+  unfolding finer_def
+  by auto
+
+lemma finer_trans:
+  assumes "finer n \<pi>1 \<pi>2" "finer n \<pi>2 \<pi>3"
+  shows "finer n \<pi>1 \<pi>3"
+  using assms
+  using finer_def 
+  by auto
 
 lemma finer_same_color:
   assumes "finer n \<pi>' \<pi>" "v1 < n" "v2 < n" "\<pi>' v1 = \<pi>' v2" 
@@ -64,40 +107,40 @@ lemma finer_same_color:
 
 lemma finer_cell_subset:
   assumes "n > 0" "finer n \<pi>' \<pi>" "all_k_colors n \<pi>"
-  shows "\<forall> c' \<in> set (cells n \<pi>'). \<exists> c \<in> set (cells n \<pi>). c' \<subseteq> c"
+  shows "\<forall> C' \<in> set (cells n \<pi>'). \<exists> C \<in> set (cells n \<pi>). C' \<subseteq> C"
 proof safe
-  fix c'
-  assume "c' \<in> set (cells n \<pi>')"
-  show "\<exists> c \<in> set (cells n \<pi>). c' \<subseteq> c"
-  proof (cases "c' = {}")
+  fix C'
+  assume "C' \<in> set (cells n \<pi>')"
+  show "\<exists> C \<in> set (cells n \<pi>). C' \<subseteq> C"
+  proof (cases "C' = {}")
     case True
     then show ?thesis
       using \<open>n > 0\<close>
       by (auto simp add: cells_def num_colors_def all_colors_def)
   next
     case False
-    then obtain v where "v < n" "v \<in> c'"
-      using \<open>c' \<in> set (cells n \<pi>')\<close>
+    then obtain v where "v < n" "v \<in> C'"
+      using \<open>C' \<in> set (cells n \<pi>')\<close>
       unfolding cell_def cells_def
       by auto
-    let ?c = "cell n \<pi> (\<pi> v)"
-    have "?c \<in> set (cells n \<pi>)"
+    let ?C = "cell n \<pi> (\<pi> v)"
+    have "?C \<in> set (cells n \<pi>)"
       using \<open>v < n\<close> \<open>all_k_colors n \<pi>\<close>
       unfolding cells_def all_k_colors_def
       by (auto simp add: num_colors_def all_colors_def)
     moreover
-    have "c' \<subseteq> ?c"
+    have "C' \<subseteq> ?C"
     proof
       fix v'
-      assume "v' \<in> c'"
+      assume "v' \<in> C'"
       then have "v' < n" "\<pi>' v' = \<pi>' v"
-        using \<open>c' \<in> set (cells n \<pi>')\<close> \<open>v \<in> c'\<close>
+        using \<open>C' \<in> set (cells n \<pi>')\<close> \<open>v \<in> C'\<close>
         unfolding cells_def cell_def
         by auto
       then have "\<pi> v' = \<pi> v"
         using \<open>v < n\<close> \<open>finer n \<pi>' \<pi>\<close> finer_same_color 
         by blast
-      then show "v' \<in> ?c"
+      then show "v' \<in> ?C"
         using \<open>v' < n\<close>
         unfolding cell_def
         by auto
@@ -137,13 +180,6 @@ proof-
     by (metis all_colors_def assms(2) cells_def image_eqI lessThan_atLeast0 lessThan_iff set_map set_upt)
 qed    
 
-lemma finer_trans:
-  assumes "finer n \<pi>1 \<pi>2" "finer n \<pi>2 \<pi>3"
-  shows "finer n \<pi>1 \<pi>3"
-  using assms
-  using finer_def 
-  by auto
-
 
 text \<open>A coloring is discrete if each vertex is colored by a different color {0..<n}\<close>
 definition discrete :: "nat \<Rightarrow> coloring \<Rightarrow> bool" where
@@ -158,8 +194,16 @@ lemma discrete_coloring_is_permutation:
   by auto
 
 text\<open>The effect of vertices perm on colors\<close>
+
 definition perm_coloring :: "perm \<Rightarrow> coloring \<Rightarrow> coloring" where
-  "perm_coloring p coloring_fun = coloring_fun \<circ> (perm_fun (perm_inv p))"
+  "perm_coloring p \<pi> = \<pi> \<circ> (perm_fun (perm_inv p))"
+
+lemma perm_coloring_perm_fun [simp]:
+  assumes "perm_dom p = n" "v < n"
+  shows "perm_coloring p \<pi> (perm_fun p v) = \<pi> v"
+  using assms
+  unfolding perm_coloring_def
+  by auto
 
 lemma num_colors_perm_coloring [simp]:
   assumes "perm_dom p = n"
@@ -171,6 +215,27 @@ proof-
     unfolding Coloring.num_colors_def all_colors_def perm_coloring_def is_perm_fun_def
     by (metis image_comp image_set set_upt)
 qed
+
+lemma perm_coloring_perm_id:
+  assumes "v < n"
+  shows "(perm_coloring (perm_id n) \<pi>) v = \<pi> v"
+  using assms
+  unfolding perm_coloring_def
+  by auto
+
+lemma perm_coloring_perm_comp:
+  assumes "perm_dom p1 = n" "perm_dom p2 = n" "v < n" 
+  shows "perm_coloring (perm_comp p1 p2) \<pi> v = 
+         perm_coloring p1 (perm_coloring p2 \<pi>) v"
+  using assms
+  by (simp add: perm_coloring_def)
+
+lemma color_list_perm_coloring_perm_id [simp]:
+  assumes "length colors = n"
+  shows "color_list n (perm_coloring (perm_id n) (coloring n colors)) = colors"
+  using assms
+  by (metis color_list_coloring color_list_eq perm_coloring_perm_id)
+
 
 text \<open>Permute coloring based on its discrete refinement\<close>
 abbreviation \<C> :: "nat \<Rightarrow> coloring \<Rightarrow> coloring \<Rightarrow> coloring" where
@@ -441,5 +506,6 @@ proof (induction x rule: less_induct)
     qed
   qed
 qed
+
 
 end
