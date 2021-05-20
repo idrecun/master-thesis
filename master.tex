@@ -145,6 +145,15 @@
    ukoliko za sve $v, w \in V$ važi implikacija $\pi_2(v) < \pi_2(w) \implies
    \pi_1(v) < \pi_1(w)$.
 
+   Označimo sa $\sim_\pi$ binarnu relaciju na skupu čvorova definisanu sa $u
+   \sim_\pi v \iff \pi(u) = \pi(v)$. U pitanju je relacija ekvivalencije
+   (particija) čije klase odgovaraju upravo ćelijama bojenja $\pi$.
+
+   Particija $\alpha$ je finija od particije $\beta$ (u oznaci $\alpha \leq
+   \beta$) ukoliko za sve $v, w \in V$ važi implikacija $v \alpha w \implies v
+   \beta w$. Primetimo da za bojenja $\pi_1$ i $\pi_2$ važi $\pi_1 \leq \pi_2
+   \implies \sim_{\pi_1} \leq \sim_{\pi_2}$, ali ne i obrnuto.
+
    \emph{Obojen graf} je uređeni par $(G, \pi)$ gde je $\pi$ jedno bojenje
    grafa $G$.
 
@@ -571,6 +580,101 @@
 % ------------------------------------------------------------------------------
 \chapter{Realizacija algoritma}
 % ------------------------------------------------------------------------------
+
+ \section{Reprezentacija podataka}
+
+  \subsection{Permutacija}
+
+   Permutacija $p \in S_n$ predstavljena je pomoću dva vektora. Vektor
+   \texttt{pi} je definisan tako da je \texttt{pi[u] = v} onda kada je $p(u) =
+   v$. Vektor \texttt{ip} definisan je analogno za inverznu permutaciju,
+   odnosno \texttt{ip[u] = v} onda kada je $p^{-1}(u) = v$. {\color{red}Primer}
+
+  \subsection{Bojenje}
+
+   Bojenje $\pi \in \Pi_n$ predstavljeno je permutacijom \texttt{pi} i vektorom
+   \texttt{cells}. Permutacija \texttt{pi} predstavlja niz koji se dobija
+   nadovezivanjem ćelija $\pi^{-1}(1), \dots, \pi^{-1}(k)$ redom, pri čemu su
+   elementi jedne ćelije uređeni rastuće. Preciznije, \texttt{pi} predstavlja
+   permutaciju $p$ takvu da je $p(u) \in \pi^{-1}(c)$ ako i samo ako je
+   $\sum_{i = 1}^{c-1} |\pi^{-1}(i)| \leq u < \sum_{i = 1}^c |\pi^{-1}(i)|$ i
+   da ako važi $\pi(u) = \pi(v)$ onda je $u < v \iff p^{-1}(u) < p^{-1}(v)$.
+
+   Vektor \texttt{cells} predstavlja niz vrednosti $cells$ dužine $n$ koji
+   upotpunjava permutaciju $p$ podacima o granicama ćelija bojenja $\pi$. Ako
+   pozicija $u$ predstavlja početak nove ćelije, tada je $cells_u$ takvo da ta
+   ćelija obuhvata tačno pozicije $[u, cells_u)$ permutacije $p$.  Formalno,
+   \[ cells_u =
+     \begin{cases}
+		 u + |\pi^{-1}(\pi(p(u)))|, & \quad \text{ako je } u = 1 \text{ ili }
+		 \pi(p(u)) \neq \pi(p(u-1)) \\
+		 -1, & \quad \text{inače.} \\
+	 \end{cases}
+   \]
+   {\color{red}Primer}
+
+   Primetimo da je u slučaju diskretnog bojenja $\pi$ permutacija $p$
+   predstavljena sa \texttt{pi} inverz permutacije $\pi$.
+   {\color{red}Primer}
+
+  \subsection{Graf}
+
+   {\color{red} Dodati u implementaciji podršku za obojen graf, pa dati opis.}
+
+ \section{Funkcija profinjavanja}
+  
+  \begin{definition}
+	  Označimo sa $\psi(G, \pi, u, W)$ broj grana grafa $G$ koje povezuju čvor
+	  $u$ i skup čvorova $W$.  Particija $\sim$ skupa čvorova $V$ je
+	  \emph{ekvitabilna} ako za svaki par čvorova $u$ i $v$ takvih da je $u
+	  \sim v$ i svaku klasu $C$ particije $\sim$ važi $\psi(G, \pi, u, C) =
+	  \psi(G, \pi, v, C)$.  Bojenje $\pi$ je \emph{ekvitabilno} ako je
+	  particija $\sim_\pi$ ekvitabilna.
+  \end{definition}
+
+  \begin{lemma}
+	  Za proizvoljno bojenje $\pi$ postoji jedinstvena najgrublja particija
+	  $\sim_\gamma$ koja je ekvitabilna i finija od $\sim_\pi$.
+  \end{lemma}
+
+  \begin{proof}
+	  Neka su $\alpha$ i $\beta$ ekvitabilna bojenja finija od $\pi$.
+	  Definišimo $\sim_\gamma$ kao tranzitivno zatvorenje unije particija
+	  $\sim_\alpha$ i $\sim_\beta$, odnosno $u \sim_\gamma v \iff x_0
+	  \sim_{\alpha \lor \beta} x_1 \sim_{\alpha \lor \beta} \dots \sim_{\alpha
+	  \lor \beta} x_k$ za neke $u = x_1, x_2, \dots, x_k = v$ pri čemu je $u
+	  \sim_{\alpha \lor \beta} v \iff u \sim_\alpha v \lor u \sim_\beta v$.
+
+	  Ovako definisano $\sim_\gamma$ je relacija ekvivalencije grublja od
+	  $\sim_\alpha$ i $\sim_\beta$ {\color{red} Da li treba dokaz? Prilično je
+	  jednostavan.}. Pokažimo da je i ekvitabilna.
+
+	  Neka je $u \sim_\alpha v$ i neka je $C$ proizvoljna klasa iz
+	  $\sim_\gamma$. Kako je $\sim_\alpha$ finije od $\sim_\gamma$, to je $C =
+	  \bigcup_{i=1}^n A_i$ za neke klase $A_1, \dots, A_n$ particije
+	  $\sim_\alpha$, pa je $\psi(G, \pi, u, C) = \sum_{i=1}^n \psi(G, \pi, u,
+	  A_i)$. Kako je $\alpha$ ekvitabilno, to je dalje jednako $\sum_{i=1}^n
+	  \psi(G, \pi, v, A_i) = \psi(G, \pi, v, C)$. Analogno se pokazuje i za
+	  $\sim_\beta$, pa važi $u \sim_{\alpha \lor \beta} v \implies \psi(G, \pi,
+	  u, C) = \psi(G, \pi, v, C)$.  Konačno, ako je $u \sim_\gamma v$, onda je
+	  $u = x_1 \sim_{\alpha \lor \beta} \dots \sim_{\alpha \lor \beta} x_n =
+	  v$, pa je $\psi(G, \pi, u, C) = \psi(G, \pi, x_1, C) = \psi(G, \pi, x_2,
+	  C) = \dots = \psi(G, \pi, x_n, C) = \psi(G, \pi, v, C)$.
+  \end{proof}
+  
+  %Neka je $F : \mathcal{G} \times \Pi \to \Pi$ transformacija invarijantna na
+  %imenovanje čvorova takva da je $F(G, \pi) \leq \pi$ maksimalno ekvitabilno
+  %bojenje.
+
+ \section{Funkcija odabira ciljne ćelije}
+
+ \section{Invarijanta stabla}
+
+ \section{Automorfizmi}
+
+ \section{Pretraga}
+
+ \section{Invarijanta grafa}
 
 % ------------------------------------------------------------------------------
 \chapter{Rezultati testiranja}
