@@ -14,6 +14,8 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amsthm}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
 
 % Teoreme, definicije
 \newtheorem{theorem}{Teorema}
@@ -22,6 +24,10 @@
 
 \theoremstyle{definition}
 \newtheorem*{definition}{Definicija}
+
+\makeatletter
+\renewcommand*{\ALG@name}{Algoritam}
+\makeatother
 
 % Paket koji definiše sve specifičnosti master rada Matematičkog fakulteta
 \usepackage[latinica]{matfmaster} 
@@ -347,7 +353,7 @@
 		  \item[(\phi2)] Ako su $\nu_1, \nu_2 \in \mathcal{T}(G, \pi)$ takvi
 			  da su $\pi_1 = R(G, \pi, \nu_1)$ i $\pi_2 = R(G, \pi, \nu_2)$
 			  diskretna bojenja, onda je $\phi(G, \pi, \nu_1) = \phi(G,
-			  \pi, \nu_2) \iff G^{\pi_1} = G^{\pi_2}$
+			  \pi, \nu_2) \implies G^{\pi_1} = G^{\pi_2}$
 		  \item[(\phi3)] $\phi$ je funkcija invarijantna na imenovanje čvorova
 			  grafa
 	  \end{itemize}
@@ -604,24 +610,106 @@
    upotpunjava permutaciju $p$ podacima o granicama ćelija bojenja $\pi$. Ako
    pozicija $u$ predstavlja početak nove ćelije, tada je $cells_u$ takvo da ta
    ćelija obuhvata tačno pozicije $[u, cells_u)$ permutacije $p$.  Formalno,
-   \[ cells_u =
+   $$ cells_u =
      \begin{cases}
 		 u + |\pi^{-1}(\pi(p(u)))|, & \quad \text{ako je } u = 1 \text{ ili }
 		 \pi(p(u)) \neq \pi(p(u-1)) \\
 		 -1, & \quad \text{inače.} \\
 	 \end{cases}
-   \]
+   $$
    {\color{red}Primer}
 
    Primetimo da je u slučaju diskretnog bojenja $\pi$ permutacija $p$
    predstavljena sa \texttt{pi} inverz permutacije $\pi$.
    {\color{red}Primer}
 
+   Jedna od ključnih operacija nad bojenjem je profinjavanje jedne ćelije. Neka
+   je $\pi^{-1}(c)$ jedna ćelija bojenja $\pi$ i neka je svakom čvoru $v$ te
+   ćelije dodeljena vrednost $t_v$. Profinjavanje ćelije podrazumeva formiranje
+   bojenja $\pi' \leq \pi$ takvog da za $u$ i $v$ iz $\pi^{-1}(c)$ važi
+   $\pi'(u) < \pi'(v) \iff t_u < t_v$, dok za sve ostale parove $u$ i $v$ važi
+   $\pi'(u) = \pi'(v) \iff \pi(u) = \pi(v)$.
+
+  \begin{algorithm}
+	  \caption{}
+	  \begin{algorithmic}[]
+		  \Procedure{Refine\_cell}{$G, \pi, c, t$}
+		  \State{$\pi' \gets \pi$}
+		  \State{$k \gets 1$}
+		  \For{$t' \in $ sorted($\{t_v \mid v \in \pi^{-1}(c)\}$)}
+			\State{$C_k \gets \{v \in \pi^{-1}(c) \mid t_v = t'\}$}
+			\State{$\pi'(v) \gets c + k - 1$ za sve $v \in C_k$}
+			\State{$k \gets k + 1$}
+	      \EndFor
+		  \State{$\pi'(v) \gets \pi(v) + k - 1$ za sve $v$ takve da $\pi(v) > c$ }
+		  \State{$s \gets $ indeks prvog najvećeg skupa među $C_{i, 1 \leq i \leq k}$}
+		  \State\Return{$\pi', C_1, \dots, C_k, s$}
+		  \EndProcedure
+	  \end{algorithmic}
+  \end{algorithm}
+
   \subsection{Graf}
 
    {\color{red} Dodati u implementaciji podršku za obojen graf, pa dati opis.}
 
  \section{Funkcija profinjavanja}
+  
+  \begin{lemma}
+	  Neka je preslikavanje $I : \Pi \times V \to \Pi$ definisano sa
+	  $$
+	  I(\pi, v)(w) =
+	  \begin{cases}
+		  \pi(w), & \quad \text{ako je } \pi(w) < \pi(v) \text{ ili } w = v \\
+		  \pi(w) + 1, & \quad \text{inače}\\
+	  \end{cases}
+	  $$
+	  i neka je $F : \mathcal{G} \times \Pi \times V^* \to \Pi$ transformacija
+	  invarijantna na imenovanje čvorova takva da je $F(G, \pi, \nu) \leq \pi$.
+	  Tada je preslikavanje definisano sa
+	  \begin{align*}
+		  $$
+		  &R(G, \pi, ()) = F(G, \pi, ()) \\
+		  &R(G, \pi, \nu \| w) = F(G, I(R(G, \pi, \nu), w), \nu \| w)
+		  $$
+	  \end{align}
+	  funkcija profinjavanja.
+  \end{lemma}
+
+  \begin{proof}
+	  {\color{red} Dokaz za korišćena svojstva I}
+	  Dokažimo indukcijom da tako definisana funkcija $\R$ ispunjava uslove funkcije profinjavanja.
+	  \begin{itemize}
+		  \item[] \textbf{Baza indukcije} 
+			  \begin{itemize}
+				  \item[(R1)] $R(G, \pi, ()) = F(G, \pi, ()) \leq \pi$
+				  \item[(R2)] Tvrđenje trivijalno važi zato što je $()$ prazan niz
+				  \item[(R3)] Za svako $g \in S_n$ važi $R(G^g, \pi^g, ()^g) = F(G^g,
+					  \pi^g, ()^g) = F(G, \pi, ())^g = R(G, \pi, ())^g$
+			  \end{itemize}
+		  \item[] \textbf{Induktivni korak} Pretpostavimo da tvrđenje važi za $\nu$.
+			  \begin{itemize}
+				  \item[(R1)] $R(G, \pi, \nu \| w) = F(G, I(R(G, \pi, \nu), w),
+					  \nu \| w) \leq I(R(G, \pi, \nu), w) \leq R(G, \pi, \nu)
+					  \leq \pi$
+				  \item[(R2)] $R(G, \pi, \nu \| w) \leq I(R(G, \pi, \nu), w)$
+					  pa je ${w}$ ćelija bojenja $R(G, \pi, \nu \| w)$. Ako je
+					  $v \in \nu$, onda je ${v}$ ćelija $R(G, \pi, \nu)$, pa je
+					  ćelija i bojenja $R(G, \pi, \nu \| w)$ jer je $R(G, \pi,
+					  \nu \| w) \leq R(G, \pi, \nu)$.
+				  \item[(R3)] Za svako $g \in S_n$ važi $R(G^g, \pi^g, (\nu \|
+					  w)^g) = F(G^g, I(R(G^g, \pi^g, \nu^g), w^g), (\nu \|
+					  w)^g) = F(G^g, I(R(G, \pi, \nu)^g, w^g), (\nu \| w)^g) =
+					  F(G^g, I(R(G, \pi, \nu), w)^g, (\nu \| w)^g) = F(G,
+					  I(R(G, \pi, \nu), w), (\nu \| w))^g = R(G, \pi, \nu \|
+					  w)^g$.
+			  \end{itemize}
+	  \end{itemize}
+  \end{proof}
+
+  Funkcija $I$ definisana u prethodnoj lemi naziva se funkcijom
+  \emph{individualizacije}. Kako bismo definisali konkretnu funkciju
+  profinjavanja, potrebno je još da odaberemo preslikavanje $F$. U tu svrhu
+  uvodimo pojam \emph{ekvitabilnog bojenja}.
   
   \begin{definition}
 	  Označimo sa $\psi(G, \pi, u, W)$ broj grana grafa $G$ koje povezuju čvor
@@ -638,6 +726,7 @@
   \end{lemma}
 
   \begin{proof}
+	  {\color{red} Dokaz da postoji bar jedno takvo bojenje}
 	  Neka su $\alpha$ i $\beta$ ekvitabilna bojenja finija od $\pi$.
 	  Definišimo $\sim_\gamma$ kao tranzitivno zatvorenje unije particija
 	  $\sim_\alpha$ i $\sim_\beta$, odnosno $u \sim_\gamma v \iff x_0
@@ -662,13 +751,168 @@
 	  C) = \dots = \psi(G, \pi, x_n, C) = \psi(G, \pi, v, C)$.
   \end{proof}
   
-  %Neka je $F : \mathcal{G} \times \Pi \to \Pi$ transformacija invarijantna na
-  %imenovanje čvorova takva da je $F(G, \pi) \leq \pi$ maksimalno ekvitabilno
-  %bojenje.
+  Ovim smo pokazali da postoji ekvitabilno bojenje finije od $\pi$ određeno do
+  na raspored ćelija. Definišimo onda funkciju $F(G, \pi, \nu)$ kao rezultat
+  izvršavanja algoritma određivanja jednog takvog bojenja.
+
+  \begin{algorithm}
+	  \caption{}
+	  \begin{algorithmic}[]
+		  \Procedure{Refine}{$G, \pi, \nu$}
+		  \State {$\alpha \gets \emptyset$}
+		  \If {$\nu = \nu' \| w$}
+			\State {push($\alpha$, $\{w\}$)}
+		  \Else
+			\State {push($\alpha$, $C$) za sve $C \in \pi$}
+		  \EndIf
+		  \While{$\alpha \neq \emptyset$}
+			\State {$W \gets $ pop($\alpha$)}
+			\For{$C \in \pi$}
+			  \State {$\pi, C_1, \dots, C_k, s \gets $ Refine\_cell($G, \pi, C, \psi_{(G, \pi, W)}$)}
+			  \If{$C \in \alpha$}
+				\State {remove($\alpha$, $C$)}
+				\State {push($\alpha$, $C_i$) za sve $1 \leq i \leq k$}
+			  \Else
+			    \State {push($\alpha$, $C_i$) za sve $1 \leq i \leq k, i \neq s$}
+			  \EndIf
+			\EndFor
+		  \EndWhile
+		  \State \Return{$\pi$}
+		  \EndProcedure
+	  \end{algorithmic}
+  \end{algorithm}
+
+  {\color{red} Dokaz korektnosti i svojstava za $F$ ($F \leq \pi$ i label invariant) i analiza složenosti.}
 
  \section{Funkcija odabira ciljne ćelije}
 
  \section{Invarijanta stabla}
+
+  \begin{lemma}
+	  Neka je $f : \mathcal{G} \times \Pi \times V^* \to F$ funkcija
+	  invarijantna na imenovanje čvorova, pri čemu je $F$ neki potpuno uređen
+	  skup i neka je $bin(G)$ binarna reprezentacija gornjeg trougla matrice
+	  povezanosti grafa $G$. Tada je funkcija definisana sa
+	  $$ \phi(G, \pi, \nu) =
+	  \begin{cases}
+		  (f(G, \pi, [\nu]_0), \dots, f(G, \pi, [\nu]_{|\nu|})), & \ \text{ako } \pi_\nu \text{ nije diskretno} \\
+		  (f(G, \pi, [\nu]_0), \dots, f(G, \pi, [\nu]_{|\nu|}), bin(G^{\pi_\nu}))), & \ \text{inače}
+	  \end{cases}
+	  $$ invarijanta stabla pri leksikografskom poretku.
+  \end{lemma}
+
+  \begin{proof}
+	  Dokažimo da tako definisana funkcija $\phi$ ispunjava uslove invarijante stabla.
+	  \begin{itemize}
+		  \item[(\phi1)] Za svaki čvor $\omega$ podstabla $\mathcal{T}(G, \pi,
+			  \nu)$ važi da je $\phi(G, \pi, \nu) = [\phi(G, \pi,
+			  \omega)]_{|\nu|}$. Neka su $\nu_1$ i $\nu_2$ čvorovi stabla takvi
+			  da je $|\nu_1|=|\nu_2|$ i $\phi(G, \pi, \nu_1) < \phi(G, \pi,
+			  \nu_2)$. Tada za čvorove $\omega_1 \in \mathcal{T}(G, \pi,
+			  \nu_1)$ i $\omega_2 \in \mathcal{T}(G, \pi, \nu_2)$ važi
+			  $[\phi(G, \pi, \omega_1)]_{|\nu_1|} < [\phi(G, \pi,
+			  \omega_2)]_{|\nu_2|}$ pa je po leksikografskom poretku i $\phi(G,
+			  \pi, \omega_1) < \phi(G, \pi, \omega_2)$.
+		  \item[(\phi2)] Ako za listove $\nu_1$ i $\nu_2$ važi $\phi(G, \pi,
+			  \nu_1) = \phi(G, \pi, \nu_2)$, onda je $bin(G^{\pi_1}) =
+			  bin(G^{\pi_2})$, pa je $G^{\pi_1} = G^{\pi_2}$.
+		  \item[(\phi3)] Neka je $g \in Aut(G, \pi)$ i $\nu$ čvor stabla. Tada
+			  je $f(G^g, \pi^g, \nu^g) = f(G, \pi, \nu)$, kao i
+			  $bin((G^g)^{R(G^g, \pi^g, \nu^g)}) = bin((G^g)^{\pi_\nu^g}) =
+			  bin(G^{\pi_\nu})$, pa su nizovi $\phi(G^g, \pi^g, \nu^g)$ i
+			  $\phi(G, \pi, \nu)$ jednaki.
+	  \end{itemize}
+  \end{proof}
+
+  Još je potrebno odabrati konkretnu funkciju $f$. Uvedimo za početak pojam
+  \emph{količničkog grafa}.
+
+  \begin{definition}
+	  Neka je $(G, \pi)$ obojen graf i $\pi$ ekvitabilno. \emph{Količnički
+	  graf} $Q(G, \pi) = (V_Q, d_Q, \psi_Q)$ je struktura takva da je $V_Q$
+	  skup od $|\pi|$ čvorova, $d_Q : V_Q \to \mathbb{N}$ preslikavanje takvo
+	  da je $d_Q(c) = |\pi^{-1}(c)|$ i $\psi_Q : V_Q^2 \to \mathbb{N}$
+	  preslikavanje takvo da važi $\psi_Q(c_1, c_2) = \psi(G, \pi, v,
+	  \pi^{-1}(c_2))$ za $v \in \pi^{-1}(c_1)$.
+  \end{definition}
+
+  Primetimo da je definicija dobra zbog ekvitabilnosti bojenja $\pi$. Sledeća
+  lema pokazuje značaj uvedenog pojma.
+
+  \begin{lemma}
+	  Neka je $Q : \mathcal{G}_{eq} \to \mathcal{Q}$ prethodno definisano
+	  preslikavanje iz skupa obojenih grafova sa ekvitabilnim bojenjem u skup
+	  količničkih grafova. $Q$ je funkcija invarijantna na imenovanje čvorova.
+  \end{lemma}
+
+  \begin{proof}
+	  Neka je $g \in S_n$ proizvoljno. Pokažimo da je $Q(G^g, \pi^g) = Q(G,
+	  \pi)$. Kako je $|\pi^g| = |\pi|$ to su skupovi čvorova količničkih
+	  grafova jednaki. Dalje, važi $d_{Q(G^g, \pi^g)}(c) = |(\pi^g)^{-1}(c)| =
+	  |\pi^{-1}(c)| = d_{Q(G, \pi)}(c)$. Konačno, neka je $u' \in
+	  (\pi^g)^{-1}(c_1)$. Tada važi 
+	  \begin{align*}
+		  $$
+		  \psi_{Q(G^g, \pi^g)}(c_1, c_2) &= \psi(G^g, \pi^g, u', (\pi^g)^{-1}(c_2)) \\
+		  &= \sum_{v' \in (\pi^g)^{-1}(c_2)} \psi(G^g, \pi^g, u', v') \\
+		  &= \sum_{v^g \in (\pi^g)^{-1}(c_2)} \psi(G^g, \pi^g, u^g, v^g) &\text{smena }u'=u^g, v'=v^g\\
+		  &= \sum_{v \in \pi^{-1}(c_2)} \psi(G^g, \pi^g, u^g, v^g) &(\pi^g)^{-1}(c_2) = \pi^{-1}(c_2)^g\\
+		  &= \sum_{v \in \pi^{-1}(c_2)} \psi(G, \pi, u, v) &\psi \text{ je invarijantno}\\
+		  &= \psi(G, \pi, u, \pi^{-1}(c_2)) \\
+		  &= \psi_{Q(G, \pi)}(c_1, c_2) &(\pi^g)^{-1}(c_1) = \pi^{-1}(c_1)^g\\
+		  $$
+	  \end{align}
+	  {\color{red} Uvedi dekompoziciju za psi, pokaži da je psi invarijantno i dokaži pi na -1 na g je pi na g na -1}
+  \end{proof}
+
+  \begin{corrolary}
+	  Preslikavanje $f_Q : \mathcal{G} \times \Pi \times V^* \to \mathcal{Q}$
+	  dato sa $f_Q(G, \pi, \nu) = Q(G, R(G, \pi, \nu))$ je funkcija
+	  invarijantna na imenovanje čvorova.
+  \end{corrolary}
+
+  Jasno je da za preslikavanje $f$ možemo uzeti upravo ceo količnički graf, pri
+  čemu je uređenje količničkih grafova moguće realizovati uređivanjem njihovih
+  binarnih reprezentacija. Ovakva definicija preslikavanja $f$ u praksi nije
+  korisna zbog velike složenosti neophodne za njeno izračunavanje - potrebno je
+  realizovati ceo količnički graf. Ovo je moguće rešiti posmatranjem manjeg
+  dela količničkog grafa i to bez gubitka korisnih informacija.
+
+  \begin{lemma}
+	  Neka je $(G, \pi)$ obojen graf i $\nu = \nu' \| w$ čvor stabla različit od
+	  korena. Uvedimo oznake $\pi_1 = R(G, \pi, \nu')$ i $\pi_2 = R(G, \pi, \nu)$.
+	  Neka su $c_1, \dots, c_k$ boje takve da za sve $1 \leq i \leq k$
+	  važi da $\pi_2^{-1}(c_i)$ nije ćelija bojenja $\pi_1$. Označimo sa $f_i$
+	  niz vrednosti $(c_i, d_{Q(G, \pi_2)}(c_i), \psi_{Q(G, \pi_2)}(c_i, c_1),
+	  \dots, \psi_{Q(G, \pi_2)}(c_i, c_k))$. Tada je preslikavanje $f(G, \pi,
+	  \nu)$ čija je vrednost prazan niz $()$ u slučaju korena $\nu$, odnosno
+	  dobijena nadovezivanjem nizova $f_1, \dots, f_k$ u suprotnom, funkcija
+	  invarijantna na imenovanje čvorova.
+  \end{lemma}
+
+  \begin{proof}
+	  Pretpostavimo da za neko $g \in S_n$ i neke boje $c$ i $d$ važi
+	  $\pi_2^{-1}(c) = \pi_1^{-1}(d)$, odnosno da je $\pi_2^{-1}(c)$ ćelija
+	  bojenja $\pi_1$.  Tada je $R(G^g, \pi^g, \nu^g)^{-1}(c) =
+	  (\pi_2^g)^{-1}(c) = \pi_2^{-1}(c)^g = \pi_1^{-1}(d)^g = (\pi_1^g)^{-1}(d)
+	  = R(G^g, \pi^g, \nu'^g)^{-1}(d)$. Analogno se pokazuje i obrnuta
+	  implikacija.  Ovim smo pokazali da je niz boja $c_1, \dots, c_k$ jednak
+	  za $f(G^g, \pi^g, \nu^g)$ i $f(G, \pi, \nu)$. Tvrđenje onda jednostavno
+	  važi pošto je količnički graf funkcija invarijantna na imenovanje
+	  čvorova.
+  \end{proof}
+
+  \begin{lemma}
+	  Neka je $(G, \pi)$ obojen graf i $\nu \| w_1$ i $\nu \| w_2$ različiti
+	  čvorovi stabla. Tada, ako je $f_Q(G, \pi, \nu \| w_1) \neq f_Q(G, \pi,
+	  \nu \| w_2)$, onda je $f(G, \pi, \nu \| w_1) \neq f(G, \pi, \nu \| w_2)$.
+  \end{lemma}
+  
+  \begin{proof}
+	  {\color{red} Dokaz}
+  \end{proof}
+
+  U praksi se umesto niza određenog funkcijom $f$ koristi njegova heš vrednost.
 
  \section{Automorfizmi}
 
