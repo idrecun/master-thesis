@@ -631,7 +631,7 @@
    $\pi'(u) = \pi'(v) \iff \pi(u) = \pi(v)$.
 
   \begin{algorithm}
-	  \caption{}
+	  \caption{Profinjavanje ćelije}
 	  \begin{algorithmic}[]
 		  \Procedure{Refine\_cell}{$G, \pi, c, t$}
 		  \State{$\pi' \gets \pi$}
@@ -675,9 +675,30 @@
 	  funkcija profinjavanja.
   \end{lemma}
 
-  \begin{proof}
-	  {\color{red} Dokaz za korišćena svojstva I}
-	  Dokažimo indukcijom da tako definisana funkcija $\R$ ispunjava uslove funkcije profinjavanja.
+  \begin{proof} Pokažimo prvo nekoliko svojstava ovako definisanog
+	  preslikavanja $I$.
+
+	  (I1) Za proizvoljno bojenje $\pi$ i čvor $u$ važi da je $I(\pi, u) \leq \pi$.
+	  To važi zato što ako je $\pi(v) < \pi(w)$ onda nije istovremeno $I(\pi,
+	  u)(v) = \pi(v) + 1$ i $I(\pi, u)(w) = \pi(w)$ jer to povlači da je
+	  $\pi(v) \geq \pi(u)$ i $\pi(w) \leq \pi(u)$, odnosno da je $\pi(w) \leq
+	  \pi(v)$ što je kontradikcija. U svim ostalim slučajevima iz pretpostavke
+	  sledi $I(\pi, u)(v) < I(\pi, u)(w)$.
+
+	  (I2) $\{v\}$ je ćelija bojenja $I(\pi, v)$. Ako je $\pi(w) = \pi(v)$ i $w \neq
+	  v$ onda je $I(\pi, v)(w) = I(\pi, v)(v) + 1$, a kako je $I(\pi, v) \leq
+	  \pi$ onda je $\pi(v) \neq \pi(w) \iff I(\pi, v)(v) \neq I(\pi, v)(w)$ pa
+	  je $I(\pi, v)(v) \neq I(\pi, v)(w)$ za sve $w \neq v$.
+
+	  (I3) $I$ je transformacija invarijantna na imenovanje čvorova. Neka je $g \in
+	  S_n$ proizvoljno. Tada je $I(\pi^g, v^g)(w^g) = \pi(w) \iff I(\pi^g,
+	  v^g)(w^g) = \pi^g(w^g) \iff \pi^g(w^g) < \pi^g(v^g) \lor w^g = v^g \iff
+	  \pi(w) < \pi(v) \lor w = v \iff I(\pi, v)(w) = \pi(w)$. Slično je i
+	  $I(\pi^g, v^g)(w^g) = \pi(w) + 1 \iff I(\pi, v)(w) = \pi(w) + 1$, odnosno
+	  $I(\pi^g, v^g)(w^g) = I(\pi, v)(w) = I(\pi, v)^g(w^g)$.
+
+	  Dokažimo sada indukcijom da ovako definisana funkcija $R$ ispunjava
+	  uslove funkcije profinjavanja.
 	  \begin{itemize}
 		  \item[] \textbf{Baza indukcije} 
 			  \begin{itemize}
@@ -707,10 +728,13 @@
   \end{proof}
 
   Funkcija $I$ definisana u prethodnoj lemi naziva se funkcijom
-  \emph{individualizacije}. Kako bismo definisali konkretnu funkciju
-  profinjavanja, potrebno je još da odaberemo preslikavanje $F$. U tu svrhu
-  uvodimo pojam \emph{ekvitabilnog bojenja}.
-  
+  \emph{individualizacije}. Primetimo da je za funkciju $I$ moguće uzeti bilo
+  koje preslikavanje koje ispunjava pokazana svojstva (I1-3).
+
+  Kako bismo definisali konkretnu funkciju profinjavanja, potrebno je još da
+  odaberemo preslikavanje $F$. U tu svrhu uvodimo pojam \emph{ekvitabilnog
+  bojenja}.
+
   \begin{definition}
 	  Označimo sa $\psi(G, \pi, u, W)$ broj grana grafa $G$ koje povezuju čvor
 	  $u$ i skup čvorova $W$.  Particija $\sim$ skupa čvorova $V$ je
@@ -756,7 +780,7 @@
   izvršavanja algoritma određivanja jednog takvog bojenja.
 
   \begin{algorithm}
-	  \caption{}
+	  \caption{Profinjavanje bojenja}
 	  \begin{algorithmic}[]
 		  \Procedure{Refine}{$G, \pi, \nu$}
 		  \State {$\alpha \gets \emptyset$}
@@ -768,7 +792,7 @@
 		  \While{$\alpha \neq \emptyset$}
 			\State {$W \gets $ pop($\alpha$)}
 			\For{$C \in \pi$}
-			  \State {$\pi, C_1, \dots, C_k, s \gets $ Refine\_cell($G, \pi, C, \psi_{(G, \pi, W)}$)}
+			  \State {$\pi, C_1, \dots, C_k, s \gets $ Refine\_cell($G, \pi, C, t_v = \psi(G, \pi, W, v)$)}
 			  \If{$C \in \alpha$}
 				\State {remove($\alpha$, $C$)}
 				\State {push($\alpha$, $C_i$) za sve $1 \leq i \leq k$}
@@ -817,10 +841,10 @@
 			  \nu_1) = \phi(G, \pi, \nu_2)$, onda je $bin(G^{\pi_1}) =
 			  bin(G^{\pi_2})$, pa je $G^{\pi_1} = G^{\pi_2}$.
 		  \item[(\phi3)] Neka je $g \in Aut(G, \pi)$ i $\nu$ čvor stabla. Tada
-			  je $f(G^g, \pi^g, \nu^g) = f(G, \pi, \nu)$, kao i
-			  $bin((G^g)^{R(G^g, \pi^g, \nu^g)}) = bin((G^g)^{\pi_\nu^g}) =
-			  bin(G^{\pi_\nu})$, pa su nizovi $\phi(G^g, \pi^g, \nu^g)$ i
-			  $\phi(G, \pi, \nu)$ jednaki.
+			  je $f(G^g, \pi^g, [\nu^g]_i) = f(G^g, \pi^g, [\nu]_i^g) = f(G,
+			  \pi, [\nu]_i)$, kao i $bin((G^g)^{R(G^g, \pi^g, \nu^g)}) =
+			  bin((G^g)^{\pi_\nu^g}) = bin(G^{\pi_\nu})$, pa su nizovi
+			  $\phi(G^g, \pi^g, \nu^g)$ i $\phi(G, \pi, \nu)$ jednaki.
 	  \end{itemize}
   \end{proof}
 
