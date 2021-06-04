@@ -736,43 +736,42 @@
   bojenja}.
 
   \begin{definition}
-	  Označimo sa $\psi(G, \pi, u, W)$ broj grana grafa $G$ koje povezuju čvor
-	  $u$ i skup čvorova $W$.  Particija $\sim$ skupa čvorova $V$ je
-	  \emph{ekvitabilna} ako za svaki par čvorova $u$ i $v$ takvih da je $u
-	  \sim v$ i svaku klasu $C$ particije $\sim$ važi $\psi(G, \pi, u, C) =
-	  \psi(G, \pi, v, C)$.  Bojenje $\pi$ je \emph{ekvitabilno} ako je
-	  particija $\sim_\pi$ ekvitabilna.
+	  Označimo sa $\psi(G, u, W) = \sum_{w \in W} \psi(G, u, w)$ broj grana
+	  grafa $G$ koje povezuju čvor $u$ i skup čvorova $W$.  Particija $\sim$
+	  skupa čvorova $V$ je \emph{ekvitabilna} ako za svaki par čvorova $u$ i
+	  $v$ takvih da je $u \sim v$ i svaku klasu $C$ particije $\sim$ važi
+	  $\psi(G, u, C) = \psi(G, v, C)$.  Bojenje $\pi$ je \emph{ekvitabilno} ako
+	  je particija $\sim_\pi$ ekvitabilna.
   \end{definition}
 
   \begin{lemma}
-	  Za proizvoljno bojenje $\pi$ postoji jedinstvena najgrublja particija
-	  $\sim_\gamma$ koja je ekvitabilna i finija od $\sim_\pi$.
+	  Za proizvoljno bojenje $\pi$ grafa $G$ postoji jedinstvena najgrublja
+	  particija $\sim_\gamma$ koja je ekvitabilna i finija od $\sim_\pi$.
   \end{lemma}
 
   \begin{proof}
-	  {\color{red} Dokaz da postoji bar jedno takvo bojenje}
-	  Neka su $\alpha$ i $\beta$ ekvitabilna bojenja finija od $\pi$.
-	  Definišimo $\sim_\gamma$ kao tranzitivno zatvorenje unije particija
-	  $\sim_\alpha$ i $\sim_\beta$, odnosno $u \sim_\gamma v \iff x_0
-	  \sim_{\alpha \lor \beta} x_1 \sim_{\alpha \lor \beta} \dots \sim_{\alpha
-	  \lor \beta} x_k$ za neke $u = x_1, x_2, \dots, x_k = v$ pri čemu je $u
-	  \sim_{\alpha \lor \beta} v \iff u \sim_\alpha v \lor u \sim_\beta v$.
+	  Očigledno postoji bar jedna ekvitabilna particija finija od $\sim_\pi$;
+	  diskretna particija ispunjava te uslove.
+
+	  Neka su $\sim_\alpha$ i $\sim_\beta$ dve takve particije. Definišimo
+	  $\sim_\gamma$ kao tranzitivno zatvorenje unije particija $\sim_\alpha$ i
+	  $\sim_\beta$, odnosno $u \sim_\gamma v \iff x_1 \sim_\cup x_2 \sim_\cup
+	  \dots \sim_\cup x_k$ za neke $u = x_1, x_2, \dots, x_k = v$ pri čemu je
+	  $u \sim_\cup v \iff u \sim_\alpha v \lor u \sim_\beta v$.
 
 	  Ovako definisano $\sim_\gamma$ je relacija ekvivalencije grublja od
-	  $\sim_\alpha$ i $\sim_\beta$ {\color{red} Da li treba dokaz? Prilično je
-	  jednostavan.}. Pokažimo da je i ekvitabilna.
+	  $\sim_\alpha$ i $\sim_\beta$. Pokažimo da je i ekvitabilna.
 
 	  Neka je $u \sim_\alpha v$ i neka je $C$ proizvoljna klasa iz
 	  $\sim_\gamma$. Kako je $\sim_\alpha$ finije od $\sim_\gamma$, to je $C =
 	  \bigcup_{i=1}^n A_i$ za neke klase $A_1, \dots, A_n$ particije
-	  $\sim_\alpha$, pa je $\psi(G, \pi, u, C) = \sum_{i=1}^n \psi(G, \pi, u,
-	  A_i)$. Kako je $\alpha$ ekvitabilno, to je dalje jednako $\sum_{i=1}^n
-	  \psi(G, \pi, v, A_i) = \psi(G, \pi, v, C)$. Analogno se pokazuje i za
-	  $\sim_\beta$, pa važi $u \sim_{\alpha \lor \beta} v \implies \psi(G, \pi,
-	  u, C) = \psi(G, \pi, v, C)$.  Konačno, ako je $u \sim_\gamma v$, onda je
-	  $u = x_1 \sim_{\alpha \lor \beta} \dots \sim_{\alpha \lor \beta} x_n =
-	  v$, pa je $\psi(G, \pi, u, C) = \psi(G, \pi, x_1, C) = \psi(G, \pi, x_2,
-	  C) = \dots = \psi(G, \pi, x_n, C) = \psi(G, \pi, v, C)$.
+	  $\sim_\alpha$, pa je $\psi(G, u, C) = \sum_{i=1}^n \psi(G, u, A_i)$. Kako
+	  je $\alpha$ ekvitabilno, to je dalje jednako $\sum_{i=1}^n \psi(G, v,
+	  A_i) = \psi(G, v, C)$. Analogno se pokazuje i za $\sim_\beta$, pa važi $u
+	  \sim_\cup v \implies \psi(G, u, C) = \psi(G, v, C)$.  Konačno, ako je $u
+	  \sim_\gamma v$, onda je $u = x_1 \sim_\cup x_2 \sim_\cup \dots \sim_\cup x_n = v$, pa
+	  je $\psi(G, u, C) = \psi(G, x_1, C) = \psi(G, x_2, C) = \dots = \psi(G,
+	  x_n, C) = \psi(G, v, C)$.
   \end{proof}
   
   Ovim smo pokazali da postoji ekvitabilno bojenje finije od $\pi$ određeno do
@@ -792,7 +791,7 @@
 		  \While{$\alpha \neq \emptyset$}
 			\State {$W \gets $ pop($\alpha$)}
 			\For{$C \in \pi$}
-			  \State {$\pi, C_1, \dots, C_k, s \gets $ Refine\_cell($G, \pi, C, t_v = \psi(G, \pi, W, v)$)}
+			  \State {$\pi, C_1, \dots, C_k, s \gets $ Refine\_cell($G, \pi, C, t_v = \psi(G, v, W)$)}
 			  \If{$C \in \alpha$}
 				\State {remove($\alpha$, $C$)}
 				\State {push($\alpha$, $C_i$) za sve $1 \leq i \leq k$}
@@ -856,8 +855,8 @@
 	  graf} $Q(G, \pi) = (V_Q, d_Q, \psi_Q)$ je struktura takva da je $V_Q$
 	  skup od $|\pi|$ čvorova, $d_Q : V_Q \to \mathbb{N}$ preslikavanje takvo
 	  da je $d_Q(c) = |\pi^{-1}(c)|$ i $\psi_Q : V_Q^2 \to \mathbb{N}$
-	  preslikavanje takvo da važi $\psi_Q(c_1, c_2) = \psi(G, \pi, v,
-	  \pi^{-1}(c_2))$ za $v \in \pi^{-1}(c_1)$.
+	  preslikavanje takvo da važi $\psi_Q(c_1, c_2) = \psi(G, v,
+	  \pi^{-1}(c_2))$ za bilo koje $v \in \pi^{-1}(c_1)$.
   \end{definition}
 
   Primetimo da je definicija dobra zbog ekvitabilnosti bojenja $\pi$. Sledeća
@@ -877,16 +876,18 @@
 	  (\pi^g)^{-1}(c_1)$. Tada važi 
 	  \begin{align*}
 		  $$
-		  \psi_{Q(G^g, \pi^g)}(c_1, c_2) &= \psi(G^g, \pi^g, u', (\pi^g)^{-1}(c_2)) \\
-		  &= \sum_{v' \in (\pi^g)^{-1}(c_2)} \psi(G^g, \pi^g, u', v') \\
-		  &= \sum_{v^g \in (\pi^g)^{-1}(c_2)} \psi(G^g, \pi^g, u^g, v^g) &\text{smena }u'=u^g, v'=v^g\\
-		  &= \sum_{v \in \pi^{-1}(c_2)} \psi(G^g, \pi^g, u^g, v^g) &(\pi^g)^{-1}(c_2) = \pi^{-1}(c_2)^g\\
-		  &= \sum_{v \in \pi^{-1}(c_2)} \psi(G, \pi, u, v) &\psi \text{ je invarijantno}\\
-		  &= \psi(G, \pi, u, \pi^{-1}(c_2)) \\
+		  \psi_{Q(G^g, \pi^g)}(c_1, c_2) &= \psi(G^g, u', (\pi^g)^{-1}(c_2)) \\
+		  &= \sum_{v' \in (\pi^g)^{-1}(c_2)} \psi(G^g, u', v') \\
+		  &= \sum_{v^g \in (\pi^g)^{-1}(c_2)} \psi(G^g, u^g, v^g) &\text{smena }u'=u^g, v'=v^g\\
+		  &= \sum_{v \in \pi^{-1}(c_2)} \psi(G^g, u^g, v^g) &(\pi^g)^{-1}(c_2) = \pi^{-1}(c_2)^g\\
+		  &= \sum_{v \in \pi^{-1}(c_2)} \psi(G, u, v) &\psi \text{ je invarijantno}\\
+		  &= \psi(G, u, \pi^{-1}(c_2)) \\
 		  &= \psi_{Q(G, \pi)}(c_1, c_2) &(\pi^g)^{-1}(c_1) = \pi^{-1}(c_1)^g\\
 		  $$
 	  \end{align}
-	  {\color{red} Uvedi dekompoziciju za psi, pokaži da je psi invarijantno i dokaži pi na -1 na g je pi na g na -1}
+	  {\color{red} Uvedi dekompoziciju za psi, pokaži da je psi invarijantno i
+	  dokaži pi na -1 na g je pi na g na -1 (svojstva za psi kod grafa, a ovo
+	  kod bojenja i dejstva na bojenje)}
   \end{proof}
 
   \begin{corrolary}
@@ -928,15 +929,43 @@
 
   \begin{lemma}
 	  Neka je $(G, \pi)$ obojen graf i $\nu \| w_1$ i $\nu \| w_2$ različiti
-	  čvorovi stabla. Tada, ako je $f_Q(G, \pi, \nu \| w_1) \neq f_Q(G, \pi,
-	  \nu \| w_2)$, onda je $f(G, \pi, \nu \| w_1) \neq f(G, \pi, \nu \| w_2)$.
+	  čvorovi stabla. Tada je $f(G, \pi, \nu \| w_1) = f(G, \pi, \nu \| w_2)$
+	  ako i samo ako $f_Q(G, \pi, \nu \| w_1) = f_Q(G, \pi, \nu \| w_2)$.
   \end{lemma}
   
   \begin{proof}
-	  {\color{red} Dokaz}
-  \end{proof}
+	  Dokaz implikacije ulevo je trivijalan. Za smer udesno dokazaćemo
+	  kontrapoziciju tvrđenja.
 
-  U praksi se umesto niza određenog funkcijom $f$ koristi njegova heš vrednost.
+	  Označimo $\pi_i = R(G, \pi, \nu \| w_i)$ i $\pi_2 = R(G, \pi, \nu \|
+	  w_2)$. Pretpostavimo da je $Q(G, \pi_1) \neq Q(G, \pi_2)$. Ako je
+	  $V_{Q(G, \pi_1)} \neq V_{Q(G, \pi_2)}$ ili $d_{Q(G, \pi_1)} \neq d_{Q(G,
+	  \pi_2)}$ onda je skup ćelija bojenja $\pi_1$ i $\pi_2$ koje nisu ćelije u
+	  $\pi_\nu$ različit, pa je $f(G, \pi, \nu \| w_1) \neq f(G, \pi, \nu \|
+	  w_2)$. Ako je $\psi_{Q(G, \pi_1)}(c_1, c_2) \neq \psi_{Q(G, \pi_2)}(c_1,
+	  c_2)$ za neke $c_1$ i $c_2$ čije odgovarajuće ćelije iz $\pi_1$ i $\pi_2$
+	  nisu ćelije bojenja $\pi_\nu$, očigledno je $f(G, \pi, \nu \| w_1) \neq
+	  f(G, \pi, \nu \| w_2)$.
+
+	  Pretpostavimo da je $\pi_1^{-1}(c_2)$ ćelija bojenja $\pi_\nu$. Tada zbog
+	  ekvitabilnosti bojenja $\pi_\nu$ za proizvoljno $c_1$ važi $\psi_{Q(G,
+	  \pi_1)}(c_1, c_2) = \psi_{Q(G, \pi_\nu)}(d_1, d_2)$ gde je $d_1$ takvo da
+	  je $\pi_1^{-1}(c_1) \subseteq \pi_\nu^{-1}(d_1)$, a $d_2$ takvo da je
+	  $\pi_1^{-1}(c_2) = \pi_\nu^{-1}(d_2)$. Odatle sledi da ne važi
+	  $\psi_{Q(G, \pi_1)}(c_1, c_2) \neq \psi_{Q(G, \pi_2)}(c_1, c_2)$ jer je
+	  $\psi_{Q(G, \pi_1)}(c_1, c_2) = \psi_{Q(G, \pi_\nu)}(d_1, d_2) =
+	  \psi_{Q(G, \pi_2)}(c_1, c_2)$, a znamo da su u obe jednakosti isti $d_1$
+	  i $d_2$ u pitanju jer su $\pi_1, \pi_2 \leq \pi_\nu$.
+
+	  Pretpostavimo da je $\pi_1^{-1}(c_1)$ ćelija bojenja $\pi_\nu$. Tada nije
+	  $\psi_{Q(G, \pi_1)}(c_1, c_2) \neq \psi_{Q(G, \pi_2)}(c_1, c_2)$ zato što
+	  po prethodno pokazanom važi $|\pi_1^{-1}(c_1)|\psi_{Q(G, \pi_1)}(c_1,
+	  c_2) = |\pi_1^{-1}(c_2)|\psi_{Q(G, \pi_1)}(c_2, c_1) =
+	  |\pi_2^{-1}(c_2)|\psi_{Q(G, \pi_2)}(c_2, c_1) =
+	  |\pi_2^{-1}(c_1)|\psi_{Q(G, \pi_2)}(c_1, c_2)$.
+
+	  {\color{red} Dokazati svojstvo $|C_1|\psi(c_1, c_2) = |C_2|\psi(c_2, c_1)$}
+  \end{proof}
 
  \section{Automorfizmi}
 
