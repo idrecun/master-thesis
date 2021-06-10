@@ -318,6 +318,7 @@
   \end{proof}
 
   \begin{corrolary}
+	  \label{corr:auttree}
       Neka je $\nu$ čvor stabla $\mathcal{T}(G, \pi)$ i neka $\mathcal{T}(G,
       \pi, \nu)$ označava njegovo podstablo sa korenom u $\nu$. Ako je $g
       \in Aut(G, \pi)$, onda je $\nu^g$ čvor stabla $\mathcal{T}(G, \pi)$ i
@@ -367,6 +368,7 @@
   dobijeno funkcijom profinjavanja sa $\pi_\nu = R(G, \pi, \nu)$. 
 
   \begin{lemma}
+	  \label{lemma:autequiv}
 	  Neka je $g \in Aut(G, \pi)$ i listovi $\nu_1$ i $\nu_2$ takvi da je
 	  $\nu_1^g = \nu_2$. Tada su $\nu_1$ i $\nu_2$ ekvivalentni i $g =
 	  \pi_{\nu_2}^{-1}\pi_{\nu_1}$.
@@ -453,12 +455,13 @@
   \end{theorem}
   
   \begin{proof}
-	  Neka je $g \in Aut(G, \pi)$. Tada je po posledici 1 $\nu^g$ list stabla
-	  $\mathcal{T}(G, \pi)$. Po prethodno dokazanoj lemi 3 su $\nu$ i $\nu^g$
-	  ekvivalentni i $g = \pi_{\nu^g}^{-1}\pi_\nu$ što je element skupa sa
-	  desne strane jednakosti.  Sa druge strane, ako su $\nu$ i $\omega$
-	  ekvivalentni, onda je $G^{\pi_\nu} = G^{\pi_\omega}$, pa je
-	  $\pi_\omega^{-1}\pi_\nu \in Aut(G, \pi)$.
+	  Neka je $g \in Aut(G, \pi)$. Tada je po posledici \ref{corr:auttree}
+	  $\nu^g$ list stabla $\mathcal{T}(G, \pi)$. Po prethodno dokazanoj lemi
+	  \ref{lemma:autequiv} su $\nu$ i $\nu^g$ ekvivalentni i $g =
+	  \pi_{\nu^g}^{-1}\pi_\nu$ što je element skupa sa desne strane jednakosti.
+	  Sa druge strane, ako su $\nu$ i $\omega$ ekvivalentni, onda je
+	  $G^{\pi_\nu} = G^{\pi_\omega}$, pa je $\pi_\omega^{-1}\pi_\nu \in Aut(G,
+	  \pi)$.
   \end{proof}
 
 	Prethodna teorema pokazuje da je otkrivanjem svih čvorova ekvivalentnih
@@ -630,7 +633,7 @@
    $\pi'(u) < \pi'(v) \iff t_u < t_v$, dok za sve ostale parove $u$ i $v$ važi
    $\pi'(u) = \pi'(v) \iff \pi(u) = \pi(v)$.
 
-  \begin{algorithm}
+  \begin{algorithm}[H]
 	  \caption{Profinjavanje ćelije}
 	  \begin{algorithmic}[]
 		  \Procedure{Refine\_cell}{$G, \pi, c, t$}
@@ -647,6 +650,9 @@
 		  \EndProcedure
 	  \end{algorithmic}
   \end{algorithm}
+
+  Primetimo da je složenost ovog algoritma $O(|C| \log |C|)$ gde je $C =
+  \pi^{-1}(c)$ zbog sortiranja čvorova na osnovu vrednosti $t_v$.
 
   \subsection{Graf}
 
@@ -745,6 +751,7 @@
   \end{definition}
 
   \begin{lemma}
+	  \label{lemma:coarsesteq}
 	  Za proizvoljno bojenje $\pi$ grafa $G$ postoji jedinstvena najgrublja
 	  particija $\sim_\gamma$ koja je ekvitabilna i finija od $\sim_\pi$.
   \end{lemma}
@@ -774,11 +781,11 @@
 	  x_n, C) = \psi(G, v, C)$.
   \end{proof}
   
-  Ovim smo pokazali da postoji ekvitabilno bojenje finije od $\pi$ određeno do
-  na raspored ćelija. Definišimo onda funkciju $F(G, \pi, \nu)$ kao rezultat
-  izvršavanja algoritma određivanja jednog takvog bojenja.
+  Ovim smo pokazali da postoji najgrublje ekvitabilno bojenje finije od $\pi$
+  određeno do na raspored ćelija. Definišimo onda funkciju $F(G, \pi, \nu)$ kao
+  rezultat izvršavanja algoritma određivanja jednog takvog bojenja.
 
-  \begin{algorithm}
+  \begin{algorithm}[H]
 	  \caption{Profinjavanje bojenja}
 	  \begin{algorithmic}[]
 		  \Procedure{Refine}{$G, \pi, \nu$}
@@ -791,7 +798,7 @@
 		  \While{$\alpha \neq \emptyset$}
 			\State {$W \gets $ pop($\alpha$)}
 			\For{$C \in \pi$}
-			  \State {$\pi, C_1, \dots, C_k, s \gets $ Refine\_cell($G, \pi, C, t_v = \psi(G, v, W)$)}
+			  \State {$\pi, C_1, \dots, C_k, s \gets $ Refine\_cell($G, \pi, \pi(C), t_v = \psi(G, v, W)$)}
 			  \If{$C \in \alpha$}
 				\State {remove($\alpha$, $C$)}
 				\State {push($\alpha$, $C_i$) za sve $1 \leq i \leq k$}
@@ -805,7 +812,83 @@
 	  \end{algorithmic}
   \end{algorithm}
 
-  {\color{red} Dokaz korektnosti i svojstava za $F$ ($F \leq \pi$ i label invariant) i analiza složenosti.}
+  Potrebno je da procedure koje modifikuju strukturu $\alpha$ budu
+  implementirane na način koji garantuje invarijantnost na imenovanje čvorova.
+  Ovo se jednostavno postiže bilo kojom implementacijom koja ne zavisi od
+  sadržaja elemenata unutar skupa $\alpha$ poput steka ili reda, ili opštije
+  implementacijom koja zavisi jedino od svojstava elemenata invarijantnih
+  na imenovanje čvorova.
+
+  \begin{theorem}
+	  Neka je $\gamma = F(G, \pi, \nu)$ rezultujuće bojenje izvršavanja
+	  algoritma profinjavanja za ulaz $(G, \pi, \nu)$. Tada $\gamma$ ispunjava
+	  uslove leme \ref{lemma:coarsesteq} i $F$ je transformacija invarijantna
+	  na imenovanje čvorova, odnosno $F(G^g, \pi^g, \nu^g) = F(G, \pi, \nu)^g$
+	  za proizvoljno $g \in S_n$.
+  \end{theorem}
+
+  \begin{proof}
+
+  \end{proof}
+  {\color{red} Dokaz...}
+
+  \begin{theorem}
+	  Neka je $\nu$ list stabla $\mathcal{T}(G, \pi)$. Tada je ukupna vremenska
+	  složenost određivanja svih $R(G, \pi, [\nu]_i)$ u klasi $O(n^2 \log n)$,
+	  pri čemu je $n$ broj čvorova grafa.
+  \end{theorem}
+
+  \begin{proof}
+	  Pretpostavimo da su operacije \texttt{push}, \texttt{pop} i
+	  \texttt{remove} složenosti $O(1)$. Za fiksno $W$ i $C$ broj koraka jedne
+	  iteracije unutrašnje petlje je $|C||W| + |C| \log |C| + k \leq |C||W| +
+	  |C| (1 + \log |C|)$ za određivanje vrednosti $t_v$ za svaki čvor ćelije
+	  $C$, izvršavanje profinjavanja ćelije $C$ i dodavanje svih potrebnih
+	  $C_i$ u $\alpha$. Dakle, za fiksno $W$ je broj koraka unutrašnje petlje
+	  manji ili jednak $\sum_{C \in \pi}(|C||W| + |C| (1 + \log |C|)) \leq
+	  \sum_{C \in \pi}(|C||W| + |C| (1 + \log n)) = n|W| + n(1 + \log n)$.
+	  Odatle je broj koraka za određivanje $R(G, \pi, [\nu]_i)$ najviše
+	  $\sum_{W \in \mathcal{W}_i} (n|W| + n(1 + \log n)) = n \sum_{W \in
+	  \mathcal{W}_i} |W| + |\mathcal{W}_i| n (1 + \log n)$ gde je
+	  $\mathcal{W}_i$ skup svih ćelija na osnovu kojih je vršeno profinjavanje
+	  prilikom određivanja $R(G, \pi, [\nu]_i)$. Ukupna složenost svih
+	  profinjavanja je onda $\sum_{i=1}^{|\nu|}(n \sum_{W \in \mathcal{W}_i}
+	  |W| + |\mathcal{W}_i| n (1 + \log n)) = O(n \sum_{W \in \mathcal{W}} |W|
+	  + |\mathcal{W}| n \log n)$ pri čemu je $\mathcal{W} = \bigcup_{i =
+	  1}^{|\nu|}\mathcal{W}_i$.
+
+	  Neka je $C$ ćelija nekog bojenja i neka su $C_1, C_2, \dots, C_k$ ćelije
+	  dobijene netrivijalnim profinjavanjem $C$ u odnosu na neku ćeliju $W$ ili
+	  individualizacijom ćelije $C$. Možemo formirati šumu (skup stabala) čiji
+	  su čvorovi ćelije na sledeći način:
+	  \begin{enumerate}
+		  \item Koren svakog stabla šume je jedna ćelija bojenja $R(G, \pi, ())$.
+		  \item Deca čvora $C$ su $\{C_1, \dots, C_k\}$.
+	  \end{enumerate}
+
+	  Kako su ćelije u listovima šume sve različite jedinične ćelije (jer je
+	  bojenje $R(G, \pi, \nu)$ diskretno), ima ih tačno $n$. Kako svaka ćelija
+	  šume ima bar dva deteta, broj ćelija u šumi je manji od $2n$, a pošto ona
+	  mora sadržati i sve ćelije iz $\mathcal{W}$, to je $|\mathcal{W}| < 2n$.
+
+	  Neka je $v$ čvor grafa. Posmatrajmo niz ćelija $\{v\} = C_m \subseteq
+	  C_{m-1} \subseteq \dots \subseteq C_1$ koje čine put od lista $\{v\}$ do
+	  korena odgovarajućeg stabla. Neka je ćelija $C_i$ jedna od ćelija dodatih
+	  u $\alpha$ u \texttt{else} grani poslednjeg grananja ili prilikom
+	  individualizacije. Tada je $|C_i| \leq \frac{|C_{i-1}|}{2}$ kad je $i >
+	  1$. Označimo sa $C_{i_1}, \dots, C_{i_k}$ sve takve ćelije. Tada za svako
+	  $j$ postoji tačno jedan indeks $i_j \leq l < i_{j+1}$ takav da je $C_l
+	  \in \mathcal{W}$. To je zato što ćelija koja sadrži $v$ mora biti
+	  izvađena iz $\alpha$ i zato što ćelija koja sadrži $v$ ne može biti
+	  izvađena iz $\alpha$ pre nego što je neka takva ćelija dodata u $\alpha$.
+	  Očigledno je $k \leq 1 + \log_2 |C_1| \leq 1 + \log_2 n$.  Odavde sledi
+	  $\sum_{W \in \mathcal{W}} |W| = \sum_{W \in \mathcal{W}} \sum_{v \in W} 1
+	  = \sum_{W \in \mathcal{W}} \sum_{v \in V} \chi_W(v) = \sum_{v \in V}
+	  \sum_{W \in \mathcal{W}} \chi_W(v) \leq \sum_{v \in V} (1 + \log_2 n) = n
+	  (1 + \log_2 n)$.
+
+  \end{proof}
+
 
  \section{Funkcija odabira ciljne ćelije}
 
@@ -819,7 +902,7 @@
 	  $$ \phi(G, \pi, \nu) =
 	  \begin{cases}
 		  (f(G, \pi, [\nu]_0), \dots, f(G, \pi, [\nu]_{|\nu|})), & \ \text{ako } \pi_\nu \text{ nije diskretno} \\
-		  (f(G, \pi, [\nu]_0), \dots, f(G, \pi, [\nu]_{|\nu|}), bin(G^{\pi_\nu}))), & \ \text{inače}
+		  (f(G, \pi, [\nu]_0), \dots, f(G, \pi, [\nu]_{|\nu|}), bin(G^{\pi_\nu})), & \ \text{inače}
 	  \end{cases}
 	  $$ invarijanta stabla pri leksikografskom poretku.
   \end{lemma}
