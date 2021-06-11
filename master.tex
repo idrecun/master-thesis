@@ -787,7 +787,7 @@
 
   \begin{algorithm}[H]
 	  \caption{Profinjavanje bojenja}
-	  \begin{algorithmic}[]
+	  \begin{algorithmic}[1]
 		  \Procedure{Refine}{$G, \pi, \nu$}
 		  \State {$\alpha \gets \emptyset$}
 		  \If {$\nu = \nu' \| w$}
@@ -851,11 +851,11 @@
 	  $\sum_{W \in \mathcal{W}_i} (n|W| + n(1 + \log n)) = n \sum_{W \in
 	  \mathcal{W}_i} |W| + |\mathcal{W}_i| n (1 + \log n)$ gde je
 	  $\mathcal{W}_i$ skup svih ćelija na osnovu kojih je vršeno profinjavanje
-	  prilikom određivanja $R(G, \pi, [\nu]_i)$. Ukupna složenost svih
-	  profinjavanja je onda $\sum_{i=1}^{|\nu|}(n \sum_{W \in \mathcal{W}_i}
-	  |W| + |\mathcal{W}_i| n (1 + \log n)) = O(n \sum_{W \in \mathcal{W}} |W|
-	  + |\mathcal{W}| n \log n)$ pri čemu je $\mathcal{W} = \bigcup_{i =
-	  1}^{|\nu|}\mathcal{W}_i$.
+	  prilikom određivanja $R(G, \pi, [\nu]_i)$, odnosno svih ćelija $W$ iz
+	  linije 8 algoritma. Ukupna složenost svih profinjavanja je onda
+	  $\sum_{i=1}^{|\nu|}(n \sum_{W \in \mathcal{W}_i} |W| + |\mathcal{W}_i| n
+	  (1 + \log n)) = O(n \sum_{W \in \mathcal{W}} |W| + |\mathcal{W}| n \log
+	  n)$ pri čemu je $\mathcal{W} = \bigcup_{i = 1}^{|\nu|}\mathcal{W}_i$.
 
 	  Neka je $C$ ćelija nekog bojenja i neka su $C_1, C_2, \dots, C_k$ ćelije
 	  dobijene netrivijalnim profinjavanjem $C$ u odnosu na neku ćeliju $W$ ili
@@ -874,18 +874,30 @@
 	  Neka je $v$ čvor grafa. Posmatrajmo niz ćelija $\{v\} = C_m \subseteq
 	  C_{m-1} \subseteq \dots \subseteq C_1$ koje čine put od lista $\{v\}$ do
 	  korena odgovarajućeg stabla. Neka je ćelija $C_i$ jedna od ćelija dodatih
-	  u $\alpha$ u \texttt{else} grani poslednjeg grananja ili prilikom
-	  individualizacije. Tada je $|C_i| \leq \frac{|C_{i-1}|}{2}$ kad je $i >
-	  1$. Označimo sa $C_{i_1}, \dots, C_{i_k}$ sve takve ćelije. Tada za svako
-	  $j$ postoji tačno jedan indeks $i_j \leq l < i_{j+1}$ takav da je $C_l
-	  \in \mathcal{W}$. To je zato što ćelija koja sadrži $v$ mora biti
-	  izvađena iz $\alpha$ i zato što ćelija koja sadrži $v$ ne može biti
-	  izvađena iz $\alpha$ pre nego što je neka takva ćelija dodata u $\alpha$.
-	  Očigledno je $k \leq 1 + \log_2 |C_1| \leq 1 + \log_2 n$.  Odavde sledi
-	  $\sum_{W \in \mathcal{W}} |W| = \sum_{W \in \mathcal{W}} \sum_{v \in W} 1
-	  = \sum_{W \in \mathcal{W}} \sum_{v \in V} \chi_W(v) = \sum_{v \in V}
-	  \sum_{W \in \mathcal{W}} \chi_W(v) \leq \sum_{v \in V} (1 + \log_2 n) = n
-	  (1 + \log_2 n)$.
+	  u $\alpha$ u liniji 4, 6, ili 15 algoritma. Tada je $|C_i| \leq
+	  \frac{|C_{i-1}|}{2}$ ako je $i > 1$, odnosno nakon individualizacije ili
+	  profinjavanja. Označimo broj ovakvih ćelija sa $k_v$. Očigledno je $k_v
+	  \leq 1 + \log_2 |C_1| \leq 1 + \log_2 n$.
+
+	  Primetimo da su u svakom koraku algoritma ćelije koje se nalaze u
+	  $\alpha$ međusobno disjunktne. Odavde sledi da se istovremeno u $\alpha$
+	  ne mogu naći dve različite ćelije $C_i$ i $C_j$. Primetimo, takođe, da
+	  jedino linije 4, 6, 8 i 15 algoritma mogu da promene tačnost rečenice
+	  $\exists i \ C_i \in \alpha$ (12 i 13 ne mogu ukoliko se posmatraju
+	  zajedno). Kako je na početku i na kraju izvršavanja algoritma $\alpha =
+	  \emptyset$, mora važiti da je broj $k_v$ dodavanja ćelija $C_i$ u $\alpha$
+	  jednak broju uklanjanja ćelija $C_i$ iz $\alpha$, odnosno broju onih ćelija za
+	  koje važi $C_i \in \mathcal{W}$.
+
+	  Konačno,
+	  \begin{align*}
+		  $$\sum_{W \in \mathcal{W}} |W| &= \sum_{W \in \mathcal{W}} \sum_{v \in W} 1\\
+		  &= \sum_{W \in \mathcal{W}} \sum_{v \in V} \chi_W(v)\\
+		  &= \sum_{v \in V} \sum_{W \in \mathcal{W}} \chi_W(v) \\
+		  &= \sum_{v \in V} k_v\\
+		  &\leq \sum_{v \in V} (1 + \log_2 n)\\
+		  &= n (1 + \log_2 n)$$
+	  \end{align}
 
   \end{proof}
 
