@@ -571,7 +571,6 @@
 	  ako je $\omega < \omega^g$, pa je $[\nu]_{|\omega|} \neq \omega^g$ pošto
 	  je ili $[\nu]_{|\omega|} < \omega$ ili su $\omega$ i $[\nu]_{|\omega|}$ iz
 	  različitih orbita.
-
 	  \begin{enumerate}
 		  \item Na osnovu dokazanih svojstava operacija $P_A$ i $P_C$ iz stabla
 			  se ne uklanja leksikografski najmanji list $\nu$ ekvivalentan
@@ -821,11 +820,9 @@
   na imenovanje čvorova.
 
   \begin{theorem}
-	  Neka je $\gamma = F(G, \pi, \nu)$ rezultujuće bojenje izvršavanja
-	  algoritma profinjavanja za ulaz $(G, \pi, \nu)$. Tada $\gamma$ ispunjava
-	  uslove leme \ref{lemma:coarsesteq} i $F$ je transformacija invarijantna
-	  na imenovanje čvorova, odnosno $F(G^g, \pi^g, \nu^g) = F(G, \pi, \nu)^g$
-	  za proizvoljno $g \in S_n$.
+	  Neka je $\gamma$ bojenje dobijeno izvršavanjem algoritma profinjavanja
+	  bojenja za ulaz $(G, \pi, \nu)$ u obojenom grafu $(G, \pi_0)$. Tada
+	  $\gamma$ ispunjava uslove leme \ref{lemma:coarsesteq}.
   \end{theorem}
 
   \begin{proof}
@@ -833,16 +830,17 @@
 	  Označimo sa $\xi$ particiju koja ispunjava uslove leme
 	  \ref{lemma:coarsesteq}. Dokažimo indukcijuom po $i$ da je $\xi \leq
 	  \sim_{\pi_i}$ gde $\pi_i$ predstavlja bojenje $\pi$ nakon $i$ izvršenih
-	  koraka spoljne petlje algoritma.
+	  koraka spoljne petlje algoritma. Iz ovoga će slediti $\xi \leq \sim_\gamma$.
 
 	  \begin{itemize}
 		  \item[] \textbf{Baza indukcije} Po definiciji $\xi$ je $\xi \leq \sim_{\pi}$.
-		  \item[] \textbf{Induktivni korak} Neka je $\xi \leq \sim_{\pi_i}$.
-			  Tada je svaka ćelija $C$ bojenja $\pi_i$ unija nekih klasa
-			  particije $\xi$, pa to važi i za ćeliju $W$ odabranu u liniji 8.
-			  Za proizvoljne $x$ i $y$ takve da je $\pi_{i+1}(x) =
-			  \pi_{i+1}(y)$ mora važiti $\psi(G, x, W) = \psi(G, y, W)$
-			  {\color{red} ...}
+		  \item[] \textbf{Induktivni korak} Neka je $\xi \leq \sim_{\pi_j}$ za sve $ j \leq i$.
+			  Tada je svaka ćelija $C$ svakog bojenja $\pi_j,\ j \leq i$ unija nekih
+			  klasa particije $\xi$, pa to važi i za ćeliju $W$ odabranu u
+			  liniji 8.  Neka su $x$ i $y$ proizvoljni elementi iste klase
+			  particije $\xi$. Tada je $\psi(x, W) = \psi(y, W)$, pa oni ne
+			  mogu biti razdvojeni nakon izvršavanja koraka spoljne petlje.
+			  Prema tome je $\xi \leq \sim_{\pi_{i+1}}$.
 	  \end{itemize}
 
 	  Neka je $C$ ćelija nekog bojenja i neka su $C_1, C_2, \dots, C_k$ ćelije
@@ -850,18 +848,18 @@
 	  individualizacijom ćelije $C$. Možemo formirati šumu (skup stabala) čiji
 	  su čvorovi ćelije na sledeći način:
 	  \begin{enumerate}
-		  \item Koren svakog stabla šume je jedna ćelija bojenja {\color{red}$R(G, \pi, ())$}.
+		  \item Koren svakog stabla šume je jedna ćelija bojenja $\pi_0$ ako je
+			  $\nu = ()$, odnosno $R(G, \pi_0, \nu')$ ako je $\nu = \nu' \| w$.
 		  \item Deca čvora $C$ su $\{C_1, \dots, C_k\}$.
 	  \end{enumerate}
 
-	  Pokažimo da je $F(G, \pi, \nu)$ ekvitabilno. Obradimo prvo slučaj $\nu = ()$.
-
-	  Dokaz izvodimo iz dva dela. Prvo, pokažimo da važi sledeće tvrđenje. Ako
-	  je ćelija $C$ prilikom izvršavanja algoritma dodata u $\alpha$ u liniji
-	  4, 6, 13 ili 15 (u oznaci $C \in \alpha$), tada se ona može predstaviti kao
-	  disjunktna unija nekih ćelija $W_1, \dots, W_m \in \mathcal{W}$ gde $W$
-	  predstavlja skup svih ćelija uklonjenih iz $\alpha$ linijom 8 algoritma.
-	  Dokaz izvodimo indukcijom po strukturi stabla, odozdo naviše.
+	  Pokažimo da je $\gamma$ ekvitabilno. Dokaz izvodimo iz dva dela. Prvo,
+	  pokažimo da važi sledeće tvrđenje. Ako je ćelija $C$ prilikom izvršavanja
+	  algoritma dodata u $\alpha$ u liniji 4, 6, 13 ili 15 (u oznaci $C \in
+	  \alpha$), tada se ona može predstaviti kao disjunktna unija nekih ćelija
+	  $W_1, \dots, W_m \in \mathcal{W}$ gde $W$ predstavlja skup svih ćelija
+	  uklonjenih iz $\alpha$ linijom 8 algoritma.  Dokaz izvodimo indukcijom po
+	  strukturi stabla, odozdo naviše.
 
 	  \begin{itemize}
 		  \item[] \textbf{Baza indukcije} Ukoliko je $C \in \mathcal{W}$,
@@ -877,15 +875,21 @@
 
 	  Sada, definišimo $\beta = \{C \in \mathcal{P}(V) \mid \forall x, y \
 	  \gamma(x) = \gamma(y) \implies \psi(x, C) = \psi(y, C)\}$. Jasno je da je
-	  $\mathcal{W} \subseteq \beta$. Prema prethodno pokazanom je takođe i
-	  $\alpha \subseteq \beta$.  Pokažimo da za svaku ćeliju $C$ u stablu važi
+	  $\mathcal{W} \subseteq \beta$. Prema prethodno pokazanom je onda i
+	  $\alpha \subseteq \beta$.  Pokažimo da za svaku ćeliju $C$ u šumi važi
 	  da je $C \in \beta$. Dokaz izvodimo indukcijom po strukturi stabla,
 	  odozgo naniže.
 
 	  \begin{itemize}
-		  \item[] \textbf{Baza indukcije} Ako je $C$ koren nekog stabla šume,
-			  onda je $C \in \beta$ jer je dodato u $\alpha$ u liniji 6
-			  algoritma.
+		  \item[] \textbf{Baza indukcije} Neka je $C$ koren nekog stabla šume.
+			  \begin{itemize}
+				  \item[1\degree] Ako je $\nu = ()$, važi $C \in \beta$ jer je
+					  dodato u $\alpha$ u liniji 6 algoritma.
+				  \item[2\degree] Ako je $\nu = \nu' \| w$, bojenje $R(G,
+					  \pi_0, \nu')$ je ekvitabilno, pa kako je $\gamma \leq
+					  R(G, \pi_0, \nu')$, sve njegove ćelije su u $\beta$, a
+					  samim tim je i $C$.
+			  \end{itemize}
 		  \item[] \textbf{Induktivni korak} Neka je $C \in \beta$ i $C = C_1 \sqcup \dots \sqcup C_k$.
 			  \begin{itemize}
 				  \item[1\degree] Ako je $C \in \alpha$, onda su i $C_1, \dots,
@@ -898,12 +902,8 @@
 			  \end{itemize}
 	  \end{itemize}
 
-	  Kako su sve ćelije šume u $\beta$, to su i sve ćelije bojenja $F(G, \pi,
-	  \nu)$, pa je bojenje $F(G, \pi, \nu)$ ekvitabilno. Posmatrajmo još slučaj
-	  kada je $\nu \neq ()$.
-
-	  {\color{red} Dokaz...}
-
+	  Kako su sve ćelije šume u $\beta$, to su i sve ćelije bojenja $\gamma$,
+	  pa je $\gamma$ ekvitabilno.
   \end{proof}
 
   \begin{theorem}
@@ -1143,7 +1143,7 @@
   operaciji odsecanja $P_C$ moguće je primeniti ne samo neki od tih
   automorfizama, već i proizvoljan automorfizam iz grupe generisane tim skupom.
   
-  Operacija odsecanja $P_C$ se primenjuje što je pliće u stablu moguće.
+  Operacija odsecanja $P_C$ se primenjuje što je ranije u stablu moguće.
   Konkretno, neka je $\nu = (v_1, \dots, v_{|\nu|})$ i neka je $k$ dužina
   najdužeg zajedničkog prefiksa nizova $\nu$ i $\nu^g$ za neki automorfizam
   $g$. Tada je moguće primeniti operaciju odsecanja $P_C([\nu]_{k+1}, g)$.
@@ -1155,14 +1155,17 @@
   Pored samog skupa automorfizama čuvaju se podaci koji ovo i omogućavaju.
 
   Neka su $\{g_1, \dots, g_n\}$ elementi skupa automorfizama. Definišimo
-  $stab(v) = \{i \mid v^{g_i} = v\}$ predstavljen vektorom \texttt{stab}. Grupa
-  automorfizama generisana skupom $\{g_i \mid i \in \bigcap_{1 \leq j \leq k}
-  stab(v_j)\}$ je podgrupa stabilizatora niza $\nu = (v_1, \dots, v_k)$.
+  $stab(v) = \{i \mid v^{g_i} = v\}$. Grupa automorfizama generisana skupom
+  $\{g_i \mid i \in \bigcap_{1 \leq j \leq k} stab(v_j)\}$ je podgrupa
+  stabilizatora niza $\nu = (v_1, \dots, v_k)$.
 
-  Definišimo $mcr(v) = \min \Omega_v^{<g_1, \dots, g_n>}$ predstavljen vektorom
-  \texttt{orbit}. Kako je prema prethodno pokazanom $P_C$ moguće primenjivati
-  za bilo koja dva čvora iz iste orbite, možemo odseći pretragu u bilo kom
-  čvoru za koji važi $v \neq mcr(v)$.
+  Definišimo $mcr(v) = \min \Omega_v^{<g_1, \dots, g_n>}$. Kako je prema
+  prethodno pokazanom $P_C$ moguće primenjivati za bilo koja dva čvora iz iste
+  orbite, možemo odseći pretragu u bilo kom čvoru za koji važi $v \neq mcr(v)$.
+
+  Prilikom dodavanja novog automorfizma u skup neophodno je ažurirati vrednosti
+  $stab$ i $mcr$. Jasno je da je za ažuriranje $stab$ dovoljno u odgovarajuće
+  skupove dodati indeks novog automorfizma. {\color{red} Dovršiti}
 
  \section{Pretraga}
 
