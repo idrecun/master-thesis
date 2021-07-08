@@ -451,6 +451,7 @@
   \end{proof}
 
   \begin{theorem}
+	  \label{thm:aut}
 	  Za svaki list $\nu$ važi $Aut(G, \pi) = \{\pi_{\omega}^{-1}\pi_{\nu}
 	  \mid \text{$\nu$ i $\omega$ su ekvivalentni} \}$.
   \end{theorem}
@@ -1136,6 +1137,8 @@
 	  {\color{red} Dokazati svojstvo $|C_1|\psi(c_1, c_2) = |C_2|\psi(c_2, c_1)$}
   \end{proof}
 
+  {\color{red} Slozenost.}
+
  \section{Automorfizmi}
 
   Prilikom pretrage otkrivaju se automorfizmi koji se dalje koriste za
@@ -1154,20 +1157,180 @@
   (ili nekog njegovog podskupa) i određivanje orbita nekog skupa automorfizama.
   Pored samog skupa automorfizama čuvaju se podaci koji ovo i omogućavaju.
 
-  Neka su $\{g_1, \dots, g_n\}$ elementi skupa automorfizama. Definišimo
-  $stab(v) = \{i \mid v^{g_i} = v\}$. Grupa automorfizama generisana skupom
-  $\{g_i \mid i \in \bigcap_{1 \leq j \leq k} stab(v_j)\}$ je podgrupa
-  stabilizatora niza $\nu = (v_1, \dots, v_k)$.
+  Neka je $S = \{g_1, \dots, g_n\}$ skup automorfizama. Definišimo $stab_S(v) =
+  \{i \mid v^{g_i} = v\}$. Grupa automorfizama generisana skupom $S_\nu = \{g_i
+  \mid i \in \bigcap_{1 \leq j \leq k} stab(v_j)\}$ je podgrupa stabilizatora
+  niza $\nu = (v_1, \dots, v_k)$, odnosno $< \negmedspace S_\nu \negmedspace >
+  \  \leq \  \Sigma^{Aut(G, \pi)}_\nu$.
 
-  Definišimo $mcr(v) = \min \Omega_v^{<g_1, \dots, g_n>}$. Kako je prema
-  prethodno pokazanom $P_C$ moguće primenjivati za bilo koja dva čvora iz iste
-  orbite, možemo odseći pretragu u bilo kom čvoru za koji važi $v \neq mcr(v)$.
+  Definišimo $mcr_S(v) = \min \Omega_v^{< S >}$. Neka je $\nu$ čvor stabla.
+  Kako je prema prethodno pokazanom $P_C$ moguće primenjivati za bilo koja dva
+  čvora iz iste orbite stabilizatora, možemo odseći pretragu u bilo kom čvoru
+  $\nu \| v$ za koji važi $v \neq mcr_{S_\nu}(v)$.
 
   Prilikom dodavanja novog automorfizma u skup neophodno je ažurirati vrednosti
   $stab$ i $mcr$. Jasno je da je za ažuriranje $stab$ dovoljno u odgovarajuće
   skupove dodati indeks novog automorfizma. {\color{red} Dovršiti}
 
  \section{Pretraga}
+
+  Generisanje i pretraga stabla realizovani su pretragom u dubinu. Osnovni
+  algoritam generisanja stabla dat je u nastavku.
+
+  \begin{algorithm}[H]
+	  \caption{Generisanje stabla pretrage}
+	  \begin{algorithmic}[1]
+		  \Procedure{Search}{$G, \pi_0, \pi, \nu$}
+		  \State {$\pi \gets $ Refine($G, \pi, \nu$)}
+		  \State {$cell \gets $ Target\_cell($\pi$)}
+		  \For{$v \in cell$}
+			\State {Search($G, \pi_0, I(\pi, v), \nu \| v$)}
+		  \EndFor
+		  \EndProcedure
+	  \end{algorithmic}
+  \end{algorithm}
+
+  Izračunavanjem invarijante stabla možemo iskoristiti prethodni algoritam za
+  određivanje kanonske forme. Pored toga, poznavanje invarijante stabla
+  omogućava odsecanje operacijom $P_A$. Tokom obilaska stabla pamti se list
+  $\rho$ čija je vrednost invarijante $\phi(G, \pi_0, \rho)$ najveća među svim
+  do sada obrađenim listovima, odnosno $()$ ukoliko do sada nije obrađen
+  nijedan list. Nakon završenog obilaska stabla čvor $\rho$ je upravo čvor
+  $\nu^*$ neophodan za određivanje kanonske forme.
+
+  \begin{algorithm}[H]
+	  \caption{Određivanje kanonske forme}
+	  \begin{algorithmic}[1]
+		  \Procedure{Search}{$G, \pi_0, \pi, \nu$}
+		  \State {$\pi \gets $ Refine($G, \pi, \nu$)}
+		  \If {$|\rho| \geq |\nu| \land \phi(G, \pi_0, \nu) < \phi(G, \pi_0, [\rho]_{|\nu|})$}
+		  	\State \Return
+		  \EndIf
+		  \State {$cell \gets $ Target\_cell($\pi$)}
+		  \For{$v \in cell$}
+			\State {Search($G, \pi_0, I(\pi, v), \nu \| v$)}
+		  \EndFor
+		  \If {$ cell = \emptyset $}
+			\If {$ \rho = () \lor \phi(G, \pi_0, \nu) > \phi(G, \pi_0, \rho) $}
+				\State {$\rho \gets \nu$}
+			\EndIf
+		  \EndIf
+		  \EndProcedure
+	  \end{algorithmic}
+  \end{algorithm}
+
+  Kako bi bilo moguće odrediti generatore grupe automorfizama i primeniti
+  operaciju odsecanja $P_C$ neophodno je tokom pretrage otkrivati i pamtiti
+  otkrivene automorfizme. Održava se skup otkrivenih automorfizama $S$. Jedan
+  od načina da se primeni operacija $P_C$ je da se pretraga rekurzivno pokreće
+  samo za one čvorove odabrane ćelije za koje važi $v = mcr_{S_\nu}(v)$.
+
+  Otkrivanje novih automorfizama omogućeno je pamćenjem jednog lista $\zeta$,
+  konkretno prvog otkrivenog lista. Kada se prilikom pretrage otkrije list
+  $\nu$, u slučaju da su $\zeta$ i $\nu$ ekvivalentni listovi $g =
+  \pi_\zeta^{-1} \pi_\nu$ je otkriven automorfizam i on se dodaje u skup $S$.
+  Kako se novi automorfizmi otkrivaju samo u listovima ekvivalentnim listu
+  $\zeta$, moguće je u velikoj meri primenjivati operaciju odsecanja $P_B$.
+  Ovde dolazimo i do drugog načina za primenu operacije $P_C$. Kako je $\nu^g =
+  \zeta$, $g$ je automorfizam koji stabilizuje $lca(\nu, \zeta)$ (najduži
+  zajednički prefiks za $\nu$ i $\zeta$). Ako je njegova dužina $k = |lca(\nu,
+  \zeta)|$, tada je $[\nu]_{k+1}^g = [\zeta]_{k+1}$ i moguće je primeniti
+  operaciju odsecanja $P_C([\nu]_{k+1}, g)$. Ovo je moguće realizovati skokom
+  unazad - povratna vrednost određuje do kog nivoa u pretrazi je potrebno
+  vratiti se.
+
+  Na osnovu teoreme \ref{thm:aut} nakon završenog obilaska stabla skup $S$
+  predstavlja skup generatora grupe $Aut(G, \pi_0)$.
+
+  \begin{algorithm}[H]
+	  \caption{Određivanje generatora grupe automorfizama}
+	  \begin{algorithmic}[1]
+		  \Procedure{Search}{$G, \pi_0, \pi, \nu$}
+		  \State {$\pi \gets $ Refine($G, \pi, \nu$)}
+		  \If {$\zeta \neq () \land (|\zeta| < |\nu| \lor \phi(G, \pi_0, \nu) \neq \phi(G, \pi_0, [\zeta]_{|\nu|}))$}
+			\State \Return {$|\nu|$}
+		  \EndIf
+		  \State {$cell \gets $ Target\_cell($\pi$)}
+		  \State {$mcr \gets cell$}
+		  \For{$v \in cell$}
+		  	\If {$v \in mcr$}
+				\State {$b \gets $ Search($G, \pi_0, I(\pi, v), \nu \| v$)}
+				\If {$ |\nu| > b$}
+					\State \Return{$b$}
+				\EndIf
+				\State {$mcr \gets mcr \cap \{v \in V \mid v = mcr_{S_\nu}(v)\}$}
+			\EndIf
+		  \EndFor
+		  \If {$ cell = \emptyset $}
+			\If {$\zeta = ()$}
+				\State {$\zeta \gets \nu$}
+			\EndIf
+
+			\State {$g = \pi_\zeta^{-1} \pi_\nu$}
+			\If {$G^g = G$}
+				\State {insert($S, g$)}
+				\State \Return{$|lca(\nu, \zeta)|$}
+			\EndIf
+		  \EndIf
+		  \State \Return{$|\nu|$}
+		  \EndProcedure
+	  \end{algorithmic}
+  \end{algorithm}
+
+  Konačno, kako bismo iskoristili automorfizme u odsecanju prilikom određivanja
+  kanonske forme, potrebno je da istovremeno vršimo prethodna dva algoritma.
+  Primetimo da je otkrivanje automorfizama sada moguće vršiti i u odnosu na
+  list $\rho$.
+
+  \begin{algorithm}[H]
+	  \caption{Određivanje kanonske forme i grupe automorfizama}
+	  \begin{algorithmic}[1]
+		  \Procedure{Search}{$G, \pi_0, \pi, \nu$}
+		  \State {$\pi \gets $ Refine($G, \pi, \nu$)}
+		  \State {$max\_path \gets |\rho| < |\nu| \lor \phi(G, \pi_0, \nu) \geq \phi(G, \pi_0, [\rho]_{|\nu|})$}
+		  \State {$aut\_path \gets |\zeta| \geq |\nu| \land \phi(G, \pi_0, \nu) = \phi(G, \pi_0, [\zeta]_{|\nu|})$}
+		  \If {$\neg\ max\_path \land \neg\ aut\_path$}
+			\State \Return {$|\nu|$}
+		  \EndIf
+		  \State {$cell \gets $ Target\_cell($\pi$)}
+		  \State {$mcr \gets cell$}
+		  \For{$v \in cell$}
+		  	\If {$v \in mcr$}
+				\State {$b \gets $ Search($G, \pi_0, I(\pi, v), \nu \| v$)}
+				\If {$ |\nu| > b$}
+					\State \Return{$b$}
+				\EndIf
+				\State {$mcr \gets mcr \cap \{v \in V \mid v = mcr_{S_\nu}(v)\}$}
+			\EndIf
+		  \EndFor
+		  \If {$ cell = \emptyset $}
+			\If {$ \rho = () \lor \phi(G, \pi_0, \nu) > \phi(G, \pi_0, \rho) $}
+				\State {$\rho \gets \nu$}
+			\EndIf
+
+			\If {$\zeta = ()$}
+				\State {$\zeta \gets \nu$}
+			\EndIf
+
+			\State {$g = \pi_\zeta^{-1} \pi_\nu$}
+			\If {$G^g \neq G$}
+				\State {$g = \pi_\rho^{-1} \pi_\nu$}
+			\EndIf
+			\If {$G^g = G$}
+				\State {insert($S, g$)}
+				\If {$mcr_{S_{lca(\nu, \zeta)}}(v) \neq v$ where $ \nu = \nu' \| v$}
+					\State \Return{$|lca(\nu, \zeta)|$}
+				\EndIf
+				\State \Return{$|lca(\nu, \rho)|$}
+			\EndIf
+
+		  \EndIf
+		  \State \Return{$|\nu|$}
+		  \EndProcedure
+	  \end{algorithmic}
+  \end{algorithm}
+
+  {\color{red} Mogući su i drugi načini obilaska, pomenuti bfs i traces. Moguće je čuvati više od jednog $\zeta$.}
 
  \section{Invarijanta grafa}
 
