@@ -1107,7 +1107,7 @@
 	  Dokaz implikacije ulevo je trivijalan. Za smer udesno dokazaćemo
 	  kontrapoziciju tvrđenja.
 
-	  Označimo $\pi_i = R(G, \pi, \nu \| w_i)$ i $\pi_2 = R(G, \pi, \nu \|
+	  Označimo $\pi_1 = R(G, \pi, \nu \| w_1)$ i $\pi_2 = R(G, \pi, \nu \|
 	  w_2)$. Pretpostavimo da je $Q(G, \pi_1) \neq Q(G, \pi_2)$. Ako je
 	  $V_{Q(G, \pi_1)} \neq V_{Q(G, \pi_2)}$ ili $d_{Q(G, \pi_1)} \neq d_{Q(G,
 	  \pi_2)}$ onda je skup ćelija bojenja $\pi_1$ i $\pi_2$ koje nisu ćelije u
@@ -1333,6 +1333,29 @@
   {\color{red} Mogući su i drugi načini obilaska, pomenuti bfs i traces. Moguće je čuvati više od jednog $\zeta$.}
 
  \section{Invarijanta grafa}
+
+  U definiciji ekvitabilnog bojenja korišćena je funkcija $\psi(G, u, W) =
+  \sum_{v \in W} \psi(G, u, v)$ koja predstavlja broj grana koje povezuju čvor
+  $u$ sa čvorovima iz skupa $W$. Možemo primetiti da se stavovi i dokazi koji
+  koriste koncept ekvitabilnosti ne pozivaju na konkretno značenje funkcije
+  $\psi$, već samo na određena svojstva te funkcije koja nam omogućavaju da
+  uopštimo značenje ekvitabilnog bojenja.
+
+  \begin{definition}
+	  Preslikavanje $\psi : \mathcal{G} \times V \times V \to \mathbb{N}$ je
+	  \emph{invarijanta grafa} ukoliko za svaki graf $G$ i par čvorova $u$ i $v$
+	  zadovoljava sledeće uslove:
+
+	  \begin{itemize}
+		  \item[($\psi1$)] $\psi(G, u, v) = \psi(G, v, u)$
+		  \item[($\psi2$)] $\psi(G^g, u^g, v^g) = \psi(G, v, u)$ za $g \in S_n$
+	  \end{itemize}
+  \end{definition}
+
+  Onda možemo definisati $\psi(G, u, W) = \sum_{v \in W} \{\psi(G, u, v)\}$ pri
+  čemu sada sumu interpretiramo kao sabiranje multiskupova.
+
+  {\color{red} Izmeni/dovrši.}
 
 % ------------------------------------------------------------------------------
 \chapter{Rezultati testiranja}
