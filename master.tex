@@ -287,6 +287,12 @@
    \end{itemize}
   \end{definition}
 
+  Iz definicije se vidi da je neki čvor list stabla ako i samo ako je njemu
+  pridruženo bojenje diskretno. Primetimo da je ovako definisano stablo konačno
+  zato što za svako $\nu$ koje je permutacija skupa $V$ važi da je bojenje
+  pridruženo nekom njegovom prefiksu diskretno ili je njemu pridruženo bojenje
+  diskretno.
+
   Dejstvo grupe $S_n$ na stablo definiše se slično kao za bilo koju drugu
   strukturu. Naredna lema pokazuje da je ovako definisano stablo invarijantno na
   imenovanje čvorova grafa.
@@ -327,15 +333,22 @@
   \end{corrolary}
 
   \begin{lemma}
-      Neka je $\nu$ čvor stabla $\mathcal{T}(G, \pi)$ i $\pi_\nu = R(G, \pi,
-      \nu)$. Tada je $Aut(G, \pi_\nu) = \Sigma_\nu^{Aut(G, \pi)}$.
+	  Neka je $\nu$ čvor stabla $\mathcal{T}(G, \pi)$ i $\pi_\nu = R(G, \pi,
+	  \nu)$. Tada je grupa automorfizama obojenog grafa $(G, \pi_\nu)$ jednaka
+	  stabilizatoru niza $\nu$ u grupi automorfizama grafa $(G, \pi)$, odnosno
+	  $Aut(G, \pi_\nu) = \Sigma_\nu^{Aut(G, \pi)}$.
   \end{lemma}
 
   \begin{proof}
-	  Na osnovu uslova (R2) bilo koji automorfizam obojenog grafa $(G,
-	  \pi_\nu)$ stabilizuje $\nu$. Sa druge strane, neka $g \in Aut(G, \pi)$
-	  stabilizuje $\nu$. Tada po (R3) važi $\pi_\nu^g = R(G, \pi, \nu)^g = R(G,
-	  \pi, \nu) = \pi_\nu$, pa je $g \in Aut(G, \pi_\nu)$.
+	  Neka je $g \in Aut(G, \pi_\nu)$. Tada je $\pi_\nu^g = \pi_\nu$, pa za
+	  svako $v$ važi $\pi_\nu^g(v) = \pi_\nu(v)$. Na osnovu uslova $(R2)$ za $v
+	  \in \nu$ važi $\{v\} = \pi_\nu^{-1}(\pi_\nu(v)) =
+	  \pi_\nu^{-1}(\pi_\nu^g(v)) = \pi_\nu^{-1}(\pi_\nu(g^{-1}v)) \ni g^{-1}v$
+	  odakle sledi $v^g = v$, odnosno $g$ stabilizuje svako $v \in \nu$.
+
+	  Sa druge strane, neka $g \in Aut(G, \pi)$ stabilizuje $\nu$. Tada po (R3)
+	  važi $\pi_\nu^g = R(G, \pi, \nu)^g = R(G^g, \pi^g, \nu^g) = R(G, \pi,
+	  \nu) = \pi_\nu$, pa je $g \in Aut(G, \pi_\nu)$.
   \end{proof}
 
  \section{Invarijanta stabla}
@@ -524,9 +537,11 @@
 		  podstabla $\mathcal{T}(G, \pi, \nu_2)$.
   \end{itemize}
 
-  Naredna teorema opravdava uvođenje ovih operacija odsecanja i pokazuje da one
-  ne narušavaju rezultate teorema o određivanju grupe automorfizama i kanonske
-  forme iz prethodnog odeljka.
+  Operacije $P_A$ i $P_C$ su definisane tako da očuvavaju mogućnost određivanja
+  kanonske forme u stablu. Slično, operacije $P_B$ i $P_C$ očuvavaju mogućnost
+  određivanja grupe automorfizama na osnovu stabla. Naredna teorema opravdava
+  uvođenje ovih operacija i pokazuje da one ne narušavaju rezultate teorema o
+  određivanju grupe automorfizama i kanonske forme.
 
   \begin{theorem}
 	  Neka je $(G, \pi)$ obojen graf.
@@ -537,12 +552,12 @@
 			  \nu^*)$.
 		  \item Neka je $\nu_0$ list stabla $\mathcal{T}(G, \pi)$ i neka je nad
 			  stablom izvršen proizvoljan niz operacija $P_B(\nu_1, \nu_2)$ i
-			  $P_C$ gde je $|\nu_2| > |\nu_0|$ ili $\phi(G, \pi, \nu_2) \neq
-			  \phi(G, \pi, [\nu_0]_{|\nu_2|})$ i neka su $g_1, \dots, g_k$ svi
-			  automorfizmi korišćeni u izvršenim operacijama $P_C$.  Tada je
-			  grupa automorfizama $Aut(G, \pi)$ generisana skupom $\{g_1,
-			  \dots, g_k\} \cup \{g \in Aut(G, \pi) \mid \nu_0^g \text{ nije
-			  uklonjen}\}$.
+			  $P_C$ gde je $\phi(G, \pi, \nu_2) \neq \phi(G, \pi,
+			  [\nu_0]_{s})$ za sve $0 \leq s \leq |\nu_0|$ i neka su $g_1,
+			  \dots, g_k$ svi automorfizmi korišćeni u izvršenim operacijama
+			  $P_C$.  Tada je grupa automorfizama $Aut(G, \pi)$ generisana
+			  skupom $\{g_1, \dots, g_k\} \cup \{g \in Aut(G, \pi) \mid \nu_0^g
+			  \text{ nije uklonjen}\}$.
 	  \end{enumerate}
   \end{theorem}
 
@@ -566,7 +581,7 @@
 
 	  Nijedna operacija $P_C$ ne uklanja leksikografski najmanji među
 	  ekvivalentnim listovima. Štaviše, nijedna operacija $P_C$ ne uklanja
-	  leksikografski najmanji list iz $\Omega_\nu^{<g_1, \dots, g_k>}$ za bilo
+	  leksikografski najmanji čvor iz $\Omega_\nu^{<g_1, \dots, g_k>}$ za bilo
 	  koje $\nu$. Neka je bez umanjenja opštosti $\nu$ leksikografski najmanji
 	  list u svojoj orbiti. Operacija $P_C(\omega, g)$ uklanja čvor $\omega^g$
 	  ako je $\omega < \omega^g$, pa je $[\nu]_{|\omega|} \neq \omega^g$ pošto
