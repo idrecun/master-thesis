@@ -271,7 +271,7 @@
    automorfizama}.
 
    \begin{figure}[htp]
-	   %\label{img:aut}
+	   \label{img:aut}
 	   \centering
 	   \begin{tikzpicture}
 		   \begin{scope}
@@ -407,14 +407,15 @@
 	   \begin{tikzpicture}
 		   \begin{scope}
 			   \node (1) at (0, 0)[pointred, label=180:1] {};
-			   \node (2) at (1, 1.71)[pointred, label=90:2] {};
-			   \node (3) at (2, 0)[pointred, label=0:3] {};
+			   \node (2) at (0.5, 0.86)[pointred, label=90:2] {};
+			   \node (3) at (1, 0)[pointred, label=0:3] {};
 		   \end{scope}
 		   \begin{scope}
 			   \path [-] (1) edge (2);
 			   \path [-] (2) edge (3);
 		   \end{scope}
 	   \end{tikzpicture}
+
 	   \begin{tikzpicture}
 		   \begin{scope}
 			   \node (0) at (0, 0) {$[{\color{red}1\ 2\ 3}]$};
@@ -569,6 +570,92 @@
 	  \pi, \nu_1) = \phi(G, \pi, \nu_2)$.
   \end{definition}
 
+  \begin{example}
+	  Definišimo $\phi(G, \pi, \nu)$ koristeći pomoćnu funkciju $f$ kao niz
+	  vrednosti $(f(G, \pi, [\nu]_0), f(G, \pi, [\nu]_1), \dots, f(G, \pi,
+	  [\nu]_{|\nu|}))$, pri čemu u slučaju da je $\nu$ list možemo na taj niz
+	  nadovezati i binarnu reprezentaciju grafa permutovanog bojenjem $R(G, \pi,
+	  \nu)$. Ovako definisano $\phi$ ispunjava uslove ($\phi$1-2). Ako za
+	  pomoćnu funkciju $f$ odaberemo npr. proizvod zbirova stepena čvorova
+	  ćelija, dobijamo jednu jednostavnu invarijantu stabla. Vrednosti
+	  invarijante stabla iz primera \ref{img:tree} prikazane su na slici
+	  \ref{img:invariant}.
+  \end{example}
+
+   \begin{figure}[htp]
+	   \label{img:invariant}
+	   \centering
+	   \begin{tikzpicture}
+		   \begin{scope}
+			   \node (0) at (0, 0) [label=0:{(4)}] {$[{\color{red}1\ 2\ 3}]$};
+			   \node (1) at (-4, -1) [label=0:{(4,3)}] {$[{\color{red}1} \mid {\color{green}2\ 3}]$};
+			   \node (2) at (0, -1) [label=0:{(4,4)}] {$[{\color{red}2} \mid {\color{green}1\ 3}]$};
+			   \node (3) at (4, -1) [label=0:{(4,3)}] {$[{\color{red}3} \mid {\color{green}1\ 2}]$};
+			   \node (12) at (-5, -2) [label=270:{\footnotesize $(4,3,2,\begin{matrix}010\\101\\010\end{matrix})$}] {$[{\color{red}1} \mid {\color{green}2} \mid {\color{blue}3}]$};
+			   \node (13) at (-3, -2) [label=270:{\footnotesize $(4,3,2,\begin{matrix}001\\001\\110\end{matrix})$}] {$[{\color{red}1} \mid {\color{green}3} \mid {\color{blue}2}]$};
+			   \node (21) at (-1, -2) [label=270:{\footnotesize $(4,4,2,\begin{matrix}011\\100\\100\end{matrix})$}] {$[{\color{red}2} \mid {\color{green}1} \mid {\color{blue}3}]$};
+			   \node (23) at (1, -2) [label=270:{\footnotesize $(4,4,2,\begin{matrix}011\\100\\100\end{matrix})$}] {$[{\color{red}2} \mid {\color{green}3} \mid {\color{blue}1}]$};
+			   \node (31) at (3, -2) [label=270:{\footnotesize $(4,3,2,\begin{matrix}001\\001\\110\end{matrix})$}] {$[{\color{red}3} \mid {\color{green}1} \mid {\color{blue}2}]$};
+			   \node (32) at (5, -2) [label=270:{\footnotesize $(4,3,2,\begin{matrix}010\\101\\010\end{matrix})$}] {$[{\color{red}3} \mid {\color{green}2} \mid {\color{blue}1}]$};
+
+			   \node (a1) at (-5.5, -5)[pointred] {};
+			   \node (a2) at (-5, -4.14)[pointgreen] {};
+			   \node (a3) at (-4.5, -5)[pointblue] {};
+
+			   \node (b1) at (-3.5, -5) [pointred] {};
+			   \node (b2) at (-3, -4.14)[pointblue] {};
+			   \node (b3) at (-2.5, -5)[pointgreen] {};
+
+			   \node (c1) at (-1.5, -5)[pointgreen] {};
+			   \node (c2) at (-1, -4.14)[pointred] {};
+			   \node (c3) at (-0.5, -5)[pointblue] {};
+
+			   \node (d1) at (0.5, -5)[pointblue] {};
+			   \node (d2) at (1, -4.14)[pointred] {};
+			   \node (d3) at (1.5, -5)[pointgreen] {};
+
+			   \node (e1) at (2.5, -5)[pointgreen] {};
+			   \node (e2) at (3, -4.14)[pointblue] {};
+			   \node (e3) at (3.5, -5)[pointred] {};
+
+			   \node (f1) at (4.5, -5)[pointblue] {};
+			   \node (f2) at (5, -4.14)[pointgreen] {};
+			   \node (f3) at (5.5, -5)[pointred] {};
+		   \end{scope}
+		   \begin{scope}
+			   \path [-] (0) edge (1);
+			   \path [-] (0) edge (2);
+			   \path [-] (0) edge (3);
+			   \path [-] (1) edge (12);
+			   \path [-] (1) edge (13);
+			   \path [-] (2) edge (21);
+			   \path [-] (2) edge (23);
+			   \path [-] (3) edge (31);
+			   \path [-] (3) edge (32);
+
+			   \path [-] (a1) edge (a2);
+			   \path [-] (a2) edge (a3);
+
+			   \path [-] (b1) edge (b2);
+			   \path [-] (b2) edge (b3);
+
+			   \path [-] (c1) edge (c2);
+			   \path [-] (c2) edge (c3);
+
+			   \path [-] (d1) edge (d2);
+			   \path [-] (d2) edge (d3);
+
+			   \path [-] (e1) edge (e2);
+			   \path [-] (e2) edge (e3);
+
+			   \path [-] (f1) edge (f2);
+			   \path [-] (f2) edge (f3);
+		   \end{scope}
+	   \end{tikzpicture}
+   \caption{Invarijanta stabla.}
+   \end{figure}
+
+
   U nastavku ćemo kroz dve teoreme prikazati značaj ovako definisane
   invarijante stabla. Označimo za proizvoljan čvor stabla $\nu$ njegovo bojenje
   dobijeno funkcijom profinjavanja sa $\pi_\nu = R(G, \pi, \nu)$. 
@@ -676,6 +763,15 @@
 	ovakav način određivanja grupe automorfizama nije veoma efikasan pošto se
 	grupa generiše član po član. Ovo se može poboljšati odsecanjem pretrage o
 	čemu će biti reči u narednom odeljku.
+	
+	\begin{example}
+		Posmatrajmo prvi list stabla sa slike \ref{img:invariant}. Na osnovu
+		prethodne teoreme je moguće odrediti skup svih automorfizama grafa.
+		Kako je taj list ekvivalentan samom sebi, $id \in Aut(G, \pi)$.  Kako
+		je ekvivalentan poslednjem listu stabla, $(1\ 3) \in Aut(G, \pi)$. Ne
+		postoje drugi automorfizmi jer ne postoje drugi listovi ekvivalentni
+		prvom listu stabla, pa je $Aut(G, \pi) = \{id, (1\ 3)\}$.
+	\end{example}
 
   \begin{definition}
 	  Neka je $\nu^*$ list stabla $\mathcal{T}(G, \pi)$ u kom invarijanta
@@ -709,6 +805,13 @@
 			  imenovanje čvorova.
 	  \end{itemize}
   \end{proof}
+
+	\begin{example}
+		Posmatrajmo stablo sa slike \ref{img:invariant}. Na osnovu prethodne
+		teoreme je moguće odrediti kanonsku formu grafa. U pitanju je graf koji
+		se dobija bilo kojom od permutacija $(2\ 1)$ ili $(3\ 2\ 1)$ jer su to
+		permutacije sa najvećom invarijantnom u stablu.
+	\end{example}
 
  \section{Odsecanje pretrage}
 
@@ -793,6 +896,61 @@
 			  grupe.
 	  \end{enumerate}
   \end{proof}
+
+   \begin{figure}[htp]
+	   \label{img:prune}
+	   \centering
+	   \begin{tikzpicture}
+		   \begin{scope}
+			   \node (0) at (0, 0)  {$[{\color{red}1\ 2\ 3}]$};
+			   \node (1) at (-4, -1) [rectangle, draw=violet!70, thick] {$[{\color{red}1} \mid {\color{green}2\ 3}]$};
+			   \node (2) at (0, -1)  {$[{\color{red}2} \mid {\color{green}1\ 3}]$};
+			   \node (3) at (4, -1) [label=270:{$P_C({\color{violet}(1)}, (1\ 3))$}] {$[{\color{red}3} \mid {\color{green}1\ 2}]$};
+			   \node (12) at (-5, -2)  {$[{\color{red}1} \mid {\color{green}2} \mid {\color{blue}3}]$};
+			   \node (13) at (-3, -2)  {$[{\color{red}1} \mid {\color{green}3} \mid {\color{blue}2}]$};
+			   \node (21) at (-1, -2) [rectangle,draw=orange!70,thick] {$[{\color{red}2} \mid {\color{green}1} \mid {\color{blue}3}]$};
+			   \node (23) at (1, -2) [label=270:{$P_C({\color{orange}(2,1)}, (1\ 3)) $}] {$[{\color{red}2} \mid {\color{green}3} \mid {\color{blue}1}]$};
+
+			   \node (a1) at (-5.5, -3.86)[pointred] {};
+			   \node (a2) at (-5, -3)[pointgreen] {};
+			   \node (a3) at (-4.5, -3.86)[pointblue] {};
+
+			   \node (b1) at (-3.5, -3.86)[pointred] {};
+			   \node (b2) at (-3, -3)[pointblue] {};
+			   \node (b3) at (-2.5, -3.86)[pointgreen] {};
+
+			   \node (c1) at (-1.5, -3.86)[pointgreen] {};
+			   \node (c2) at (-1, -3)[pointred] {};
+			   \node (c3) at (-0.5, -3.86)[pointblue] {};
+		   \end{scope}
+		   \begin{scope}
+			   \path [-] (0) edge (1);
+			   \path [-] (0) edge (2);
+			   \path [-] (0) edge (3);
+			   \path [-] (1) edge (12);
+			   \path [-] (1) edge (13);
+			   \path [-] (2) edge (21);
+			   \path [-] (2) edge (23);
+
+			   \path [-] (a1) edge (a2);
+			   \path [-] (a2) edge (a3);
+
+			   \path [-] (b1) edge (b2);
+			   \path [-] (b2) edge (b3);
+
+			   \path [-] (c1) edge (c2);
+			   \path [-] (c2) edge (c3);
+		   \end{scope}
+	   \end{tikzpicture}
+   \caption{Odsecanje stabla na osnovu automorfizama.}
+   \end{figure}
+
+  \begin{example}
+	  Prilikom obilaska stabla sa slike \ref{img:invariant} moguće je izvršiti
+	  odsecanje nekih delova stabla na osnovu automorfizma $(1\ 3)$ (ukoliko je
+	  on poznat unapred).  Rezultujuće stablo je dato na slici \ref{img:prune}.
+  \end{example}
+
 
 % ------------------------------------------------------------------------------
 \chapter{Realizacija algoritma}
