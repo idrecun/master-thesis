@@ -38,9 +38,6 @@
 \tikzstyle{pointgreen}=[circle, fill=green!70,thick]
 \tikzstyle{pointblue}=[circle, fill=blue!70,thick]
 
-% Matematicki simboli
-\DeclareMathOperator*{\argmax}{arg\,max}
-
 % Paket koji definiše sve specifičnosti master rada Matematičkog fakulteta
 \usepackage[latinica]{matfmaster} 
 %
@@ -958,39 +955,54 @@
 
  \section{Reprezentacija podataka}
 
-  \subsection{Permutacija}
-
-   Permutacija $p \in S_n$ predstavljena je pomoću dva vektora. Vektor
-   \texttt{pi} je definisan tako da je \texttt{pi[u] = v} onda kada je $p(u) =
-   v$. Vektor \texttt{ip} definisan je analogno za inverznu permutaciju,
-   odnosno \texttt{ip[u] = v} onda kada je $p^{-1}(u) = v$. {\color{red}Primer}
-
   \subsection{Bojenje}
 
-   Bojenje $\pi \in \Pi_n$ predstavljeno je permutacijom \texttt{pi} i vektorom
-   \texttt{cells}. Permutacija \texttt{pi} predstavlja niz koji se dobija
-   nadovezivanjem ćelija $\pi^{-1}(1), \dots, \pi^{-1}(k)$ redom, pri čemu su
-   elementi jedne ćelije uređeni rastuće. Preciznije, \texttt{pi} predstavlja
-   permutaciju $p$ takvu da je $p(u) \in \pi^{-1}(c)$ ako i samo ako je
-   $\sum_{i = 1}^{c-1} |\pi^{-1}(i)| \leq u < \sum_{i = 1}^c |\pi^{-1}(i)|$ i
-   da ako važi $\pi(u) = \pi(v)$ onda je $u < v \iff p^{-1}(u) < p^{-1}(v)$.
+   Bojenje $\pi \in \Pi_n$ predstavljeno je permutacijom $p$ i nizom $cells$.
+   Permutacija $p$ predstavlja niz koji se dobija nadovezivanjem ćelija
+   $\pi^{-1}(1), \dots, \pi^{-1}(k)$ redom, pri čemu su elementi jedne ćelije
+   uređeni rastuće. Preciznije, $p$ je permutacija takva da je $p(u) \in
+   \pi^{-1}(c)$ ako i samo ako je $\sum_{i = 1}^{c-1} |\pi^{-1}(i)| \leq u <
+   \sum_{i = 1}^c |\pi^{-1}(i)|$ i da ako važi $\pi(u) = \pi(v)$ onda je $u < v
+   \iff p^{-1}(u) < p^{-1}(v)$.
 
-   Vektor \texttt{cells} predstavlja niz vrednosti $cells$ dužine $n$ koji
-   upotpunjava permutaciju $p$ podacima o granicama ćelija bojenja $\pi$. Ako
-   pozicija $u$ predstavlja početak nove ćelije, tada je $cells_u$ takvo da ta
-   ćelija obuhvata tačno pozicije $[u, cells_u)$ permutacije $p$.  Formalno,
-   $$ cells_u =
+   Niz $cells$ dužine $n$ upotpunjava permutaciju $p$ podacima o granicama
+   ćelija bojenja $\pi$. Ako pozicija $u$ predstavlja početak nove ćelije, tada
+   je $cells_u$ takvo da ta ćelija obuhvata tačno pozicije $[u, cells_u)$
+   permutacije $p$.  Formalno,
+   $$ cells(u) =
      \begin{cases}
 		 u + |\pi^{-1}(\pi(p(u)))|, & \quad \text{ako je } u = 1 \text{ ili }
 		 \pi(p(u)) \neq \pi(p(u-1)) \\
 		 -1, & \quad \text{inače.} \\
 	 \end{cases}
    $$
-   {\color{red}Primer}
 
-   Primetimo da je u slučaju diskretnog bojenja $\pi$ permutacija $p$
-   predstavljena sa \texttt{pi} inverz permutacije $\pi$.
-   {\color{red}Primer}
+   \begin{example}
+	   Neka je $\pi = [2\ 5 \mid 4\ 3\ 5 \mid 1]$ jedno bojenje. Tada je ono
+	   predstavljeno permutacijom
+	   $p :
+	   \begin{pmatrix}
+		   1 & 2 & 3 & 4 & 5 & 6\\
+		   2 & 5 & 3 & 4 & 5 & 1
+	   \end{pmatrix}$ i nizom $cells = (3, -1, 6, -1, -1, 7)$.
+   \end{example}
+
+   Primetimo da u slučaju diskretnog bojenja $\pi$ permutacija $p$ predstavlja
+   inverz permutacije $\pi$.
+
+   \begin{example}
+	   Bojenje $\pi = [2 \mid 4 \mid 3 \mid 1]$ koje je zapravo preslikavanje
+	   $\pi :
+	   \begin{pmatrix}
+		   1 & 2 & 3 & 4\\
+		   4 & 1 & 3 & 2
+	   \end{pmatrix}$ predstavljeno je permutacijom
+	   $p :
+	   \begin{pmatrix}
+		   1 & 2 & 3 & 4\\
+		   2 & 4 & 3 & 1
+	   \end{pmatrix}$.
+   \end{example}
 
    Jedna od ključnih operacija nad bojenjem je profinjavanje jedne ćelije. Neka
    je $\pi^{-1}(c)$ jedna ćelija bojenja $\pi$ i neka je svakom čvoru $v$ te
@@ -1017,12 +1029,30 @@
 	  \end{algorithmic}
   \end{algorithm}
 
-  Primetimo da je složenost ovog algoritma $O(|C| \log |C|)$ gde je $C =
-  \pi^{-1}(c)$ zbog sortiranja čvorova na osnovu vrednosti $t_v$.
+  Opisana reprezentacija bojenja je korisna zato što omogućava da se ovaj
+  algoritam implementira tako da mu složenost bude $O(|C| \log |C|)$ gde je $C
+  = \pi^{-1}(c)$, pri čemu dominira složenost sortiranja čvorova na osnovu
+  vrednosti $t_v$.
 
   \subsection{Graf}
 
-   {\color{red} Dodati u implementaciji podršku za obojen graf, pa dati opis.}
+   Pošto se graf ne menja tokom izvršavanja samog algoritma, moguće je čuvati
+   više različitih reprezentacija grafa. Ovde ćemo istaći one delove
+   reprezentacije koji su neophodni za dalju diskusiju.
+
+   Obojen graf je predstavljen bojenjem $\pi$ i matricom povezanosti $\psi :
+   \mathcal{G} \times V \times V \to \{0, 1\}$ gde je $\psi(G, u, v) = 1$ akko
+   je $(u, v) \in E$. Zapazimo sledeća svojstva matrice povezantosti:
+   \begin{itemize}
+	   \item[$(\psi1)$] $\psi(G, u, v) = \psi(G, v, u)$
+	   \item[$(\psi2)$] $\psi(G^g, u^g, v^g) = \psi(G, v, u)$ za proizvoljno $g \in S_n$
+   \end{itemize}
+   Prvo svojstvo je simetričnost matrice povezanosti koja proizilazi iz
+   činjenice da je u neusmerenom grafu $(u, v) \in E$ akko $(v, u) \in E$.
+   Drugo svojstvo govori da je matrica povezanosti funkcija invarijantna na
+   imenovanje čvorova. Ovo svojstvo će biti značajno u definicijama i dokazima
+   koji slede u ovom poglavlju. Invarijantnost važi zato što je $(u, v)$ grana
+   grafa $G$ akko je $(u, v)^g = (u^g, v^g)$ grana grafa $G^g$.
 
  \section{Funkcija profinjavanja}
   
@@ -1343,6 +1373,8 @@
 
 
  \section{Funkcija odabira ciljne ćelije}
+
+ {\color{red} napisi nesto lol}
 
  \section{Invarijanta stabla}
 
@@ -1720,7 +1752,61 @@
   Onda možemo definisati $\psi(G, u, W) = \sum_{v \in W} \{\psi(G, u, v)\}$ pri
   čemu sada sumu interpretiramo kao sabiranje multiskupova.
 
-  {\color{red} Izmeni/dovrši.}
+  Značaj uvedenog pojma dolazi iz činjenice da je dovoljno jednom, pre
+  izvršavanja algoritma, za uneti graf izračunati odabranu invarijantu. To
+  znači da je jedino povećanje u ukupnoj složenosti celog postupka cena tog
+  pretprocesiranja. Nakon toga, ukoliko je odabrana pogodna invarijanta, moguća
+  je velika ušteda usled moćnije procedure profinjavanja i manjeg stepena
+  grananja stabla pretrage.
+
+  \begin{example}
+	  Posmatrajmo (nepovezan) graf sa slike \ref{img:graphinv}. Standardna
+	  procedura profinjavanja koja koristi matricu povezanosti će kao rezultat
+	  vratiti bojenje jednako početnom. Procedura profinjavanja koja koristi
+	  invarijantu grafa $d(G, u, v)$ koja predstavlja dužinu najkraćeg puta
+	  između čvorova $u$ i $v$ (ili $\infty$ ako put ne postoji) će odrediti
+	  bojenje čije su ćelije tačno orbite čvorova u grupi automorfizama.
+  \end{example}
+
+   \begin{figure}[htp]
+	   \label{img:graphinv}
+	   \centering
+	   \begin{tikzpicture}
+		   \begin{scope}
+			   \node (0) at (-2.1, 0)[point] {};
+			   \node (1) at (-1.5, 1)[point] {};
+			   \node (2) at (-0.9, 0)[point] {};
+
+			   \node (3) at (1, 0)[point] {};
+			   \node (4) at (1, 1)[point] {};
+			   \node (5) at (2, 1)[point] {};
+			   \node (6) at (2, 0)[point] {};
+
+			   \node (7) at (-0.58, -2.81)[point] {};
+			   \node (8) at (0.58, -2.81)[point] {};
+			   \node (9) at (0.95, -1.69)[point] {};
+			   \node (10) at (0, -1)[point] {};
+			   \node (11) at (-0.95, -1.69)[point] {};
+		   \end{scope}
+		   \begin{scope}
+			   \path [-] (0) edge (1);
+			   \path [-] (1) edge (2);
+			   \path [-] (2) edge (0);
+
+			   \path [-] (3) edge (4);
+			   \path [-] (4) edge (5);
+			   \path [-] (5) edge (6);
+			   \path [-] (6) edge (3);
+
+			   \path [-] (7) edge (8);
+			   \path [-] (8) edge (9);
+			   \path [-] (9) edge (10);
+			   \path [-] (10) edge (11);
+			   \path [-] (11) edge (7);
+		   \end{scope}
+	   \end{tikzpicture}
+	   \caption{graf slika nesto}
+   \end{figure}
 
 % ------------------------------------------------------------------------------
 \chapter{Rezultati testiranja}
