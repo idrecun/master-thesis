@@ -17,11 +17,13 @@
 \usepackage{algorithm}
 \usepackage{gensymb}
 \usepackage[noend]{algpseudocode}
+\usepackage{tikz}
 
 % Teoreme, definicije
 \newtheorem{theorem}{Teorema}
 \newtheorem{lemma}{Lema}
 \newtheorem{corrolary}{Posledica}
+\newtheorem{example}{Primer}
 
 \theoremstyle{definition}
 \newtheorem*{definition}{Definicija}
@@ -29,6 +31,15 @@
 \makeatletter
 \renewcommand*{\ALG@name}{Algoritam}
 \makeatother
+
+% Tikz stilovi
+\tikzstyle{point}=[circle, fill,thick]
+\tikzstyle{pointred}=[circle, fill=red!70,thick]
+\tikzstyle{pointgreen}=[circle, fill=green!70,thick]
+\tikzstyle{pointblue}=[circle, fill=blue!70,thick]
+
+% Matematicki simboli
+\DeclareMathOperator*{\argmax}{arg\,max}
 
 % Paket koji definiše sve specifičnosti master rada Matematičkog fakulteta
 \usepackage[latinica]{matfmaster} 
@@ -164,6 +175,19 @@
    \emph{Obojen graf} je uređeni par $(G, \pi)$ gde je $\pi$ jedno bojenje
    grafa $G$.
 
+   \begin{example}
+	   Neka je $\pi :
+	   \begin{pmatrix}
+		   1 & 2 & 3 & 4 & 5 & 6 \\
+		   3 & 1 & 2 & 2 & 1 & 2
+	   \end{pmatrix}$
+	   jedno bojenje. Koristan je zapis po ćelijama bojenja $\pi = [2\ 5 \mid
+	   4\ 3\ 6 \mid 1]$. Bojenje $\pi_1 = [5 \mid 2 \mid 4\ 6 \mid 3 \mid 1]$
+	   je finije od $\pi$. Bojenje $\pi_2 = [2 \mid 3 \mid 4\ 6 \mid 5 \mid 1]$
+	   nije finije od $\pi$ iako važi da je svaka njegova ćelija podskup neke
+	   ćelije bojenja $\pi$.
+   \end{example}
+
 
    \subsection{Dejstvo grupe}
 
@@ -192,11 +216,79 @@
    $(G_1, \pi_1) \cong (G_2, \pi_2)$) ukoliko postoji $g \in S_n$ tako da je
    $(G_1, \pi_1) = (G_2, \pi_2)^g$. Takvo $g$ zovemo \emph{izomorfizam}.
 
+   \begin{example}
+	   Neka su dati grafovi $(G_1, \pi_1)$ i $(G_2, \pi_2)$ kao na slici
+	   \ref{img:iso}. Ako je redosled boja crvena, zelena, plava, tada je
+	   $\pi_1 = [1\ 4\mid 2 \mid 3]$ i $\pi_2 = [3\ 1 \mid 4 \mid 2]$. Ovi
+	   grafovi su izomorfni za izomorfizam
+	   $g :
+	   \begin{pmatrix}
+		   1 & 2 & 3 & 4\\
+		   3 & 4 & 2 & 1
+	   \end{pmatrix}$
+	   .
+   \end{example}
+
+   \begin{figure}[htp]
+	   \label{img:iso}
+	   \centering
+	   \begin{tikzpicture}
+		   \begin{scope}
+			   \node (0) at (0, 0)[pointred, label=180:1] {};
+			   \node (1) at (1.5, 1.5)[pointred, label=90:4] {};
+			   \node (2) at (3, 0)[pointblue, label=0:3] {};
+			   \node (3) at (1.5, -1.5)[pointgreen, label=-90:2] {};
+		   \end{scope}
+		   \begin{scope}
+			   \path [-] (0) edge (1);
+			   \path [-] (1) edge (2);
+			   \path [-] (1) edge (3);
+			   \path [-] (2) edge (3);
+		   \end{scope}
+	   \end{tikzpicture}
+	   \hspace{20pt}
+	   \begin{tikzpicture}
+		   \begin{scope}
+			   \node (0) at (0, 0)[pointred, label=180:3] {};
+			   \node (1) at (1.5, 1.5)[pointred, label=90:1] {};
+			   \node (2) at (3, 0)[pointblue, label=0:2] {};
+			   \node (3) at (1.5, -1.5)[pointgreen, label=-90:4] {};
+		   \end{scope}
+		   \begin{scope}
+			   \path [-] (0) edge (1);
+			   \path [-] (1) edge (2);
+			   \path [-] (1) edge (3);
+			   \path [-] (2) edge (3);
+		   \end{scope}
+	   \end{tikzpicture}
+	   \caption{Izomorfni grafovi $(G_1, \pi_1)$ i $(G_2, \pi_2)$.}
+   \end{figure}
+
    \emph{Automorfizam} obojenog grafa $(G, \pi)$ je izomorfizam tog grafa sa
    samim sobom, odnosno $g \in S_n$ za koje važi $(G, \pi) = (G, \pi)^g$. Skup
    automorfizama grafa $(G, \pi)$ označavamo sa $Aut(G, \pi)$. Zajedno sa
    operacijom kompozicije preslikavanja skup $Aut(G, \pi)$ čini \emph{grupu
    automorfizama}.
+
+   \begin{figure}[htp]
+	   %\label{img:aut}
+	   \centering
+	   \begin{tikzpicture}
+		   \begin{scope}
+			   \node (0) at (0, 0)[pointred, label=180:1] {};
+			   \node (1) at (1.5, 1.5)[pointblue, label=90:2] {};
+			   \node (2) at (3, 0)[pointgreen, label=0:3] {};
+			   \node (3) at (1.5, -1.5)[pointgreen, label=-90:4] {};
+		   \end{scope}
+		   \begin{scope}
+			   \path [-] (0) edge (1);
+			   \path [-] (1) edge (2);
+			   \path [-] (1) edge (3);
+			   \path [-] (2) edge (3);
+		   \end{scope}
+	   \end{tikzpicture}
+	   \caption{Graf sa automorfizmom $g = (3\ 4)$.}
+   \end{figure}
 
 
    \subsection{Kanonska forma}
@@ -225,6 +317,13 @@
 			imenovanje čvorova
 	   \end{itemize}
    \end{definition}
+
+   \begin{example}
+	   Neka je definisano jedno totalno uređenje na skupu obojenih grafova,
+	   recimo poređenjem njihovih binarnih reprezentacija $bin(G, \pi)$. Tada
+	   je preslikavanje definisano sa $\mathcal{M}(G, \pi) = \max_{g \in S_n}
+	   (G^g, \pi^g)$ kanonska forma.
+   \end{example}
 
 
  \section{Stablo pretrage}
@@ -292,6 +391,99 @@
   zato što za svako $\nu$ koje je permutacija skupa $V$ važi da je bojenje
   pridruženo nekom njegovom prefiksu diskretno ili je njemu pridruženo bojenje
   diskretno.
+
+  \begin{example}
+	  Prikažimo jedno jednostavno stablo pretrage. Za funkciju odabira ciljne
+	  ćelije možemo uzeti funkciju koja bira prvu nejediničnu ćeliju bojenja.
+	  Za funkciju profinjavanja možemo uzeti funkciju koja dodeljuje boje
+	  čvorovima u skladu sa početnim bojenjem $\pi$, pri čemu čvorove niza
+	  $\nu$ izdvaja u zasebne ćelije. Na slici \ref{img:tree} je prikazano
+	  stablo pretrage jednog grafa.
+  \end{example}
+
+   \begin{figure}[htp]
+	   \label{img:tree}
+	   \centering
+	   \begin{tikzpicture}
+		   \begin{scope}
+			   \node (1) at (0, 0)[pointred, label=180:1] {};
+			   \node (2) at (1, 1.71)[pointred, label=90:2] {};
+			   \node (3) at (2, 0)[pointred, label=0:3] {};
+		   \end{scope}
+		   \begin{scope}
+			   \path [-] (1) edge (2);
+			   \path [-] (2) edge (3);
+		   \end{scope}
+	   \end{tikzpicture}
+	   \begin{tikzpicture}
+		   \begin{scope}
+			   \node (0) at (0, 0) {$[{\color{red}1\ 2\ 3}]$};
+			   \node (1) at (-4, -1) {$[{\color{red}1} \mid {\color{green}2\ 3}]$};
+			   \node (2) at (0, -1) {$[{\color{red}2} \mid {\color{green}1\ 3}]$};
+			   \node (3) at (4, -1) {$[{\color{red}3} \mid {\color{green}1\ 2}]$};
+			   \node (12) at (-5, -2) {$[{\color{red}1} \mid {\color{green}2} \mid {\color{blue}3}]$};
+			   \node (13) at (-3, -2) {$[{\color{red}1} \mid {\color{green}3} \mid {\color{blue}2}]$};
+			   \node (21) at (-1, -2) {$[{\color{red}2} \mid {\color{green}1} \mid {\color{blue}3}]$};
+			   \node (23) at (1, -2) {$[{\color{red}2} \mid {\color{green}3} \mid {\color{blue}1}]$};
+			   \node (31) at (3, -2) {$[{\color{red}3} \mid {\color{green}1} \mid {\color{blue}2}]$};
+			   \node (32) at (5, -2) {$[{\color{red}3} \mid {\color{green}2} \mid {\color{blue}1}]$};
+
+			   \node (a1) at (-5.5, -3.86)[pointred] {};
+			   \node (a2) at (-5, -3)[pointgreen] {};
+			   \node (a3) at (-4.5, -3.86)[pointblue] {};
+
+			   \node (b1) at (-3.5, -3.86)[pointred] {};
+			   \node (b2) at (-3, -3)[pointblue] {};
+			   \node (b3) at (-2.5, -3.86)[pointgreen] {};
+
+			   \node (c1) at (-1.5, -3.86)[pointgreen] {};
+			   \node (c2) at (-1, -3)[pointred] {};
+			   \node (c3) at (-0.5, -3.86)[pointblue] {};
+
+			   \node (d1) at (0.5, -3.86)[pointblue] {};
+			   \node (d2) at (1, -3)[pointred] {};
+			   \node (d3) at (1.5, -3.86)[pointgreen] {};
+
+			   \node (e1) at (2.5, -3.86)[pointgreen] {};
+			   \node (e2) at (3, -3)[pointblue] {};
+			   \node (e3) at (3.5, -3.86)[pointred] {};
+
+			   \node (f1) at (4.5, -3.86)[pointblue] {};
+			   \node (f2) at (5, -3)[pointgreen] {};
+			   \node (f3) at (5.5, -3.86)[pointred] {};
+		   \end{scope}
+		   \begin{scope}
+			   \path [-] (0) edge (1);
+			   \path [-] (0) edge (2);
+			   \path [-] (0) edge (3);
+			   \path [-] (1) edge (12);
+			   \path [-] (1) edge (13);
+			   \path [-] (2) edge (21);
+			   \path [-] (2) edge (23);
+			   \path [-] (3) edge (31);
+			   \path [-] (3) edge (32);
+
+			   \path [-] (a1) edge (a2);
+			   \path [-] (a2) edge (a3);
+
+			   \path [-] (b1) edge (b2);
+			   \path [-] (b2) edge (b3);
+
+			   \path [-] (c1) edge (c2);
+			   \path [-] (c2) edge (c3);
+
+			   \path [-] (d1) edge (d2);
+			   \path [-] (d2) edge (d3);
+
+			   \path [-] (e1) edge (e2);
+			   \path [-] (e2) edge (e3);
+
+			   \path [-] (f1) edge (f2);
+			   \path [-] (f2) edge (f3);
+		   \end{scope}
+	   \end{tikzpicture}
+	   \caption{Stablo pretrage koje generiše sve permutacije skupa čvorova.}
+   \end{figure}
 
   Dejstvo grupe $S_n$ na stablo definiše se slično kao za bilo koju drugu
   strukturu. Naredna lema pokazuje da je ovako definisano stablo invarijantno na
