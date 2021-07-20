@@ -188,15 +188,21 @@
 
    \subsection{Dejstvo grupe}
 
-   Neka je $G$ grupa i $S$ skup na kom je definisano dejstvo grupe $G$ označeno
-   sa $s^g$ za $s \in S$ i $g \in G$. Orbita elementa $s$ je skup $\Omega_s^G =
+   Neka je nad grupom $G$ i skupom $S$ definisano dejstvo. Dejstvo elementa
+   grupe $g \in G$ na element skupa $s \in S$ označavamo sa $gs$ ili $s^g$, pri
+   čemu ako su $g_1, g_2 \in G$ tada je $(g_1g_2)s = g_1(g_2s)$ odnosno
+   $s^{g_1g_2} = (s^{g_2})^{g_1}$.  Orbita elementa $s$ je skup $\Omega_s^G =
    \{s^g \mid g \in G\}$.  Stabilizator elementa $s$ je skup $\Sigma_s^G = \{g
    \in G \mid s^g=s\}$ koji čini jednu podgrupu od $G$.
 
-   Neka $S_n$ označava simetričnu grupu stepena $n$. Na skupu čvorova $V$
-   definisano je dejstvo grupe sa $v^g = g(v)$ za $v \in V$ i $g \in S_n$.
-   Definiciju dejstva grupe permutacija možemo proširiti i na složenije
-   strukture:
+   Neka $S_n$ označava grupu simetrija stepena $n$. Permutaciju $g \in S_n$
+   možemo predstaviti kao preslikavanje, npr.  $g : \begin{pmatrix} 1 & 2 & 3 &
+   4\\ 3 & 4 & 1 & 2 \end{pmatrix}$ ili kao kompoziciju ciklusa $(1\ 3)(2\ 4)$.
+   Identičnu permutaciju označavamo sa $id$.
+
+   Na skupu čvorova $V$ definisano je dejstvo grupe $S_n$ sa $v^g = g(v)$ za $v
+   \in V$ i $g \in S_n$.  Definiciju dejstva grupe permutacija možemo proširiti
+   i na složenije strukture:
    \begin{itemize}
        \item $W^g = \{w^g \mid w \in W\}$ za skup $W \subseteq V$
        \item $w^g = (v_1^g, v_2^g, \dots, v_k^g)$ za uređenu $k$-torku $w$
@@ -205,6 +211,9 @@
 		   $\pi^g(v^g)=\pi(v)$ odnosno $\pi^g=\pi g^{-1}$
        \item $(G, \pi)^g = (G^g, \pi^g)$ za obojen graf $(G, \pi)$
    \end{itemize}
+   Primetimo da za ćeliju bojenja $\pi^{-1}(c)$ važi $\pi^{-1}(c)^g =
+   (\pi^g)^{-1}(c)$. To je zato što $(\pi^g)^{-1}(c) = \{v \mid \pi^g(v) = c\}
+   = \{w^g \mid \pi^g(w^g) = c\} = \{w^g \mid \pi(w) = c\} = \pi^{-1}(c)^g$. 
 
 
    \subsection{Izomorfizam}
@@ -711,9 +720,7 @@
 
 		  \item $|(\pi^\alpha)^{-1}(c)| = |\pi^{-1}(c)|$
 
-			  Važi da je $(\pi^\alpha)^{-1}(c) = \{m \mid \pi^\alpha(m) = c\} =
-			  \{m^\alpha \mid \pi^\alpha(m^\alpha) = c\} = \{m^\alpha \mid
-			  \pi(m) = c\} = \pi^{-1}(c)^\alpha$. Odatle je
+			  Važi da je $(\pi^\alpha)^{-1}(c) = \pi^{-1}(c)^\alpha$ odakle je
 			  $|(\pi^\alpha)^{-1}(c)| = |\pi^{-1}(c)^\alpha| = |\pi^{-1}(c)|$.
 
 		  \item $(\pi^\alpha)^{-1}(c) = (\pi^\beta)^{-1}(c)$
@@ -1447,14 +1454,11 @@
 		  &= \sum_{v' \in (\pi^g)^{-1}(c_2)} \psi(G^g, u', v') \\
 		  &= \sum_{v^g \in (\pi^g)^{-1}(c_2)} \psi(G^g, u^g, v^g) &\text{smena }u'=u^g, v'=v^g\\
 		  &= \sum_{v \in \pi^{-1}(c_2)} \psi(G^g, u^g, v^g) &(\pi^g)^{-1}(c_2) = \pi^{-1}(c_2)^g\\
-		  &= \sum_{v \in \pi^{-1}(c_2)} \psi(G, u, v) &\psi \text{ je invarijantno}\\
+		  &= \sum_{v \in \pi^{-1}(c_2)} \psi(G, u, v) &(\psi2)\\
 		  &= \psi(G, u, \pi^{-1}(c_2)) \\
 		  &= \psi_{Q(G, \pi)}(c_1, c_2) &(\pi^g)^{-1}(c_1) = \pi^{-1}(c_1)^g\\
 		  $$
 	  \end{align}
-	  {\color{red} Uvedi dekompoziciju za psi, pokaži da je psi invarijantno i
-	  dokaži pi na -1 na g je pi na g na -1 (svojstva za psi kod grafa, a ovo
-	  kod bojenja i dejstva na bojenje)}
   \end{proof}
 
   \begin{corrolary}
