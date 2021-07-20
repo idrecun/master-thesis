@@ -1241,7 +1241,7 @@
 			  Tada je svaka ćelija $C$ svakog bojenja $\pi_j,\ j \leq i$ unija nekih
 			  klasa particije $\xi$, pa to važi i za ćeliju $W$ odabranu u
 			  liniji 8.  Neka su $x$ i $y$ proizvoljni elementi iste klase
-			  particije $\xi$. Tada je $\psi(x, W) = \psi(y, W)$, pa oni ne
+			  particije $\xi$. Tada je $\psi(G, x, W) = \psi(G, y, W)$, pa oni ne
 			  mogu biti razdvojeni nakon izvršavanja koraka spoljne petlje.
 			  Prema tome je $\xi \leq \sim_{\pi_{i+1}}$.
 	  \end{itemize}
@@ -1259,7 +1259,7 @@
 	  Pokažimo da je $\gamma$ ekvitabilno. Dokaz izvodimo iz dva dela. Prvo,
 	  pokažimo da važi sledeće tvrđenje. Ako je ćelija $C$ prilikom izvršavanja
 	  algoritma dodata u $\alpha$ u liniji 4, 6, 13 ili 15 (u oznaci $C \in
-	  \alpha$), tada se ona može predstaviti kao disjunktna unija nekih ćelija
+	  \mathcal{A}$), tada se ona može predstaviti kao disjunktna unija nekih ćelija
 	  $W_1, \dots, W_m \in \mathcal{W}$ gde $W$ predstavlja skup svih ćelija
 	  uklonjenih iz $\alpha$ linijom 8 algoritma.  Dokaz izvodimo indukcijom po
 	  strukturi stabla, odozdo naviše.
@@ -1276,36 +1276,36 @@
 			  disjunktna unija skupova iz $\mathcal{W}$, pa to važi i za $C$.
 	  \end{itemize}
 
-	  Sada, definišimo $\beta = \{C \in \mathcal{P}(V) \mid \forall x, y \
-	  \gamma(x) = \gamma(y) \implies \psi(x, C) = \psi(y, C)\}$. Jasno je da je
-	  $\mathcal{W} \subseteq \beta$. Prema prethodno pokazanom je onda i
-	  $\alpha \subseteq \beta$.  Pokažimo da za svaku ćeliju $C$ u šumi važi
-	  da je $C \in \beta$. Dokaz izvodimo indukcijom po strukturi stabla,
+	  Definišimo $\mathcal{B} = \{C \in \mathcal{P}(V) \mid \forall x, y \
+	  \gamma(x) = \gamma(y) \implies \psi(G, x, C) = \psi(G, y, C)\}$. Jasno je da je
+	  $\mathcal{W} \subseteq \mathcal{B}$. Prema prethodno pokazanom je onda i
+	  $\mathcal{A} \subseteq \mathcal{B}$.  Pokažimo da za svaku ćeliju $C$ u šumi važi
+	  da je $C \in \mathcal{B}$. Dokaz izvodimo indukcijom po strukturi stabla,
 	  odozgo naniže.
 
 	  \begin{itemize}
 		  \item[] \textbf{Baza indukcije} Neka je $C$ koren nekog stabla šume.
 			  \begin{itemize}
-				  \item[1\degree] Ako je $\nu = ()$, važi $C \in \beta$ jer je
+				  \item[1\degree] Ako je $\nu = ()$, važi $C \in \mathcal{B}$ jer je
 					  dodato u $\alpha$ u liniji 6 algoritma.
 				  \item[2\degree] Ako je $\nu = \nu' \| w$, bojenje $R(G,
 					  \pi_0, \nu')$ je ekvitabilno, pa kako je $\gamma \leq
-					  R(G, \pi_0, \nu')$, sve njegove ćelije su u $\beta$, a
+					  R(G, \pi_0, \nu')$, sve njegove ćelije su u $\mathcal{B}$, a
 					  samim tim je i $C$.
 			  \end{itemize}
-		  \item[] \textbf{Induktivni korak} Neka je $C \in \beta$ i $C = C_1 \sqcup \dots \sqcup C_k$.
+		  \item[] \textbf{Induktivni korak} Neka je $C \in \mathcal{B}$ i $C = C_1 \sqcup \dots \sqcup C_k$.
 			  \begin{itemize}
-				  \item[1\degree] Ako je $C \in \alpha$, onda su i $C_1, \dots,
-					  C_k \in \alpha \subseteq \beta$.
-				  \item[2\degree] Ako je $C \not \in \alpha$, onda su $C_1,
-					  \dots, C_{s-1}, C_{s+1}, \dots, C_k \in \alpha \subseteq
-					  \beta$. Tada je $\psi(G, x, C_s) = \psi(G, x, C) -
+				  \item[1\degree] Ako je $C \in \mathcal{A}$, onda su i $C_1, \dots,
+					  C_k \in \mathcal{A} \subseteq \mathcal{B}$.
+				  \item[2\degree] Ako je $C \not \in \mathcal{A}$, onda su $C_1,
+					  \dots, C_{s-1}, C_{s+1}, \dots, C_k \in \mathcal{A} \subseteq
+					  \mathcal{B}$. Tada je $\psi(G, x, C_s) = \psi(G, x, C) -
 					  \sum_{1 \leq i \leq k, i \neq s} \psi(G, x, C_i)$, pa je
-					  i $C_s \in \beta$.
+					  i $C_s \in \mathcal{B}$.
 			  \end{itemize}
 	  \end{itemize}
 
-	  Kako su sve ćelije šume u $\beta$, to su i sve ćelije bojenja $\gamma$,
+	  Kako su sve ćelije šume u $\mathcal{B}$, to su i sve ćelije bojenja $\gamma$,
 	  pa je $\gamma$ ekvitabilno.
   \end{proof}
 
