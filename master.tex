@@ -1803,8 +1803,54 @@
 			   \path [-] (10) edge (11);
 			   \path [-] (11) edge (7);
 		   \end{scope}
+		   \draw [thick] (0, -0.5) circle (2.8);
 	   \end{tikzpicture}
-	   \caption{graf slika nesto}
+	   \hspace{20pt}
+	   \begin{tikzpicture}
+		   \begin{scope}
+			   \node (0) at (-2.1, 0)[point] {};
+			   \node (1) at (-1.5, 1)[point] {};
+			   \node (2) at (-0.9, 0)[point] {};
+
+			   \node (3) at (1, 0)[point] {};
+			   \node (4) at (1, 1)[point] {};
+			   \node (5) at (2, 1)[point] {};
+			   \node (6) at (2, 0)[point] {};
+
+			   \node (7) at (-0.58, -2.81)[point] {};
+			   \node (8) at (0.58, -2.81)[point] {};
+			   \node (9) at (0.95, -1.69)[point] {};
+			   \node (10) at (0, -1)[point] {};
+			   \node (11) at (-0.95, -1.69)[point] {};
+		   \end{scope}
+		   \begin{scope}
+			   \path [-] (0) edge (1);
+			   \path [-] (1) edge (2);
+			   \path [-] (2) edge (0);
+
+			   \path [-] (3) edge (4);
+			   \path [-] (4) edge (5);
+			   \path [-] (5) edge (6);
+			   \path [-] (6) edge (3);
+
+			   \path [-] (7) edge (8);
+			   \path [-] (8) edge (9);
+			   \path [-] (9) edge (10);
+			   \path [-] (10) edge (11);
+			   \path [-] (11) edge (7);
+		   \end{scope}
+		   \draw [thick, color=red] (-1.5, 0.5) circle (1.2);
+		   \draw [thick, color=green] (1.5, 0.5) circle (1.2);
+		   \draw [thick, color=blue] (0, -2) circle (1.4);
+	   \end{tikzpicture}
+	   \caption{Levo je prikazana particija usled standardne procedure
+	   profinjavanja. Količnički graf sadrži jedan čvor $c$ i važi $\psi(c, c)
+	   = 2$. Desno je prikazana particija usled profinjavanja sa invarijantom
+	   najkraćeg puta. Količnički graf sadrži tri čvora {\color{red}$a$},
+	   {\color{green}$b$} i {\color{blue}$c$} i važi $\psi( a, a) = \{0, 1,
+	   1\}$, $\psi(b, b) = \{0, 1, 1, 2\}$ i $\psi(c, c) = \{0, 1, 1, 2, 2\}$,
+	   dok su $\psi(x, y)$ za različite $x$ i $y$ multiskupovi sa različitim
+	   brojem beskonačnosti.}
 	   \label{img:graphinv}
    \end{figure}
 
