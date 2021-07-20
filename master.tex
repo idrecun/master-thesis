@@ -18,6 +18,7 @@
 \usepackage{gensymb}
 \usepackage[noend]{algpseudocode}
 \usepackage{tikz}
+\usetikzlibrary{arrows.meta}
 
 % Teoreme, definicije
 \newtheorem{theorem}{Teorema}
@@ -34,9 +35,10 @@
 
 % Tikz stilovi
 \tikzstyle{point}=[circle, fill,thick]
-\tikzstyle{pointred}=[circle, fill=red!70,thick]
-\tikzstyle{pointgreen}=[circle, fill=green!70,thick]
-\tikzstyle{pointblue}=[circle, fill=blue!70,thick]
+\tikzstyle{pointred}=[circle, fill=red!50,thick]
+\tikzstyle{pointgreen}=[circle, fill=green!50,thick]
+\tikzstyle{pointblue}=[circle, fill=blue!50,thick]
+\tikzstyle{arrow}=[draw=black, >={Latex[length=2mm]}]
 
 % Paket koji definiše sve specifičnosti master rada Matematičkog fakulteta
 \usepackage[latinica]{matfmaster} 
@@ -1153,6 +1155,52 @@
 	  je particija $\sim_\pi$ ekvitabilna.
   \end{definition}
 
+   \begin{figure}[htp]
+	   \centering
+	   \begin{tikzpicture}
+		   \begin{scope}
+			   \node (0) at (1, 0)[pointgreen] {};
+			   \node (1) at (0.5, 0.86)[point] {};
+			   \node (2) at (-0.5, 0.86)[point] {};
+			   \node (3) at (-1, 0)[pointgreen] {};
+			   \node (4) at (-0.5, -0.86)[point] {};
+			   \node (5) at (0.5, -0.86)[point] {};
+		   \end{scope}
+		   \begin{scope}
+			   \path [-] (0) edge (1);
+			   \path [-] (1) edge (2);
+			   \path [-] (2) edge (3);
+			   \path [-] (3) edge (4);
+			   \path [-] (4) edge (5);
+			   \path [-] (5) edge (0);
+		   \end{scope}
+	   \end{tikzpicture}
+	   \hspace{20pt}
+	   \begin{tikzpicture}
+		   \begin{scope}
+			   \node (0) at (1, 0)[pointgreen] {};
+			   \node (1) at (0.5, 0.86)[pointgreen] {};
+			   \node (2) at (-0.5, 0.86)[point] {};
+			   \node (3) at (-1, 0)[pointgreen] {};
+			   \node (4) at (-0.5, -0.86)[point] {};
+			   \node (5) at (0.5, -0.86)[point] {};
+		   \end{scope}
+		   \begin{scope}
+			   \path [-] (0) edge (1);
+			   \path [-] (1) edge (2);
+			   \path [-] (2) edge (3);
+			   \path [-] (3) edge (4);
+			   \path [-] (4) edge (5);
+			   \path [-] (5) edge (0);
+		   \end{scope}
+	   \end{tikzpicture}
+	   \caption{Levo bojenje je ekvitabilno zato što je svaki zeleni čvor
+	   povezan sa tačno dva crna, a svaki crni čvor sa tačno jednim zelenim i
+	   tačno jednim crnim. Desno bojenje nije ekvitabilno zato što postoje
+	   zeleni čvorovi sa različitim brojem zelenih suseda.}
+	   \label{img:equitable}
+   \end{figure}
+
   \begin{lemma}
 	  \label{lemma:coarsesteq}
 	  Za proizvoljno bojenje $\pi$ grafa $G$ postoji jedinstvena najgrublja
@@ -1183,6 +1231,80 @@
 	  je $\psi(G, u, C) = \psi(G, x_1, C) = \psi(G, x_2, C) = \dots = \psi(G,
 	  x_n, C) = \psi(G, v, C)$.
   \end{proof}
+
+   \begin{figure}[htp]
+	   \centering
+	   \begin{tikzpicture}
+		   \begin{scope}
+			   \node (0) at (1, 0)[pointgreen] {};
+			   \node (1) at (0.5, 0.86)[pointblue] {};
+			   \node (2) at (-0.5, 0.86)[pointred] {};
+			   \node (3) at (-1, 0)[point, color=orange!50] {};
+			   \node (4) at (-0.5, -0.86)[pointred] {};
+			   \node (5) at (0.5, -0.86)[pointblue] {};
+			   \node (6) at (1.5, -0.86)[point, color=violet!50] {};
+			   \node (7) at (2.5, -0.86)[point, color=cyan!50] {};
+			   \node (8) at (2.5, 0.86)[point, color=cyan!50] {};
+			   \node (9) at (1.5, 0.86)[point, color=violet!50] {};
+		   \end{scope}
+		   \begin{scope}
+			   \path [-] (0) edge (1);
+			   \path [-] (1) edge (2);
+			   \path [-] (2) edge (3);
+			   \path [-] (3) edge (4);
+			   \path [-] (4) edge (5);
+			   \path [-] (5) edge (0);
+			   \path [-] (0) edge (6);
+			   \path [-] (6) edge (7);
+			   \path [-] (7) edge (8);
+			   \path [-] (8) edge (9);
+			   \path [-] (9) edge (0);
+		   \end{scope}
+	   \end{tikzpicture}
+	   \hspace{40pt}
+	   \begin{tikzpicture}
+		   \begin{scope}
+			   \node (0) at (0, 1)[point] {};
+			   \node (1) at (0.86, 0.5)[point] {};
+			   \node (2) at (0.86, -0.5)[point] {};
+			   \node (3) at (0, -1)[point] {};
+			   \node (4) at (-0.86, -0.5)[point] {};
+			   \node (5) at (-0.86, 0.5)[point] {};
+			   \node (6) at (3, 1)[point] {};
+			   \node (7) at (3.86, 0.5)[point] {};
+			   \node (8) at (3.86, -0.5)[point] {};
+			   \node (9) at (3, -1)[point] {};
+			   \node (10) at (2.14, -0.5)[point] {};
+			   \node (11) at (2.14, 0.5)[point] {};
+		   \end{scope}
+		   \begin{scope}
+			   \path [-] (0) edge (1);
+			   \path [-] (1) edge (2);
+			   \path [-] (2) edge (3);
+			   \path [-] (3) edge (4);
+			   \path [-] (4) edge (5);
+			   \path [-] (5) edge (0);
+			   \path [-] (6) edge (7);
+			   \path [-] (7) edge (8);
+			   \path [-] (8) edge (9);
+			   \path [-] (9) edge (10);
+			   \path [-] (10) edge (11);
+			   \path [-] (11) edge (6);
+			   \path [-] (0) edge (6);
+			   \path [-] (3) edge (9);
+			   \path [-] (1) edge (5);
+			   \path [-] (2) edge (4);
+			   \path [-] (7) edge (10);
+			   \path [-] (8) edge (11);
+		   \end{scope}
+	   \end{tikzpicture}
+	   \caption{Najgrublje ekvitabilno bojenje levog grafa razdvaja čvorove
+	   grafa tačno po orbitama u grupi automorfizama grafa. To naravno nije
+	   uvek slučaj, što se može videti iz primera desnog grafa čije je
+	   najgrublje ekvitabilno bojenje jednobojno.}
+	   \label{img:equitable}
+   \end{figure}
+
   
   Ovim smo pokazali da postoji najgrublje ekvitabilno bojenje finije od $\pi$
   određeno do na raspored ćelija. Definišimo onda funkciju $F(G, \pi, \nu)$ kao
@@ -1375,7 +1497,7 @@
 		  &\leq \sum_{v \in V} (1 + \log_2 n)\\
 		  &= n (1 + \log_2 n)$$
 	  \end{align}
-
+	  gde je $\chi_W : V \to \{0, 1\}$ karakteristična funkcija skupa $W$.
   \end{proof}
 
 
@@ -1432,6 +1554,74 @@
 	  preslikavanje takvo da važi $\psi_Q(c_1, c_2) = \psi(G, v,
 	  \pi^{-1}(c_2))$ za bilo koje $v \in \pi^{-1}(c_1)$.
   \end{definition}
+
+   \begin{figure}[htp]
+	   \centering
+	   \begin{tikzpicture}
+		   \begin{scope}
+			   \node (0) at (2, 0)[pointgreen] {};
+			   \node (1) at (1.71, 1)[pointblue] {};
+			   \node (2) at (1, 1.71)[pointgreen] {};
+			   \node (3) at (0,2)[pointred] {};
+			   \node (4) at (-1, 1.71)[pointgreen] {};
+			   \node (5) at (-1.71, 1)[pointblue] {};
+			   \node (6) at (-2, 0)[pointgreen] {};
+			   \node (7) at (-1.71, -1)[pointred] {};
+			   \node (8) at (-1, -1.71)[pointgreen] {};
+			   \node (9) at (0, -2)[pointblue] {};
+			   \node (10) at (1, -1.71)[pointgreen] {};
+			   \node (11) at (1.71, -1)[pointred] {};
+		   \end{scope}
+		   \begin{scope}
+			   \path [-] (0) edge (1);
+			   \path [-] (1) edge (2);
+			   \path [-] (2) edge (3);
+			   \path [-] (3) edge (4);
+			   \path [-] (4) edge (5);
+			   \path [-] (5) edge (6);
+			   \path [-] (6) edge (7);
+			   \path [-] (7) edge (8);
+			   \path [-] (8) edge (9);
+			   \path [-] (9) edge (10);
+			   \path [-] (10) edge (11);
+			   \path [-] (11) edge (0);
+			   \path [-] (1) edge (3);
+			   \path [-] (3) edge (5);
+			   \path [-] (5) edge (7);
+			   \path [-] (7) edge (9);
+			   \path [-] (9) edge (11);
+			   \path [-] (11) edge (1);
+			   \path [-] (3) edge (7);
+			   \path [-] (7) edge (11);
+			   \path [-] (11) edge (3);
+		   \end{scope}
+	   \end{tikzpicture}
+	   \hspace{40pt}
+	   \begin{tikzpicture}
+		   \begin{scope}
+			   \node (0) at (0, 0)[circle, fill=red!30] {3};
+			   \node (1) at (3, 0)[circle, fill=blue!30] {3};
+			   \node (2) at (1.5, 2.56)[circle, fill=green!30] {6};
+			   \node (3) at (0, -1) {};
+		   \end{scope}
+		   \begin{scope}[label distance=-2mm]
+			   \path [->] (0) edge[arrow, loop left] node[label=below:2]{} (0);
+
+			   \path [->] (0) edge[arrow, bend right = 10] node[label=below:2]{} (1);
+			   \path [->] (1) edge[arrow, bend right = 10] node[label=above:2]{} (0);
+
+			   \path [->] (1) edge[arrow, bend right = 10] node[label=30:2]{} (2);
+			   \path [->] (2) edge[arrow, bend right = 10] node[label=210:1]{} (1);
+
+			   \path [->] (0) edge[arrow, bend right = 10] node[label=-30:2]{} (2);
+			   \path [->] (2) edge[arrow, bend right = 10] node[label=150:1]{} (0);
+		   \end{scope}
+	   \end{tikzpicture}
+	   \caption{Graf sa ekvitabilnim bojenjem (levo) i odgovarajući količnički
+	   graf (desno).}
+	   \label{img:quotient}
+   \end{figure}
+
 
   Primetimo da je definicija dobra zbog ekvitabilnosti bojenja $\pi$. Sledeća
   lema pokazuje značaj uvedenog pojma.
