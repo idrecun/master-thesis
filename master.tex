@@ -1535,10 +1535,22 @@
 	  |\pi_2^{-1}(c_2)|\psi_{Q(G, \pi_2)}(c_2, c_1) =
 	  |\pi_2^{-1}(c_1)|\psi_{Q(G, \pi_2)}(c_1, c_2)$.
 
-	  {\color{red} Dokazati svojstvo $|C_1|\psi(c_1, c_2) = |C_2|\psi(c_2, c_1)$}
+	  Dokažimo još korišćeno svojstvo $|\pi^{-1}(c_1)|\psi(c_1, c_2) =
+	  |\pi^{-1}(c_2)|\psi(c_2, c_1)$. Ono važi zato što za sve $u \in
+	  \pi^{-1}(c_1)$ važi $|\pi^{-1}(c_1)|\psi(c_1, c_2) =
+	  |\pi^{-1}(c_1)|\psi(G, u, \pi^{-1}(c_2)) = \sum_{u \in \pi^{-1}(c_1)}
+	  \psi(G, u, \pi^{-1}(c_2)) = \sum_{u \in \pi^{-1}(c_1)} \sum_{v \in
+	  \pi^{-1}(c_2)} \psi(G, u, v)$. Iz simetričnosti $(\psi1)$ i mogućnosti
+	  zamene mesta suma sledi tražena jednakost.
   \end{proof}
 
-  {\color{red} Slozenost.}
+  Primetimo da je vremenska složenost određivanja invarijante u čvoru $\nu \|
+  w$ u klasi $O((|\pi_2| - |\pi_1|)n)$ gde je $\pi_2 = R(G, \pi, \nu \| w)$,
+  $\pi_1 = R(G, \pi, \nu)$ i $n$ broj čvorova grafa. Ovo se jednostavno vidi iz
+  toga što broj ćelija $\pi_2$ koje nisu ćelije $\pi_1$ upravo $|\pi_2| -
+  |\pi_1|$ i iz toga što je za određivanje svakog niza $f_i$ dovoljno $O(n)$
+  koraka. To znači da ukupna složenost određivanja svih invarijanti od korena
+  do jednog od listova stabla pripada klasi $O(n^2)$.
 
  \section{Automorfizmi}
 
