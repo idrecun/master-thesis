@@ -1571,19 +1571,15 @@
   Pored samog skupa automorfizama čuvaju se podaci koji ovo i omogućavaju.
 
   Neka je $S = \{g_1, \dots, g_n\}$ skup automorfizama. Definišimo $stab_S(v) =
-  \{i \mid v^{g_i} = v\}$. Grupa automorfizama generisana skupom $S_\nu = \{g_i
-  \mid i \in \bigcap_{1 \leq j \leq k} stab(v_j)\}$ je podgrupa stabilizatora
-  niza $\nu = (v_1, \dots, v_k)$, odnosno $< \negmedspace S_\nu \negmedspace >
-  \  \leq \  \Sigma^{Aut(G, \pi)}_\nu$.
+  \{g \in S \mid v^{g} = v\}$. Grupa automorfizama generisana skupom $S_\nu =
+  \bigcap_{1 \leq j \leq k} stab_S(v_j)$ je podgrupa stabilizatora niza $\nu =
+  (v_1, \dots, v_k)$, odnosno $< \negmedspace S_\nu \negmedspace > \  \leq \
+  \Sigma^{Aut(G, \pi)}_\nu$.
 
   Definišimo $mcr_S(v) = \min \Omega_v^{< S >}$. Neka je $\nu$ čvor stabla.
   Kako je prema prethodno pokazanom $P_C$ moguće primenjivati za bilo koja dva
   čvora iz iste orbite stabilizatora, možemo odseći pretragu u bilo kom čvoru
   $\nu \| v$ za koji važi $v \neq mcr_{S_\nu}(v)$.
-
-  Prilikom dodavanja novog automorfizma u skup neophodno je ažurirati vrednosti
-  $stab$ i $mcr$. Jasno je da je za ažuriranje $stab$ dovoljno u odgovarajuće
-  skupove dodati indeks novog automorfizma. {\color{red} Dovršiti}
 
  \section{Pretraga}
 
@@ -1650,10 +1646,8 @@
   \zeta)|$, tada je $[\nu]_{k+1}^g = [\zeta]_{k+1}$ i moguće je primeniti
   operaciju odsecanja $P_C([\nu]_{k+1}, g)$. Ovo je moguće realizovati skokom
   unazad - povratna vrednost određuje do kog nivoa u pretrazi je potrebno
-  vratiti se.
-
-  Na osnovu teoreme \ref{thm:aut} nakon završenog obilaska stabla skup $S$
-  predstavlja skup generatora grupe $Aut(G, \pi_0)$.
+  vratiti se. Nakon završenog obilaska stabla skup $S$ predstavlja skup
+  generatora grupe $Aut(G, \pi_0)$.
 
   \begin{algorithm}[H]
 	  \caption{Određivanje generatora grupe automorfizama}
