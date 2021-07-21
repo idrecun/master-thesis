@@ -1063,6 +1063,21 @@
    koji slede u ovom poglavlju. Invarijantnost važi zato što je $(u, v)$ grana
    grafa $G$ akko je $(u, v)^g = (u^g, v^g)$ grana grafa $G^g$.
 
+ \section{Funkcija odabira ciljne ćelije}
+
+ Postoji više strategija za realizaciju funkcije odabira ciljne ćelije. Ovde
+ ćemo predstaviti dve takve strategije.
+
+ Jedna mogućnost je odabir neke (konkretno prve) nejedinične ćelije bojenja
+ najmanje veličine. Obrazloženje za ovakav izbor je da manje ćelije imaju veću
+ šansu da sadrže mali broj orbita (ili čak jednu) cite{McKay} i da je samim
+ tim očekivani faktor grananja manji.
+
+ Druga mogućnost, koja se ispostavila kao bolja u većini slučajeva cite{McKay}
+ je odabir prve nejedinične ćelije bez obzira na njenu veličinu. U daljem radu
+ pretpostavljamo postojanje procedure \texttt{Target\_cell($\pi$)} koja
+ implementira ovu strategiju.
+
  \section{Funkcija profinjavanja}
   
   \begin{lemma}
@@ -1506,21 +1521,152 @@
 	  gde je $\chi_W : V \to \{0, 1\}$ karakteristična funkcija skupa $W$.
   \end{proof}
 
+   \begin{figure}[htp]
+	   \centering
+	   \begin{tikzpicture}
+		   \begin{scope}
+			   \node (0) at (0, 0) {$[1\ 6 \mid 2\ 3\ 4\ 5]$};
+			   \node (1) at (-3.5, -1) {$[1 \mid 6 \mid 4\ 5 \mid 2\ 3]$};
+			   \node (6) at (3.5, -1) {$[6 \mid 1 \mid 2\ 3 \mid 4\ 5]$};
+			   \node (14) at (-5.25, -2) {$[1 \mid 6 \mid 4 \mid 5 \mid 3 \mid 2]$};
+			   \node (15) at (-1.75, -2) {$[1 \mid 6 \mid 5 \mid 4 \mid 2 \mid 3]$};
+			   \node (62) at (1.75, -2) {$[6 \mid 1 \mid 2 \mid 3 \mid 5 \mid 4]$};
+			   \node (63) at (5.25, -2) {$[6 \mid 1 \mid 3 \mid 2 \mid 4 \mid 5]$};
 
- \section{Funkcija odabira ciljne ćelije}
+			   \node (a1) at (1, 1.5)[pointred, label=0:6] {};
+			   \node (a2) at (0.5, 2.36)[pointblue, label=0:4] {};
+			   \node (a3) at (-0.5, 2.36)[pointblue, label=180:2] {};
+			   \node (a4) at (-1, 1.5)[pointred, label=180:1] {};
+			   \node (a5) at (-0.5, 0.64)[pointblue, label=180:3] {};
+			   \node (a6) at (0.5, 0.64)[pointblue, label=0:5] {};
 
- Postoji više strategija za realizaciju funkcije odabira ciljne ćelije. Ovde
- ćemo predstaviti dve takve strategije.
+			   \node (b1) at (-2.5, 0.5)[pointred] {};
+			   \node (b2) at (-3, 1.36)[pointblue] {};
+			   \node (b3) at (-4, 1.36)[point, color=teal!70] {};
+			   \node (b4) at (-4.5, 0.5)[pointgreen, draw] {};
+			   \node (b5) at (-4, -0.36)[point, color=teal!70] {};
+			   \node (b6) at (-3, -0.36)[pointblue] {};
 
- Jedna mogućnost je odabir neke (konkretno prve) nejedinične ćelije bojenja
- najmanje veličine. Obrazloženje za ovakav izbor je da manje ćelije imaju veću
- šansu da sadrže mali broj orbita (ili čak jednu) cite{McKay} i da je samim
- tim očekivani faktor grananja manji.
+			   \node (c1) at (2.5, 0.5)[pointred] {};
+			   \node (c2) at (3, 1.36)[pointblue] {};
+			   \node (c3) at (4, 1.36)[point, color=teal!70] {};
+			   \node (c4) at (4.5, 0.5)[pointgreen, draw] {};
+			   \node (c5) at (4, -0.36)[point, color=teal!70] {};
+			   \node (c6) at (3, -0.36)[pointblue] {};
 
- Druga mogućnost, koja se ispostavila kao bolja u većini slučajeva cite{McKay}
- je odabir prve nejedinične ćelije bez obzira na njenu veličinu. U daljem radu
- pretpostavljamo postojanje procedure \texttt{Target\_cell($\pi$)} koja
- implementira ovu strategiju.
+			   \node (d1) at (-4.25, -3.5)[pointred] {};
+			   \node (d2) at (-4.75, -2.64)[pointblue, draw] {};
+			   \node (d3) at (-5.75, -2.64)[point, color=cyan!70] {};
+			   \node (d4) at (-6.25, -3.5)[pointgreen] {};
+			   \node (d5) at (-5.75, -4.36)[point, color=teal!70] {};
+			   \node (d6) at (-4.75, -4.36)[point, color=violet!70] {};
+
+			   \node (e1) at (-0.75, -3.5)[pointred] {};
+			   \node (e2) at (-1.25, -2.64)[point, color=violet!70] {};
+			   \node (e3) at (-2.25, -2.64)[point, color=teal!70] {};
+			   \node (e4) at (-2.75, -3.5)[pointgreen] {};
+			   \node (e5) at (-2.25, -4.36)[point, color=cyan!70] {};
+			   \node (e6) at (-1.25, -4.36)[pointblue, draw] {};
+
+			   \node (f1) at (2.75, -3.5)[pointgreen] {};
+			   \node (f2) at (2.25, -2.64)[point, color=cyan!70] {};
+			   \node (f3) at (1.25, -2.64)[pointblue, draw] {};
+			   \node (f4) at (0.75, -3.5)[pointred] {};
+			   \node (f5) at (1.25, -4.36)[point, color=violet!70] {};
+			   \node (f6) at (2.25, -4.36)[point, color=teal!70] {};
+
+			   \node (g1) at (6.25, -3.5)[pointgreen] {};
+			   \node (g2) at (5.75, -2.64)[point, color=teal!70] {};
+			   \node (g3) at (4.75, -2.64)[point, color=violet!70] {};
+			   \node (g4) at (4.25, -3.5)[pointred] {};
+			   \node (g5) at (4.75, -4.36)[pointblue, draw] {};
+			   \node (g6) at (5.75, -4.36)[point, color=cyan!70] {};
+
+		   \end{scope}
+		   \begin{scope}
+			   \path [-] (0) edge (1);
+			   \path [-] (0) edge (6);
+			   \path [-] (1) edge (14);
+			   \path [-] (1) edge (15);
+			   \path [-] (6) edge (62);
+			   \path [-] (6) edge (63);
+
+			   \path [-] (a1) edge (a2);
+			   \path [-] (a2) edge (a3);
+			   \path [-] (a3) edge (a4);
+			   \path [-] (a4) edge (a5);
+			   \path [-] (a5) edge (a6);
+			   \path [-] (a6) edge (a1);
+			   \path [-] (a2) edge (a6);
+			   \path [-] (a3) edge (a5);
+
+			   \path [-] (b1) edge (b2);
+			   \path [-] (b2) edge (b3);
+			   \path [-] (b3) edge (b4);
+			   \path [-] (b4) edge (b5);
+			   \path [-] (b5) edge (b6);
+			   \path [-] (b6) edge (b1);
+			   \path [-] (b2) edge (b6);
+			   \path [-] (b3) edge (b5);
+
+			   \path [-] (c1) edge (c2);
+			   \path [-] (c2) edge (c3);
+			   \path [-] (c3) edge (c4);
+			   \path [-] (c4) edge (c5);
+			   \path [-] (c5) edge (c6);
+			   \path [-] (c6) edge (c1);
+			   \path [-] (c2) edge (c6);
+			   \path [-] (c3) edge (c5);
+
+			   \path [-] (d1) edge (d2);
+			   \path [-] (d2) edge (d3);
+			   \path [-] (d3) edge (d4);
+			   \path [-] (d4) edge (d5);
+			   \path [-] (d5) edge (d6);
+			   \path [-] (d6) edge (d1);
+			   \path [-] (d2) edge (d6);
+			   \path [-] (d3) edge (d5);
+
+			   \path [-] (e1) edge (e2);
+			   \path [-] (e2) edge (e3);
+			   \path [-] (e3) edge (e4);
+			   \path [-] (e4) edge (e5);
+			   \path [-] (e5) edge (e6);
+			   \path [-] (e6) edge (e1);
+			   \path [-] (e2) edge (e6);
+			   \path [-] (e3) edge (e5);
+
+			   \path [-] (f1) edge (f2);
+			   \path [-] (f2) edge (f3);
+			   \path [-] (f3) edge (f4);
+			   \path [-] (f4) edge (f5);
+			   \path [-] (f5) edge (f6);
+			   \path [-] (f6) edge (f1);
+			   \path [-] (f2) edge (f6);
+			   \path [-] (f3) edge (f5);
+
+			   \path [-] (g1) edge (g2);
+			   \path [-] (g2) edge (g3);
+			   \path [-] (g3) edge (g4);
+			   \path [-] (g4) edge (g5);
+			   \path [-] (g5) edge (g6);
+			   \path [-] (g6) edge (g1);
+			   \path [-] (g2) edge (g6);
+			   \path [-] (g3) edge (g5);
+
+		   \end{scope}
+	   \end{tikzpicture}
+	   \caption{Stablo pretrage generisano definisanom funkcijom profinjavanja.}
+	   \label{img:refinedtree}
+   \end{figure}
+
+  \begin{example}
+	  Na slici \ref{img:refinedtree} prikazano je stablo pretrage jednobojnog
+	  grafa koje koristi definisanu funkciju profinjavanja. Prikazan je obojen
+	  graf nakon svakog profinjavanja i zaokruženi su čvorovi korišćeni
+	  prilikom individualizacije.
+  \end{example}
+
 
  \section{Invarijanta stabla}
 
@@ -1953,7 +2099,17 @@
 	  \end{algorithmic}
   \end{algorithm}
 
-  {\color{red} Mogući su i drugi načini obilaska, pomenuti bfs i traces. Moguće je čuvati više od jednog $\zeta$.}
+  Za otkrivanje automorfizama moguće je čuvati i više od pomenuta dva lista
+  $\rho$ i $\zeta$. U tom slučaju je moguće ranije u pretrazi otkriti veći deo
+  grupe automorfizama, ali u tom slučaju sama provera ekvivalentnosti listova
+  prilikom otkrivanja automorfizma postaje sporija.
+
+  Moguće su i drugačije strategije obilaska stabla. Program Traces cite{McKay}
+  vrši pretragu stabla u širinu što omogućava odsecanje svih čvorova stabla
+  nekog nivoa čija invarijanta nije maksimalna. Pošto ovakvim obilaskom nije
+  moguće direktno otkrivati automorfizme kao u slučaju pretrage u dubinu,
+  puštaju se pomoćni slučajni putevi do listova stabla prilikom pretrage sa
+  svrhom otkrivanja automorfizama na način sličan prethodno opisanom.
 
  \section{Invarijanta grafa}
 
