@@ -1509,7 +1509,18 @@
 
  \section{Funkcija odabira ciljne ćelije}
 
- {\color{red} napisi nesto lol}
+ Postoji više strategija za realizaciju funkcije odabira ciljne ćelije. Ovde
+ ćemo predstaviti dve takve strategije.
+
+ Jedna mogućnost je odabir neke (konkretno prve) nejedinične ćelije bojenja
+ najmanje veličine. Obrazloženje za ovakav izbor je da manje ćelije imaju veću
+ šansu da sadrže mali broj orbita (ili čak jednu) cite{McKay} i da je samim
+ tim očekivani faktor grananja manji.
+
+ Druga mogućnost, koja se ispostavila kao bolja u većini slučajeva cite{McKay}
+ je odabir prve nejedinične ćelije bez obzira na njenu veličinu. U daljem radu
+ pretpostavljamo postojanje procedure \texttt{Target\_cell($\pi$)} koja
+ implementira ovu strategiju.
 
  \section{Invarijanta stabla}
 
@@ -1776,6 +1787,15 @@
   Kako je prema prethodno pokazanom $P_C$ moguće primenjivati za bilo koja dva
   čvora iz iste orbite stabilizatora, možemo odseći pretragu u bilo kom čvoru
   $\nu \| v$ za koji važi $v \neq mcr_{S_\nu}(v)$.
+
+  Prilikom dodavanja novog automorfizma $g$ u skup potrebno je ažurirati ove
+  podatke. Skupovi $stab_S(v)$ se jednostavno ažuriraju dodavanjem $g$ tamo gde
+  je potrebno. Kako bi se ažuriranje predstavnika orbita moglo efikasno
+  izvršiti, pamti se pomoćna particija $\Omega$ čvorova po orbitama. Prilikom
+  dodavanja se nova particija određuje kao tranzitivno zatvorenje unije
+  particije $\Omega$ i particije ciklusa (orbita) automorfizma $g$. Ovo je moguće
+  realizovati pretragom u širinu sa složenošću $O(n)$ ako je $n$ broj
+  čvorova grafa.
 
  \section{Pretraga}
 
