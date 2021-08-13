@@ -39,6 +39,8 @@
 \tikzstyle{pointgreen}=[circle, fill=green!50,thick]
 \tikzstyle{pointblue}=[circle, fill=blue!50,thick]
 \tikzstyle{arrow}=[draw=black, >={Latex[length=2mm]}]
+\tikzstyle{cover}=[draw, opacity=.2, line cap=round, line
+join=round, line width=22pt]
 
 % Paket koji definiše sve specifičnosti master rada Matematičkog fakulteta
 \usepackage[latinica]{matfmaster} 
@@ -142,37 +144,125 @@
 
  \section{Osnovni pojmovi}
 
+  \subsection{Permutacija i particija}
+
+   \emph{Permutacija} konačnog skupa $A$ je bilo koja bijekcija $g : A \to A$.
+   Skup svih takvih permutacija označavamo sa $S_A$. Specijalno, ako je $A =
+   \{1, 2, \dots, n\}$ za neki prirodan broj $n$, tada koristimo oznaku $S_n$.
+   Zajedno sa operacijom kompozicije preslikavanja skup $S_n$ je grupa koju
+   zovemo \emph{simetrična grupa stepena $n$}. Identičnu permutaciju označavamo
+   sa $id$, a inverz permutacije $g$ sa $g^{-1}$. Permutaciju $g$ možemo
+   zapisati kao preslikavanje, npr.  $g : \begin{pmatrix} 1 & 2 & 3 & 4\\ 3
+   & 4 & 1 & 2 \end{pmatrix}$ ili kao kompoziciju ciklusa $(1\ 3)(2\ 4)$.
+
+   \emph{Particija} konačnog skupa $A$ je skup nepraznih podskupova od $A$
+   takav da se svaki element skupa $A$ nalazi u tačno jednom od tih podskupova.
+   Te podskupove zovemo \emph{klasama} ili \emph{ćelijama} particije. Relacija
+   $\approx$ na skupu $A$ je \emph{relacija ekvivalencije} ukoliko je
+   refleksivna, simetrična i tranzitivna. \emph{Klasa ekvivalencije} elementa
+   $a \in A$ je skup $C_a = \{b \in A \mid a \approx b\}$. Skup klasa
+   ekvivalencije relacije $\approx$ čini jednu particiju $P = A/{\approx}$ skupa
+   $A$. Slično, svaka particija $P$ je skup klasa ekvivalencije jedne relacije
+   ekvivalencije $\approx_P$. Zbog ovoga u daljem tekstu poistovećujemo pojmove
+   particije skupa $A$ i relacije ekvivalencije na skupu $A$.
+
+   Neka su $\alpha$ i $\beta$ particije skupa $A$. Particija $\alpha$
+   je \emph{finija} od particije $\beta$ (u oznaci ${\alpha} \leq {\beta}$)
+   ukoliko za sve $a, b \in A$ važi $a \approx_\alpha b \implies a \approx_\beta b$.
+   Ovaj uslov je ekvivalentan tome da je svaka klasa particije $\alpha$
+   podskup neke klase particije $\beta$.
+
+   Neka su $\alpha$ i $\beta$ particije skupa $A$. Particija $\alpha \lor
+   \beta$ definisana kao tranzitivno zatvorenje relacije $a \approx b \iff a
+   \approx_\alpha b \lor a \approx_\beta b$, odnosno $a \approx_{\alpha \lor
+   \beta} b \iff x_1 \approx x_2 \approx \dots \approx x_k$ za neke $a = x_1,
+   x_2, \dots, x_k = b$ naziva se \emph{supremum particija $\alpha$ i $\beta$}.
+   Primetimo da su particije $\alpha$ i $\beta$ finije od $\alpha \lor \beta$.
+
+   \begin{example}
+	   Na slici \ref{img:partition} prikazane su dve particije skupa od šest
+	   elemenata, kao i njihov supremum. Sa slike se vidi i da su obe particije
+	   finije od supremuma.
+   \end{example}
+
+   \begin{figure}[htp]
+	   \centering
+	   \begin{tikzpicture}
+		   \begin{scope}
+			   \node (0) at (1, 0)[point] {};
+			   \node (1) at (0.5, 0.86)[point] {};
+			   \node (2) at (-0.5, 0.86)[point] {};
+			   \node (3) at (-1, 0)[point] {};
+			   \node (4) at (-0.5, -0.86)[point] {};
+			   \node (5) at (0.5, -0.86)[point] {};
+		   \end{scope}
+		   \begin{scope}
+			   \draw[edge, cover] (1.center) -- (2.center);
+			   \draw[edge, cover] (3.center) -- (4.center);
+			   \draw[edge, cover] (0.center) -- (0.center);
+			   \draw[edge, cover] (5.center) -- (5.center);
+		   \end{scope}
+	   \end{tikzpicture}
+	   \hspace{20pt}
+	   \begin{tikzpicture}
+		   \begin{scope}
+			   \node (0) at (1, 0)[point] {};
+			   \node (1) at (0.5, 0.86)[point] {};
+			   \node (2) at (-0.5, 0.86)[point] {};
+			   \node (3) at (-1, 0)[point] {};
+			   \node (4) at (-0.5, -0.86)[point] {};
+			   \node (5) at (0.5, -0.86)[point] {};
+		   \end{scope}
+		   \begin{scope}
+			   \draw[edge, cover] (1.center) -- (1.center);
+			   \draw[edge, cover] (2.center) -- (3.center);
+			   \draw[edge, cover] (0.center) -- (5.center);
+			   \draw[edge, cover] (4.center) -- (4.center);
+		   \end{scope}
+	   \end{tikzpicture}
+	   \hspace{20pt}
+	   \begin{tikzpicture}
+		   \begin{scope}
+			   \node (a0) at (1, 0)[point] {};
+			   \node (a1) at (0.5, 0.86)[point] {};
+			   \node (a2) at (-0.5, 0.86)[point] {};
+			   \node (a3) at (-1, 0)[point] {};
+			   \node (a4) at (-0.5, -0.86)[point] {};
+			   \node (a5) at (0.5, -0.86)[point] {};
+		   \end{scope}
+		   \begin{scope}
+			   \draw[edge, cover] (a1.center) -- (a2.center) -- (a3.center) --
+			   (a4.center) -- (a1.center) -- (a3.center) -- (a2.center) -- (a4.center);
+			   \draw[edge, cover] (a0.center) -- (a5.center);
+		   \end{scope}
+	   \end{tikzpicture}
+	   \caption{Particije (levo) i supremum (desno).}
+	   \label{img:partition}
+   \end{figure}
+
   \subsection{Obojen graf}
 
-   \emph{Graf} $G = (V, E)$ je uređeni par konačnog \emph{skupa čvorova} $V$ i
-   \emph{skupa grana} $E \subseteq {V \choose 2}$. U nastavku pretpostavljamo da
-   je $V = \{1, 2, \dots, n\}$ za neki prirodan broj $n > 0$. Označimo skup svih
-   grafova sa $n$ čvorova sa $\mathcal{G}_n$ (nadalje $\mathcal{G}$).
+   \emph{Bojenje} skupa $A$ je surjekcija $\pi : A \to \{1, 2, \dots, k\}$ za
+   neki prirodan broj $k > 0$. Označimo skup svih bojenja skupa sa $n$
+   elemenata sa $\Pi_n$ (nadalje $\Pi$).  Broj $k$ zovemo \emph{brojem boja} i
+   označavamo ga sa $|\pi|$.  \emph{Ćelija bojenja} $\pi$ boje $c$ je skup svih
+   čvorova te boje, odnosno $\pi^{-1}(c)$ za $c \in \{1, 2, ..., k\}$.  Bojenje
+   je \emph{diskretno} ukoliko je $|\pi| = n$ i tada je $\pi$ permutacija skupa
+   $A$.
 
-   \emph{Bojenje} grafa $G$ je surjekcija $\pi : V \to \{1, 2, \dots, k\}$ za
-   neki prirodan broj $k > 0$. Označimo skup svih bojenja grafa sa $n$ čvorova
-   sa $\Pi_n$ (nadalje $\Pi$).
+   Označimo sa $\sim_\pi$ binarnu relaciju na skupu $A$ definisanu sa $a
+   \sim_\pi b \iff \pi(a) = \pi(b)$. U pitanju je jedinstvena particija čije
+   klase odgovaraju upravo ćelijama bojenja $\pi$. Nazivamo je \emph{particija
+   bojenja} $\pi$. Primetimo da nije moguće poistovetiti bojenje i particiju
+   zato što za proizvoljnu particiju bojenje čije ćelije odgovaraju klasama
+   particije nije jedinstveno - postoji ih onoliko koliko je različitih
+   rasporeda klasa.  Bojenje možemo poistovetiti sa \emph{uređenom particijom},
+   odnosno particijom čije su klase uređene u niz.
 
-   Broj $k$ zovemo brojem boja i označavamo ga sa $|\pi|$.  Ćelija bojenja $\pi$
-   boje $c$ je skup svih čvorova te boje, odnosno $\pi^{-1}(c)$ za $c \in \{1,
-   2, ..., k\}$.  Bojenje je diskretno ukoliko je $|\pi| = n$ i tada je $\pi$
-   permutacija skupa $V$.
-
-   Bojenje $\pi_1$ je finije od bojenja $\pi_2$ (u oznaci $\pi_1 \leq \pi_2$)
-   ukoliko za sve $v, w \in V$ važi implikacija $\pi_2(v) < \pi_2(w) \implies
-   \pi_1(v) < \pi_1(w)$.
-
-   Označimo sa $\sim_\pi$ binarnu relaciju na skupu čvorova definisanu sa $u
-   \sim_\pi v \iff \pi(u) = \pi(v)$. U pitanju je relacija ekvivalencije
-   (particija) čije klase odgovaraju upravo ćelijama bojenja $\pi$.
-
-   Particija $\alpha$ je finija od particije $\beta$ (u oznaci $\alpha \leq
-   \beta$) ukoliko za sve $v, w \in V$ važi implikacija $v \alpha w \implies v
-   \beta w$. Primetimo da za bojenja $\pi_1$ i $\pi_2$ važi $\pi_1 \leq \pi_2
-   \implies \sim_{\pi_1} \leq \sim_{\pi_2}$, ali ne i obrnuto.
-
-   \emph{Obojen graf} je uređeni par $(G, \pi)$ gde je $\pi$ jedno bojenje
-   grafa $G$.
+   Bojenje $\pi_1$ je \emph{finije} od bojenja $\pi_2$ (u oznaci $\pi_1 \leq \pi_2$)
+   ukoliko za sve $a, b \in A$ važi implikacija $\pi_2(a) < \pi_2(b) \implies
+   \pi_1(a) < \pi_1(b)$.  Primetimo da za bojenja $\pi_1$ i $\pi_2$ važi $\pi_1
+   \leq \pi_2 \implies {\sim_{\pi_1}} \leq {\sim_{\pi_2}}$, ali ne i obrnuto.
 
    \begin{example}
 	   Neka je $\pi :
@@ -181,11 +271,72 @@
 		   3 & 1 & 2 & 2 & 1 & 2
 	   \end{pmatrix}$
 	   jedno bojenje. Koristan je zapis po ćelijama bojenja $\pi = [2\ 5 \mid
-	   4\ 3\ 6 \mid 1]$. Bojenje $\pi_1 = [5 \mid 2 \mid 4\ 6 \mid 3 \mid 1]$
-	   je finije od $\pi$. Bojenje $\pi_2 = [2 \mid 3 \mid 4\ 6 \mid 5 \mid 1]$
-	   nije finije od $\pi$ iako važi da je svaka njegova ćelija podskup neke
-	   ćelije bojenja $\pi$.
+	   4\ 3\ 6 \mid 1]$, pri čemu redosled brojeva unutar ćelija nije bitan.
+	   Bojenje $\pi_1 = [5 \mid 2 \mid 4\ 6 \mid 3 \mid 1]$ je finije od $\pi$.
+	   Bojenje $\pi_2 = [2 \mid 3 \mid 4\ 6 \mid 5 \mid 1]$ nije finije od
+	   $\pi$ iako važi da je svaka njegova ćelija podskup neke ćelije bojenja
+	   $\pi$. To je moguće videti iz toga što se bojenje $\pi$ može dobiti
+	   spajanjem susednih ćelija bojenja $\pi_1$, ali ne spajanjem susednih
+	   ćelija bojenja $\pi_2$.
    \end{example}
+
+   \emph{Graf} $G = (V, E)$ je uređeni par konačnog \emph{skupa čvorova} $V$ i
+   \emph{skupa grana} $E \subseteq {V \choose 2}$. U nastavku pretpostavljamo da
+   je $V = \{1, 2, \dots, n\}$ za neki prirodan broj $n > 0$. Označimo skup svih
+   grafova sa $n$ čvorova sa $\mathcal{G}_n$ (nadalje $\mathcal{G}$).
+
+   \emph{Matrica povezanosti grafa} je preslikavanje $\psi : \mathcal{G} \times
+   V \times V \to \{0, 1\}$ takvo da važi $\psi(G, u, v) = 1 \iff (u, v) \in
+   E$.  \emph{Binarna reprezentacija $bin(G)$ grafa} $G$ je binarni niz dobijen
+   nadovezivanjem redova gornjeg trougla matrice povezanosti grafa $G$.
+
+   \emph{Obojen graf} je uređeni par $(G, \pi)$ gde je $\pi$ jedno bojenje
+   skupa čvorova $V$ grafa $G$. Kažemo i da je $\pi$ \emph{bojenje grafa} $G$.
+
+   \begin{example}
+	   Na slici \ref{img:matrix} je prikazan jedan graf $G$ zajedno sa njegovom
+	   matricom povezanosti. Njegova binarna reprezentacija je $bin(G) =
+	   101011$.
+   \end{example}
+
+   \begin{figure}[htp]
+	   \centering
+	   \begin{tikzpicture}
+		   \begin{scope}
+			   \node (0) at (0, 0)[point, label=180:1] {};
+			   \node (1) at (1.5, 1.5)[point, label=90:4] {};
+			   \node (2) at (3, 0)[point, label=0:3] {};
+			   \node (3) at (1.5, -1.5)[point, label=-90:2] {};
+		   \end{scope}
+		   \begin{scope}
+			   \path [-] (0) edge (1);
+			   \path [-] (1) edge (2);
+			   \path [-] (1) edge (3);
+			   \path [-] (0) edge (3);
+		   \end{scope}
+	   \end{tikzpicture}
+	   \hspace{20pt}
+	   \begin{tikzpicture}
+		   \node at (0, 0)[] {};
+		   \node at (0, 3.5)[] {$\ \ \begin{matrix} 1 & 2 & 3 & 4 \end{matrix}$};
+		   \node at (0, 2.2)[] {
+		   $ \begin{matrix}
+			   1 \\
+			   2 \\
+			   3 \\
+			   4
+			 \end{matrix}
+			 \begin{bmatrix}
+			   0 & 1 & 0 & 1 \\
+			   1 & 0 & 0 & 1 \\
+			   0 & 0 & 0 & 1 \\
+			   1 & 1 & 1 & 0
+		     \end{bmatrix}$
+		   };
+	   \end{tikzpicture}
+	   \caption{Graf i matrica povezanosti.}
+	   \label{img:matrix}
+   \end{figure}
 
 
    \subsection{Dejstvo grupe}
@@ -196,11 +347,6 @@
    $s^{g_1g_2} = (s^{g_2})^{g_1}$.  Orbita elementa $s$ je skup $\Omega_s^G =
    \{s^g \mid g \in G\}$.  Stabilizator elementa $s$ je skup $\Sigma_s^G = \{g
    \in G \mid s^g=s\}$ koji čini jednu podgrupu od $G$.
-
-   Neka $S_n$ označava grupu simetrija stepena $n$. Permutaciju $g \in S_n$
-   možemo predstaviti kao preslikavanje, npr.  $g : \begin{pmatrix} 1 & 2 & 3 &
-   4\\ 3 & 4 & 1 & 2 \end{pmatrix}$ ili kao kompoziciju ciklusa $(1\ 3)(2\ 4)$.
-   Identičnu permutaciju označavamo sa $id$.
 
    Na skupu čvorova $V$ definisano je dejstvo grupe $S_n$ sa $v^g = g(v)$ za $v
    \in V$ i $g \in S_n$.  Definiciju dejstva grupe permutacija možemo proširiti
@@ -278,6 +424,10 @@
    operacijom kompozicije preslikavanja skup $Aut(G, \pi)$ čini \emph{grupu
    automorfizama}.
 
+   \begin{example}
+	   Na slici \ref{img:aut} prikazan je graf sa jednim automorfizmom.
+   \end{example}
+
    \begin{figure}[htp]
 	   \centering
 	   \begin{tikzpicture}
@@ -294,7 +444,13 @@
 			   \path [-] (2) edge (3);
 		   \end{scope}
 	   \end{tikzpicture}
-	   \caption{Graf sa automorfizmom $g = (3\ 4)$.}
+	   \caption{Graf sa automorfizmom 
+	   $g :
+	   \begin{pmatrix}
+		   1 & 2 & 3 & 4\\
+		   1 & 2 & 4 & 3
+	   \end{pmatrix}$
+       .}
 	   \label{img:aut}
    \end{figure}
 
@@ -327,8 +483,8 @@
    \end{definition}
 
    \begin{example}
-	   Neka je definisano jedno totalno uređenje na skupu obojenih grafova,
-	   recimo poređenjem njihovih binarnih reprezentacija $bin(G, \pi)$. Tada
+	   Neka je definisano uređenje na skupu obojenih grafova leksikografskim
+	   poređenjem odgovarajućih nizova $(bin(G), \pi(1), \dots, \pi(n))$. Tada
 	   je preslikavanje definisano sa $\mathcal{M}(G, \pi) = \max_{g \in S_n}
 	   (G^g, \pi^g)$ kanonska forma.
    \end{example}
@@ -371,7 +527,7 @@
        \item[(T1)] Ako je $R(G, \pi, \nu)$ diskretno, onda je $T(G, \pi, \nu) =
      	  \emptyset$
        \item[(T2)] Ako $R(G, \pi, \nu)$ nije diskretno, onda je $T(G, \pi, \nu)$
-     	  nejedinična ćelija od $R(G, \pi, \nu)$
+     	  višečlana ćelija od $R(G, \pi, \nu)$
        \item[(T3)] Za svako $g \in S_n$ važi $T(G^g, \pi^g, \nu^g) = T(G, \pi,
      	 \nu)^g$
    \end{itemize}
@@ -402,7 +558,7 @@
 
   \begin{example}
 	  Prikažimo jedno jednostavno stablo pretrage. Za funkciju odabira ciljne
-	  ćelije možemo uzeti funkciju koja bira prvu nejediničnu ćeliju bojenja.
+	  ćelije možemo uzeti funkciju koja bira prvu višečlanu ćeliju bojenja.
 	  Za funkciju profinjavanja možemo uzeti funkciju koja dodeljuje boje
 	  čvorovima u skladu sa početnim bojenjem $\pi$, pri čemu čvorove niza
 	  $\nu$ izdvaja u zasebne ćelije. Na slici \ref{img:tree} je prikazano
@@ -1068,13 +1224,13 @@
  Postoji više strategija za realizaciju funkcije odabira ciljne ćelije. Ovde
  ćemo predstaviti dve takve strategije.
 
- Jedna mogućnost je odabir neke (konkretno prve) nejedinične ćelije bojenja
+ Jedna mogućnost je odabir neke (konkretno prve) višečlane ćelije bojenja
  najmanje veličine. Obrazloženje za ovakav izbor je da manje ćelije imaju veću
  šansu da sadrže mali broj orbita (ili čak jednu) cite{McKay} i da je samim
  tim očekivani faktor grananja manji.
 
  Druga mogućnost, koja se ispostavila kao bolja u većini slučajeva cite{McKay}
- je odabir prve nejedinične ćelije bez obzira na njenu veličinu. U daljem radu
+ je odabir prve višečlane ćelije bez obzira na njenu veličinu. U daljem radu
  pretpostavljamo postojanje procedure \texttt{Target\_cell($\pi$)} koja
  implementira ovu strategiju.
 
@@ -1486,7 +1642,7 @@
 		  \item Deca čvora $C$ su $\{C_1, \dots, C_k\}$.
 	  \end{enumerate}
 
-	  Kako su ćelije u listovima šume sve različite jedinične ćelije (jer je
+	  Kako su ćelije u listovima šume sve različite jednočlane ćelije (jer je
 	  bojenje $R(G, \pi, \nu)$ diskretno), ima ih tačno $n$. Kako svaka ćelija
 	  šume ima bar dva deteta, broj ćelija u šumi je manji od $2n$, a pošto ona
 	  mora sadržati i sve ćelije iz $\mathcal{W}$, to je $|\mathcal{W}| < 2n$.
