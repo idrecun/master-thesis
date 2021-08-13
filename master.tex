@@ -177,7 +177,10 @@ join=round, line width=22pt]
    \approx_\alpha b \lor a \approx_\beta b$, odnosno $a \approx_{\alpha \lor
    \beta} b \iff x_1 \approx x_2 \approx \dots \approx x_k$ za neke $a = x_1,
    x_2, \dots, x_k = b$ naziva se \emph{supremum particija $\alpha$ i $\beta$}.
-   Primetimo da su particije $\alpha$ i $\beta$ finije od $\alpha \lor \beta$.
+   Primetimo da su particije $\alpha$ i $\beta$ finije od $\alpha \lor \beta$,
+   kao i da je $\alpha \lor \beta$ finije od svakog $\gamma$ za koje važi
+   $\alpha, \beta \leq \gamma$, odnosno da je $\alpha \lor \beta$ zaista
+   njihovo najmanje gornje ograničenje.
 
    \begin{example}
 	   Na slici \ref{img:partition} prikazane su dve particije skupa od šest
@@ -280,6 +283,20 @@ join=round, line width=22pt]
 	   ćelija bojenja $\pi_2$.
    \end{example}
 
+   \begin{example}
+	   Neka je $\pi = [4 \mid 1 \mid 3 \mid 2]$ diskretno bojenje. Odgovarajuća
+	   permutacija je $\pi :
+	   \begin{pmatrix}
+		   1 & 2 & 3 & 4 \\
+		   2 & 4 & 3 & 1
+	   \end{pmatrix}$,
+	   a njen inverz je $\pi^{-1} :
+	   \begin{pmatrix}
+		   1 & 2 & 3 & 4 \\
+		   4 & 1 & 3 & 2
+	   \end{pmatrix}$.
+   \end{example}
+
    \emph{Graf} $G = (V, E)$ je uređeni par konačnog \emph{skupa čvorova} $V$ i
    \emph{skupa grana} $E \subseteq {V \choose 2}$. U nastavku pretpostavljamo da
    je $V = \{1, 2, \dots, n\}$ za neki prirodan broj $n > 0$. Označimo skup svih
@@ -304,9 +321,9 @@ join=round, line width=22pt]
 	   \begin{tikzpicture}
 		   \begin{scope}
 			   \node (0) at (0, 0)[point, label=180:1] {};
-			   \node (1) at (1.5, 1.5)[point, label=90:4] {};
-			   \node (2) at (3, 0)[point, label=0:3] {};
-			   \node (3) at (1.5, -1.5)[point, label=-90:2] {};
+			   \node (1) at (1, 1)[point, label=90:4] {};
+			   \node (2) at (2, 0)[point, label=0:3] {};
+			   \node (3) at (1, -1)[point, label=-90:2] {};
 		   \end{scope}
 		   \begin{scope}
 			   \path [-] (0) edge (1);
@@ -317,7 +334,7 @@ join=round, line width=22pt]
 	   \end{tikzpicture}
 	   \hspace{20pt}
 	   \begin{tikzpicture}
-		   \node at (0, 0)[] {};
+		   \node at (0, 0.6)[] {};
 		   \node at (0, 3.5)[] {$\ \ \begin{matrix} 1 & 2 & 3 & 4 \end{matrix}$};
 		   \node at (0, 2.2)[] {
 		   $ \begin{matrix}
@@ -379,18 +396,16 @@ join=round, line width=22pt]
 	   \begin{pmatrix}
 		   1 & 2 & 3 & 4\\
 		   3 & 4 & 2 & 1
-	   \end{pmatrix}$
-	   .
+	   \end{pmatrix}$.
    \end{example}
-
    \begin{figure}[htp]
 	   \centering
 	   \begin{tikzpicture}
 		   \begin{scope}
 			   \node (0) at (0, 0)[pointred, label=180:1] {};
-			   \node (1) at (1.5, 1.5)[pointred, label=90:4] {};
-			   \node (2) at (3, 0)[pointblue, label=0:3] {};
-			   \node (3) at (1.5, -1.5)[pointgreen, label=-90:2] {};
+			   \node (1) at (1, 1)[pointred, label=90:4] {};
+			   \node (2) at (2, 0)[pointblue, label=0:3] {};
+			   \node (3) at (1, -1)[pointgreen, label=-90:2] {};
 		   \end{scope}
 		   \begin{scope}
 			   \path [-] (0) edge (1);
@@ -403,9 +418,9 @@ join=round, line width=22pt]
 	   \begin{tikzpicture}
 		   \begin{scope}
 			   \node (0) at (0, 0)[pointred, label=180:3] {};
-			   \node (1) at (1.5, 1.5)[pointred, label=90:1] {};
-			   \node (2) at (3, 0)[pointblue, label=0:2] {};
-			   \node (3) at (1.5, -1.5)[pointgreen, label=-90:4] {};
+			   \node (1) at (1, 1)[pointred, label=90:1] {};
+			   \node (2) at (2, 0)[pointblue, label=0:2] {};
+			   \node (3) at (1, -1)[pointgreen, label=-90:4] {};
 		   \end{scope}
 		   \begin{scope}
 			   \path [-] (0) edge (1);
@@ -433,9 +448,9 @@ join=round, line width=22pt]
 	   \begin{tikzpicture}
 		   \begin{scope}
 			   \node (0) at (0, 0)[pointred, label=180:1] {};
-			   \node (1) at (1.5, 1.5)[pointblue, label=90:2] {};
-			   \node (2) at (3, 0)[pointgreen, label=0:3] {};
-			   \node (3) at (1.5, -1.5)[pointgreen, label=-90:4] {};
+			   \node (1) at (1, 1)[pointblue, label=90:2] {};
+			   \node (2) at (2, 0)[pointgreen, label=0:3] {};
+			   \node (3) at (1, -1)[pointgreen, label=-90:4] {};
 		   \end{scope}
 		   \begin{scope}
 			   \path [-] (0) edge (1);
@@ -581,7 +596,7 @@ join=round, line width=22pt]
 
 	   \begin{tikzpicture}
 		   \begin{scope}
-			   \node (0) at (0, 0) {$[{\color{red}1\ 2\ 3}]$};
+			   \node (0) at (0, 1.5) {$[{\color{red}1\ 2\ 3}]$};
 			   \node (1) at (-4, -1) {$[{\color{red}1} \mid {\color{green}2\ 3}]$};
 			   \node (2) at (0, -1) {$[{\color{red}2} \mid {\color{green}1\ 3}]$};
 			   \node (3) at (4, -1) {$[{\color{red}3} \mid {\color{green}1\ 2}]$};
@@ -615,10 +630,26 @@ join=round, line width=22pt]
 			   \node (f1) at (4.5, -3.86)[pointblue] {};
 			   \node (f2) at (5, -3)[pointgreen] {};
 			   \node (f3) at (5.5, -3.86)[pointred] {};
+
+			   \node (g1) at (-4.5, -0.26)[pointred] {};
+			   \node (g2) at (-4, 0.6)[pointgreen] {};
+			   \node (g3) at (-3.5, -0.26)[pointgreen] {};
+
+			   \node (h1) at (-0.5, -0.26)[pointgreen] {};
+			   \node (h2) at (0, 0.6)[pointred] {};
+			   \node (h3) at (0.5, -0.26)[pointgreen] {};
+
+			   \node (i1) at (4.5, -0.26)[pointred] {};
+			   \node (i2) at (4, 0.6)[pointgreen] {};
+			   \node (i3) at (3.5, -0.26)[pointgreen] {};
+
+			   \node (dummy1) at (0, 0.7)[opacity=0] {};
+			   \node (dummy2) at (0, -0.3)[opacity=0] {};
 		   \end{scope}
 		   \begin{scope}
 			   \path [-] (0) edge (1);
-			   \path [-] (0) edge (2);
+			   \path [-] (0) edge (dummy1);
+			   \path [-] (dummy2) edge (2);
 			   \path [-] (0) edge (3);
 			   \path [-] (1) edge (12);
 			   \path [-] (1) edge (13);
@@ -644,6 +675,15 @@ join=round, line width=22pt]
 
 			   \path [-] (f1) edge (f2);
 			   \path [-] (f2) edge (f3);
+
+			   \path [-] (g1) edge (g2);
+			   \path [-] (g2) edge (g3);
+
+			   \path [-] (h1) edge (h2);
+			   \path [-] (h2) edge (h3);
+
+			   \path [-] (i1) edge (i2);
+			   \path [-] (i2) edge (i3);
 		   \end{scope}
 	   \end{tikzpicture}
 	   \caption{Stablo pretrage koje generiše sve permutacije skupa čvorova.}
@@ -738,10 +778,12 @@ join=round, line width=22pt]
 	  Definišimo $\phi(G, \pi, \nu)$ koristeći pomoćnu funkciju $f$ kao niz
 	  vrednosti $(f(G, \pi, [\nu]_0), f(G, \pi, [\nu]_1), \dots, f(G, \pi,
 	  [\nu]_{|\nu|}))$, pri čemu u slučaju da je $\nu$ list možemo na taj niz
-	  nadovezati i binarnu reprezentaciju grafa permutovanog bojenjem $R(G, \pi,
-	  \nu)$. Ovako definisano $\phi$ ispunjava uslove ($\phi$1-2). Ako za
+	  nadovezati i binarnu reprezentaciju grafa permutovanog bojenjem $R(G,
+	  \pi, \nu)$. Ovako definisano $\phi$ ispunjava uslove ($\phi$1-2). Ako za
 	  pomoćnu funkciju $f$ odaberemo npr. proizvod zbirova stepena čvorova
-	  ćelija, dobijamo jednu jednostavnu invarijantu stabla. Vrednosti
+	  ćelija, dobijamo jednu jednostavnu invarijantu stabla (npr. za bojenje
+	  $[2 \mid 1\ 3]$ zbir stepena čvorova prve ćelije je $2$, a druge je $1 +
+	  1$, pa je vrednost funkcije $2(1+1)=4$ za ovo bojenje). Vrednosti
 	  invarijante stabla iz primera \ref{img:tree} prikazane su na slici
 	  \ref{img:invariant}.
   \end{example}
@@ -847,7 +889,7 @@ join=round, line width=22pt]
   \end{lemma}
 
   \begin{proof}
-	  Dokaz izvodimo nizom sitnih tvrđenja.
+	  Dokaz izvodimo nizom pomoćnih tvrđenja.
 
 	  \begin{enumerate}
 		  \item $id \leq \pi^\alpha$
@@ -937,9 +979,9 @@ join=round, line width=22pt]
 
   \begin{definition}
 	  Neka je $\nu^*$ list stabla $\mathcal{T}(G, \pi)$ u kom invarijanta
-	  $\phi(G, \pi, \nu)$ dostiže maksimum. \emph{Kanonska forma} obojenog
-	  grafa $(G, \pi)$ je funkcija $\mathcal{C}(G, \pi) = (G,
-	  \pi)^{\pi_{\nu^*}}$.
+	  $\phi(G, \pi, \nu)$ dostiže maksimum. \emph{Kanonska forma određena
+	  invarijantom stabla} obojenog grafa $(G, \pi)$ je funkcija
+	  $\mathcal{C}(G, \pi) = (G, \pi)^{\pi_{\nu^*}}$.
   \end{definition}
 
   Primetimo da zbog uslova $(\phi2)$ definicija ne zavisi od izbora lista
@@ -971,8 +1013,10 @@ join=round, line width=22pt]
 	\begin{example}
 		Posmatrajmo stablo sa slike \ref{img:invariant}. Na osnovu prethodne
 		teoreme je moguće odrediti kanonsku formu grafa. U pitanju je graf koji
-		se dobija bilo kojom od permutacija $(2\ 1)$ ili $(3\ 2\ 1)$ jer su to
-		permutacije sa najvećom invarijantnom u stablu.
+		se dobija bilo kojom od permutacija $g_1 = [2 \mid 1 \mid 3]$ tj. $g_1 : \begin{pmatrix} 1 & 2 & 3 \\
+		2 & 1 & 3\end{pmatrix}$ ili $g_2 = [2 \mid 3 \mid 1]$ tj. $g_2 : \begin{pmatrix} 1 & 2 & 3 \\ 3 &
+		1 & 2 \end{pmatrix}$ jer su to permutacije sa najvećom invarijantnom u
+		stablu.
 	\end{example}
 
  \section{Odsecanje pretrage}
@@ -994,11 +1038,12 @@ join=round, line width=22pt]
 		  podstabla $\mathcal{T}(G, \pi, \nu_2)$.
   \end{itemize}
 
-  Operacije $P_A$ i $P_C$ su definisane tako da očuvavaju mogućnost određivanja
-  kanonske forme u stablu. Slično, operacije $P_B$ i $P_C$ očuvavaju mogućnost
-  određivanja grupe automorfizama na osnovu stabla. Naredna teorema opravdava
-  uvođenje ovih operacija i pokazuje da one ne narušavaju rezultate teorema o
-  određivanju grupe automorfizama i kanonske forme.
+  Operacije $P_A$ i $P_C$ su definisane tako da proizvoljna primena ovih
+  operacija ne uklanja mogućnost određivanja kanonske forme u stablu. Slično,
+  proizvoljna primena operacija $P_B$ i $P_C$ ne uklanja mogućnost određivanja
+  grupe automorfizama grafa. Naredna teorema opravdava uvođenje ovih operacija
+  i pokazuje da one ne narušavaju rezultate teorema o određivanju grupe
+  automorfizama i kanonske forme.
 
   \begin{theorem}
 	  Neka je $(G, \pi)$ obojen graf.
@@ -1038,26 +1083,34 @@ join=round, line width=22pt]
 
 	  Nijedna operacija $P_C$ ne uklanja leksikografski najmanji među
 	  ekvivalentnim listovima. Štaviše, nijedna operacija $P_C$ ne uklanja
-	  leksikografski najmanji čvor iz $\Omega_\nu^{<g_1, \dots, g_k>}$ za bilo
-	  koje $\nu$. Neka je bez umanjenja opštosti $\nu$ leksikografski najmanji
-	  list u svojoj orbiti. Operacija $P_C(\omega, g)$ uklanja čvor $\omega^g$
-	  ako je $\omega < \omega^g$, pa je $[\nu]_{|\omega|} \neq \omega^g$ pošto
-	  je ili $[\nu]_{|\omega|} < \omega$ ili su $\omega$ i $[\nu]_{|\omega|}$ iz
-	  različitih orbita.
+	  leksikografski najmanji čvor iz $\Omega_\nu^{\langle g_1, \dots, g_k
+	  \rangle}$ za bilo koje $\nu$. Neka je bez umanjenja opštosti $\nu$
+	  leksikografski najmanji list u svojoj orbiti. Operacija $P_C(\omega, g)$
+	  uklanja čvor $\omega^g$ ako je $\omega < \omega^g$, pa je
+	  $[\nu]_{|\omega|} \neq \omega^g$ pošto je ili $[\nu]_{|\omega|} < \omega$
+	  ili su $\omega$ i $[\nu]_{|\omega|}$ iz različitih orbita.
 	  \begin{enumerate}
 		  \item Na osnovu dokazanih svojstava operacija $P_A$ i $P_C$ iz stabla
 			  se ne uklanja leksikografski najmanji list $\nu$ ekvivalentan
 			  listu $\nu^*$.
 		  \item Ako je $g \in Aut(G, \pi)$, onda na osnovu dokazanih svojstva
 			  operacija $P_B$ i $P_C$ važi da iz stabla nije uklonjen
-			  leksikografski najmanji list oblika $\nu_0^{hg}$ za neko $h \in <
-			  \negmedspace g_1, \dots, g_k \negmedspace >$, izborom $\omega =
-			  \nu_0^g$. Odatle sledi da je $hg \in < \negmedspace \{g_1, \dots,
+			  leksikografski najmanji list oblika $\nu_0^{hg}$ za neko $h \in \langle
+			  g_1, \dots, g_k \rangle$, izborom $\omega =
+			  \nu_0^g$. Odatle sledi da je $hg \in \langle \{g_1, \dots,
 			  g_k\} \cup \{g \in Aut(G, \pi) \mid \nu_0^g \text{ nije
-			  uklonjen}\} \negmedspace >$, pa je i $g$ element generisane
+			  uklonjen}\} \rangle$, pa je i $g$ element generisane
 			  grupe.
 	  \end{enumerate}
   \end{proof}
+
+  \begin{example}
+	  Prilikom obilaska stabla sa slike \ref{img:invariant} moguće je izvršiti
+	  odsecanje nekih delova stabla na osnovu automorfizma $(1\ 3)$ (ukoliko je
+	  on poznat unapred).  Rezultujuće stablo je dato na slici \ref{img:prune}.
+	  Čvor $(2, 3)$ moguće je odseći na osnovu čvora $(2, 1)$. Čvor $(3)$
+	  moguće je odseći na osnovu čvora $(1)$.
+  \end{example}
 
    \begin{figure}[htp]
 	   \centering
@@ -1066,11 +1119,11 @@ join=round, line width=22pt]
 			   \node (0) at (0, 0)  {$[{\color{red}1\ 2\ 3}]$};
 			   \node (1) at (-4, -1) [rectangle, draw=violet!70, thick] {$[{\color{red}1} \mid {\color{green}2\ 3}]$};
 			   \node (2) at (0, -1)  {$[{\color{red}2} \mid {\color{green}1\ 3}]$};
-			   \node (3) at (4, -1) [label=270:{$P_C({\color{violet}(1)}, (1\ 3))$}] {$[{\color{red}3} \mid {\color{green}1\ 2}]$};
+			   \node (3) at (4, -1) [] {$P_C({\color{violet}(1)}, (1\ 3))$};
 			   \node (12) at (-5, -2)  {$[{\color{red}1} \mid {\color{green}2} \mid {\color{blue}3}]$};
 			   \node (13) at (-3, -2)  {$[{\color{red}1} \mid {\color{green}3} \mid {\color{blue}2}]$};
 			   \node (21) at (-1, -2) [rectangle,draw=orange!70,thick] {$[{\color{red}2} \mid {\color{green}1} \mid {\color{blue}3}]$};
-			   \node (23) at (1, -2) [label=270:{$P_C({\color{orange}(2,1)}, (1\ 3)) $}] {$[{\color{red}2} \mid {\color{green}3} \mid {\color{blue}1}]$};
+			   \node (23) at (1, -2) [] {$\ \ \ \ \ \ \ \ P_C({\color{orange}(2,1)}, (1\ 3))$};
 
 			   \node (a1) at (-5.5, -3.86)[pointred] {};
 			   \node (a2) at (-5, -3)[pointgreen] {};
@@ -1107,16 +1160,18 @@ join=round, line width=22pt]
 	   \label{img:prune}
    \end{figure}
 
-  \begin{example}
-	  Prilikom obilaska stabla sa slike \ref{img:invariant} moguće je izvršiti
-	  odsecanje nekih delova stabla na osnovu automorfizma $(1\ 3)$ (ukoliko je
-	  on poznat unapred).  Rezultujuće stablo je dato na slici \ref{img:prune}.
-  \end{example}
-
 
 % ------------------------------------------------------------------------------
 \chapter{Realizacija algoritma}
 % ------------------------------------------------------------------------------
+
+ U ovoj glavi konkretizovani su parametri opšteg algoritma.  Uvedeni su pojmovi
+ \emph{ekvitabilnog bojenja} i \emph{količničkog grafa} ključni za određivanje
+ funkcije profinjavanja i invarijante stabla i prikazani su efikasni postupci
+ za njihovo izračunavanje.  Prikazane su strukture podataka za reprezentaciju
+ objekata uvedenih u prethodnoj glavi i opisan je kompletan algoritam pretrage
+ za određivanje kanonske forme. Na kraju, uveden je pojam \emph{invarijante
+ grafa} koji indukuje klasu moćnijih funkcija profinjavanja.
 
  \section{Reprezentacija podataka}
 
@@ -1171,10 +1226,10 @@ join=round, line width=22pt]
 
    Jedna od ključnih operacija nad bojenjem je profinjavanje jedne ćelije. Neka
    je $\pi^{-1}(c)$ jedna ćelija bojenja $\pi$ i neka je svakom čvoru $v$ te
-   ćelije dodeljena vrednost $t_v$. Profinjavanje ćelije podrazumeva formiranje
-   bojenja $\pi' \leq \pi$ takvog da za $u$ i $v$ iz $\pi^{-1}(c)$ važi
-   $\pi'(u) < \pi'(v) \iff t_u < t_v$, dok za sve ostale parove $u$ i $v$ važi
-   $\pi'(u) = \pi'(v) \iff \pi(u) = \pi(v)$.
+   ćelije dodeljena proizvoljna vrednost $t_v$. Profinjavanje ćelije
+   podrazumeva formiranje bojenja $\pi' \leq \pi$ takvog da za $u$ i $v$ iz
+   $\pi^{-1}(c)$ važi $\pi'(u) < \pi'(v) \iff t_u < t_v$, dok za sve ostale
+   parove $u$ i $v$ važi $\pi'(u) = \pi'(v) \iff \pi(u) = \pi(v)$.
 
   \begin{algorithm}[H]
 	  \caption{Profinjavanje ćelije}
@@ -1205,9 +1260,8 @@ join=round, line width=22pt]
    više različitih reprezentacija grafa. Ovde ćemo istaći one delove
    reprezentacije koji su neophodni za dalju diskusiju.
 
-   Obojen graf je predstavljen bojenjem $\pi$ i matricom povezanosti $\psi :
-   \mathcal{G} \times V \times V \to \{0, 1\}$ gde je $\psi(G, u, v) = 1$ akko
-   je $(u, v) \in E$. Zapazimo sledeća svojstva matrice povezantosti:
+   Obojen graf je predstavljen bojenjem $\pi$ i matricom povezanosti $\psi$.
+   Zapazimo sledeća svojstva matrice povezantosti:
    \begin{itemize}
 	   \item[$(\psi1)$] $\psi(G, u, v) = \psi(G, v, u)$
 	   \item[$(\psi2)$] $\psi(G^g, u^g, v^g) = \psi(G, v, u)$ za proizvoljno $g \in S_n$
@@ -1235,9 +1289,14 @@ join=round, line width=22pt]
  implementira ovu strategiju.
 
  \section{Funkcija profinjavanja}
-  
-  \begin{lemma}
-	  Neka je preslikavanje $I : \Pi \times V \to \Pi$ definisano sa
+
+  Definiciju funkcije profinjavanja ćemo podeliti na dve komponente. Prva
+  komponenta je transformacija koja određuje kako se vrši prelaz sa čvora $\nu$
+  na čvor $\nu \| w$ u stablu, odnosno kako se izbor čvora $w$ odražava na
+  bojenje.
+
+  \begin{definition}
+	  Preslikavanje $I : \Pi \times V \to \Pi$ definisano sa
 	  $$
 	  I(\pi, v)(w) =
 	  \begin{cases}
@@ -1245,7 +1304,60 @@ join=round, line width=22pt]
 		  \pi(w) + 1, & \quad \text{inače}\\
 	  \end{cases}
 	  $$
-	  i neka je $F : \mathcal{G} \times \Pi \times V^* \to \Pi$ transformacija
+	  naziva se \emph{funkcija individualizacije}.
+  \end{definition}
+
+  \begin{example}
+	  Neka je $\pi = [1\ 3 \mid 2\ 4\ 5]$. Tada je $I(\pi, 4) = [1\ 3 \mid 4
+	  \mid 2\ 5]$.
+  \end{example}
+
+  Naredno tvrđenje ističe tri važna svojstva funkcije individualizacije.
+  Štaviše, za funkciju $I$ moguće bi bilo odabrati bilo koje preslikavanje koje
+  ispunjava ta svojstva, ali nam je cilj da individualizaciju razdvojimo od
+  ostatka definicije funkcije profinjavanja, pa zbog toga nećemo razmatrati
+  druga preslikavanja.
+  
+  \begin{lemma}
+	  Funkcija individualizacije $I$ ispunjava naredne uslove:
+	  \begin{itemize}
+		  \item[(I1)] Za svako bojenje $\pi$ i čvor $u$ važi $I(\pi, u) \leq \pi$.
+		  \item[(I2)] $\{u\}$ je ćelija bojenja $I(\pi, u)$.
+		  \item[(I3)] $I$ je transformacija invarijantna na imenovanje čvorova.
+	  \end{itemize}
+  \end{lemma}
+  
+  \begin{proof}
+	  Dokažimo redom tražena svojstva.
+  \begin{itemize}
+  \item[(I1)] Neka je $\pi(v) < \pi(w)$. Tada nije istovremeno $I(\pi,
+	  u)(v) = \pi(v) + 1$ i $I(\pi, u)(w) = \pi(w)$ jer to povlači da je
+	  $\pi(v) \geq \pi(u)$ i $\pi(w) \leq \pi(u)$, odnosno da je $\pi(w) \leq
+	  \pi(v)$ što je kontradikcija. U svim ostalim slučajevima iz pretpostavke
+	  sledi $I(\pi, u)(v) < I(\pi, u)(w)$.
+
+  \item[(I2)] Ako je $\pi(w) = \pi(v)$ i $w \neq v$ onda je $I(\pi, v)(w) = I(\pi,
+	  v)(v) + 1$, a kako je $I(\pi, v) \leq \pi$ onda je $\pi(v) \neq \pi(w)
+	  \iff I(\pi, v)(v) \neq I(\pi, v)(w)$ pa je $I(\pi, v)(v) \neq I(\pi,
+	  v)(w)$ za sve $w \neq v$.
+
+  \item[(I3)] Neka je $g \in S_n$ proizvoljno. Tada je $I(\pi^g, v^g)(w^g) =
+	  \pi(w) \iff I(\pi^g, v^g)(w^g) = \pi^g(w^g) \iff \pi^g(w^g) < \pi^g(v^g)
+	  \lor w^g = v^g \iff \pi(w) < \pi(v) \lor w = v \iff I(\pi, v)(w) =
+	  \pi(w)$. Slično je i $I(\pi^g, v^g)(w^g) = \pi(w) + 1 \iff I(\pi, v)(w) =
+	  \pi(w) + 1$, odnosno $I(\pi^g, v^g)(w^g) = I(\pi, v)(w) = I(\pi,
+	  v)^g(w^g)$.
+  \end{itemize}
+  \end{proof}
+
+	Druga komponenta definicije funkcije profinjavanja je transformacija koja
+	se vrši nad bojenjem dobijenim individualizacijom. Cilj ove transformacije
+	je da što više profini bojenje kako bi stepen grananja prilikom pretrage
+	bio što manji.  Idealna transformacija je takva da ćelije rezultujućeg
+	bojenja odgovaraju orbitama čvorova u grupi automorfizama početnog bojenja.
+  
+  \begin{lemma}
+	  Neka je $F : \mathcal{G} \times \Pi \times V^* \to \Pi$ transformacija
 	  invarijantna na imenovanje čvorova takva da je $F(G, \pi, \nu) \leq \pi$.
 	  Tada je preslikavanje definisano sa
 	  \begin{align*}
@@ -1257,29 +1369,8 @@ join=round, line width=22pt]
 	  funkcija profinjavanja.
   \end{lemma}
 
-  \begin{proof} Pokažimo prvo nekoliko svojstava ovako definisanog
-	  preslikavanja $I$.
-
-	  (I1) Za proizvoljno bojenje $\pi$ i čvor $u$ važi da je $I(\pi, u) \leq \pi$.
-	  To važi zato što ako je $\pi(v) < \pi(w)$ onda nije istovremeno $I(\pi,
-	  u)(v) = \pi(v) + 1$ i $I(\pi, u)(w) = \pi(w)$ jer to povlači da je
-	  $\pi(v) \geq \pi(u)$ i $\pi(w) \leq \pi(u)$, odnosno da je $\pi(w) \leq
-	  \pi(v)$ što je kontradikcija. U svim ostalim slučajevima iz pretpostavke
-	  sledi $I(\pi, u)(v) < I(\pi, u)(w)$.
-
-	  (I2) $\{v\}$ je ćelija bojenja $I(\pi, v)$. Ako je $\pi(w) = \pi(v)$ i $w \neq
-	  v$ onda je $I(\pi, v)(w) = I(\pi, v)(v) + 1$, a kako je $I(\pi, v) \leq
-	  \pi$ onda je $\pi(v) \neq \pi(w) \iff I(\pi, v)(v) \neq I(\pi, v)(w)$ pa
-	  je $I(\pi, v)(v) \neq I(\pi, v)(w)$ za sve $w \neq v$.
-
-	  (I3) $I$ je transformacija invarijantna na imenovanje čvorova. Neka je $g \in
-	  S_n$ proizvoljno. Tada je $I(\pi^g, v^g)(w^g) = \pi(w) \iff I(\pi^g,
-	  v^g)(w^g) = \pi^g(w^g) \iff \pi^g(w^g) < \pi^g(v^g) \lor w^g = v^g \iff
-	  \pi(w) < \pi(v) \lor w = v \iff I(\pi, v)(w) = \pi(w)$. Slično je i
-	  $I(\pi^g, v^g)(w^g) = \pi(w) + 1 \iff I(\pi, v)(w) = \pi(w) + 1$, odnosno
-	  $I(\pi^g, v^g)(w^g) = I(\pi, v)(w) = I(\pi, v)^g(w^g)$.
-
-	  Dokažimo sada indukcijom da ovako definisana funkcija $R$ ispunjava
+  \begin{proof}
+	  Dokažimo indukcijom da ovako definisana funkcija $R$ ispunjava
 	  uslove funkcije profinjavanja.
 	  \begin{itemize}
 		  \item[] \textbf{Baza indukcije} 
@@ -1291,40 +1382,53 @@ join=round, line width=22pt]
 			  \end{itemize}
 		  \item[] \textbf{Induktivni korak} Pretpostavimo da tvrđenje važi za $\nu$.
 			  \begin{itemize}
-				  \item[(R1)] $R(G, \pi, \nu \| w) = F(G, I(R(G, \pi, \nu), w),
-					  \nu \| w) \leq I(R(G, \pi, \nu), w) \leq R(G, \pi, \nu)
-					  \leq \pi$
+				  \item[(R1)] \phantom{}
+					  \begin{aligned}[t]
+						  $R(G, \pi, \nu \| w) &= F(G, I(R(G, \pi, \nu), w), \nu
+						  \| w) \\
+						  &\leq I(R(G, \pi, \nu), w) \\
+						  &\leq R(G, \pi, \nu) \\
+						  &\leq \pi$
+					  \end{aligned}
 				  \item[(R2)] $R(G, \pi, \nu \| w) \leq I(R(G, \pi, \nu), w)$
 					  pa je ${w}$ ćelija bojenja $R(G, \pi, \nu \| w)$. Ako je
 					  $v \in \nu$, onda je ${v}$ ćelija $R(G, \pi, \nu)$, pa je
 					  ćelija i bojenja $R(G, \pi, \nu \| w)$ jer je $R(G, \pi,
 					  \nu \| w) \leq R(G, \pi, \nu)$.
-				  \item[(R3)] Za svako $g \in S_n$ važi $R(G^g, \pi^g, (\nu \|
-					  w)^g) = F(G^g, I(R(G^g, \pi^g, \nu^g), w^g), (\nu \|
-					  w)^g) = F(G^g, I(R(G, \pi, \nu)^g, w^g), (\nu \| w)^g) =
-					  F(G^g, I(R(G, \pi, \nu), w)^g, (\nu \| w)^g) = F(G,
-					  I(R(G, \pi, \nu), w), (\nu \| w))^g = R(G, \pi, \nu \|
-					  w)^g$.
+				  \item[(R3)] Za svako $g \in S_n$ važi \\
+					  \begin{aligned}[t]
+						  $R(G^g, \pi^g, (\nu \| w)^g) &= F(G^g, I(R(G^g, \pi^g,
+						  \nu^g), w^g), (\nu \| w)^g) \\ &= F(G^g, I(R(G, \pi,
+						  \nu)^g, w^g), (\nu \| w)^g) \\ &= F(G^g, I(R(G, \pi,
+						  \nu), w)^g, (\nu \| w)^g) \\ &= F(G, I(R(G, \pi, \nu),
+						  w), (\nu \| w))^g \\ &= R(G, \pi, \nu \| w)^g$
+					  \end{aligned}
 			  \end{itemize}
 	  \end{itemize}
   \end{proof}
 
-  Funkcija $I$ definisana u prethodnoj lemi naziva se funkcijom
-  \emph{individualizacije}. Primetimo da je za funkciju $I$ moguće uzeti bilo
-  koje preslikavanje koje ispunjava pokazana svojstva (I1-3).
-
-  Kako bismo definisali konkretnu funkciju profinjavanja, potrebno je još da
-  odaberemo preslikavanje $F$. U tu svrhu uvodimo pojam \emph{ekvitabilnog
-  bojenja}.
+  Sada umesto funkcije profinjavanja $R$ kao parametar algoritma posmatramo
+  funkciju $F$. Kako bi stablo pretrage bilo što manje, i samim tim pretraga
+  efikasnija, ključno je odabrati što moćniju funkciju. U svrhu odabira
+  konkretne funkcije $F$ uvodimo pojam \emph{ekvitabilnog bojenja}.
 
   \begin{definition}
-	  Označimo sa $\psi(G, u, W) = \sum_{w \in W} \psi(G, u, w)$ broj grana
+	  Označimo sa $\widetilde{\psi}(G, u, W) = \sum_{w \in W} \psi(G, u, w)$ broj grana
 	  grafa $G$ koje povezuju čvor $u$ i skup čvorova $W$.  Particija $\sim$
 	  skupa čvorova $V$ je \emph{ekvitabilna} ako za svaki par čvorova $u$ i
 	  $v$ takvih da je $u \sim v$ i svaku klasu $C$ particije $\sim$ važi
-	  $\psi(G, u, C) = \psi(G, v, C)$.  Bojenje $\pi$ je \emph{ekvitabilno} ako
+	  $\widetilde{\psi}(G, u, C) = \widetilde{\psi}(G, v, C)$.  Bojenje $\pi$ je \emph{ekvitabilno} ako
 	  je particija $\sim_\pi$ ekvitabilna.
   \end{definition}
+
+  \begin{example}
+	  Na slici \ref{img:equitable} su prikazana dva bojenja istog grafa. Levo
+	  bojenje je ekvitabilno zato što je svaki zeleni čvor povezan sa tačno dva
+	  crna, a svaki crni čvor sa tačno jednim zelenim i tačno jednim crnim.
+	  Desno bojenje nije ekvitabilno zato što postoje zeleni čvorovi sa
+	  različitim brojem zelenih suseda (levi zeleni čvor nije povezan ni sa
+	  jednim zelenim, dok su preostala dva zelena čvora međusobno povezana).
+  \end{example}
 
    \begin{figure}[htp]
 	   \centering
@@ -1365,10 +1469,7 @@ join=round, line width=22pt]
 			   \path [-] (5) edge (0);
 		   \end{scope}
 	   \end{tikzpicture}
-	   \caption{Levo bojenje je ekvitabilno zato što je svaki zeleni čvor
-	   povezan sa tačno dva crna, a svaki crni čvor sa tačno jednim zelenim i
-	   tačno jednim crnim. Desno bojenje nije ekvitabilno zato što postoje
-	   zeleni čvorovi sa različitim brojem zelenih suseda.}
+	   \caption{Primer ekvitabilnog (levo) i neekvitabilnog (desno) bojenja.}
 	   \label{img:equitable}
    \end{figure}
 
@@ -1380,27 +1481,28 @@ join=round, line width=22pt]
 
   \begin{proof}
 	  Očigledno postoji bar jedna ekvitabilna particija finija od $\sim_\pi$;
-	  diskretna particija ispunjava te uslove.
-
-	  Neka su $\sim_\alpha$ i $\sim_\beta$ dve takve particije. Definišimo
-	  $\sim_\gamma$ kao tranzitivno zatvorenje unije particija $\sim_\alpha$ i
-	  $\sim_\beta$, odnosno $u \sim_\gamma v \iff x_1 \sim_\cup x_2 \sim_\cup
-	  \dots \sim_\cup x_k$ za neke $u = x_1, x_2, \dots, x_k = v$ pri čemu je
-	  $u \sim_\cup v \iff u \sim_\alpha v \lor u \sim_\beta v$.
-
-	  Ovako definisano $\sim_\gamma$ je relacija ekvivalencije grublja od
-	  $\sim_\alpha$ i $\sim_\beta$. Pokažimo da je i ekvitabilna.
+	  diskretna particija ispunjava te uslove.  Neka su $\sim_\alpha$ i
+	  $\sim_\beta$ dve takve particije. Pokažimo da je particija
+	  ${\sim_\alpha}, {\sim_\beta} \leq {\sim_{\alpha \lor \beta}} \leq
+	  {\sim_\pi}$ ekvitabilna.
 
 	  Neka je $u \sim_\alpha v$ i neka je $C$ proizvoljna klasa iz
-	  $\sim_\gamma$. Kako je $\sim_\alpha$ finije od $\sim_\gamma$, to je $C =
-	  \bigcup_{i=1}^n A_i$ za neke klase $A_1, \dots, A_n$ particije
-	  $\sim_\alpha$, pa je $\psi(G, u, C) = \sum_{i=1}^n \psi(G, u, A_i)$. Kako
-	  je $\alpha$ ekvitabilno, to je dalje jednako $\sum_{i=1}^n \psi(G, v,
-	  A_i) = \psi(G, v, C)$. Analogno se pokazuje i za $\sim_\beta$, pa važi $u
-	  \sim_\cup v \implies \psi(G, u, C) = \psi(G, v, C)$.  Konačno, ako je $u
-	  \sim_\gamma v$, onda je $u = x_1 \sim_\cup x_2 \sim_\cup \dots \sim_\cup x_n = v$, pa
-	  je $\psi(G, u, C) = \psi(G, x_1, C) = \psi(G, x_2, C) = \dots = \psi(G,
-	  x_n, C) = \psi(G, v, C)$.
+	  $\sim_{\alpha \lor \beta}$. Kako je $\sim_\alpha$ finije od $\sim_{\alpha
+	  \lor \beta}$, to je $C = \bigcup_{i=1}^n A_i$ za neke klase $A_1, \dots,
+	  A_n$ particije $\sim_\alpha$, pa je $\widetilde{\psi}(G, u, C) =
+	  \sum_{i=1}^n \widetilde{\psi}(G, u, A_i)$. Kako je $\alpha$ ekvitabilno,
+	  to je dalje jednako $\sum_{i=1}^n \widetilde{\psi}(G, v, A_i) =
+	  \widetilde{\psi}(G, v, C)$. Analogno se pokazuje i za $\sim_\beta$.
+	  Označimo $u \sim v \iff u \sim_\alpha v \lor u \sim_\beta v$. Tada važi
+	  $u \sim v \implies \widetilde{\psi}(G, u, C) = \widetilde{\psi}(G, v,
+	  C)$.  Konačno, ako je $u \sim_{\alpha \lor \beta} v$, onda je $u = x_1
+	  \sim x_2 \sim \dots \sim x_n = v$, pa je $\widetilde{\psi}(G, u, C) =
+	  \widetilde{\psi}(G, x_1, C) = \widetilde{\psi}(G, x_2, C) = \dots =
+	  \widetilde{\psi}(G, x_n, C) = \widetilde{\psi}(G, v, C)$.
+
+	  Kako za bilo koje dve particije postoji grublja ekvitabilna particija
+	  finija od $\sim_\pi$, skup svih takvih particija ima najveći element. To
+	  je tražena particija $\sim_\gamma$.
   \end{proof}
 
   \begin{example}
@@ -1500,7 +1602,7 @@ join=round, line width=22pt]
 		  \While{$\alpha \neq \emptyset$}
 			\State {$W \gets $ pop($\alpha$)}
 			\For{$C \in \pi$}
-			  \State {$\pi, C_1, \dots, C_k, s \gets $ Refine\_cell($G, \pi, \pi(C), t_v = \psi(G, v, W)$)}
+			  \State {$\pi, C_1, \dots, C_k, s \gets $ Refine\_cell($G, \pi, \pi(C), t_v = \widetilde{\psi}(G, v, W)$)}
 			  \If{$C \in \alpha$}
 				\State {remove($\alpha$, $C$)}
 				\State {push($\alpha$, $C_i$) za sve $1 \leq i \leq k$}
@@ -1530,7 +1632,7 @@ join=round, line width=22pt]
   \begin{proof}
 
 	  Označimo sa $\xi$ particiju koja ispunjava uslove leme
-	  \ref{lemma:coarsesteq}. Dokažimo indukcijuom po $i$ da je $\xi \leq
+	  \ref{lemma:coarsesteq}. Dokažimo indukcijom po $i$ da je $\xi \leq
 	  \sim_{\pi_i}$ gde $\pi_i$ predstavlja bojenje $\pi$ nakon $i$ izvršenih
 	  koraka spoljne petlje algoritma. Iz ovoga će slediti $\xi \leq \sim_\gamma$.
 
@@ -1540,7 +1642,7 @@ join=round, line width=22pt]
 			  Tada je svaka ćelija $C$ svakog bojenja $\pi_j,\ j \leq i$ unija nekih
 			  klasa particije $\xi$, pa to važi i za ćeliju $W$ odabranu u
 			  liniji 8.  Neka su $x$ i $y$ proizvoljni elementi iste klase
-			  particije $\xi$. Tada je $\psi(G, x, W) = \psi(G, y, W)$, pa oni ne
+			  particije $\xi$. Tada je $\widetilde{\psi}(G, x, W) = \widetilde{\psi}(G, y, W)$, pa oni ne
 			  mogu biti razdvojeni nakon izvršavanja koraka spoljne petlje.
 			  Prema tome je $\xi \leq \sim_{\pi_{i+1}}$.
 	  \end{itemize}
@@ -1576,7 +1678,7 @@ join=round, line width=22pt]
 	  \end{itemize}
 
 	  Definišimo $\mathcal{B} = \{C \in \mathcal{P}(V) \mid \forall x, y \
-	  \gamma(x) = \gamma(y) \implies \psi(G, x, C) = \psi(G, y, C)\}$. Jasno je da je
+	  \gamma(x) = \gamma(y) \implies \widetilde{\psi}(G, x, C) = \widetilde{\psi}(G, y, C)\}$. Jasno je da je
 	  $\mathcal{W} \subseteq \mathcal{B}$. Prema prethodno pokazanom je onda i
 	  $\mathcal{A} \subseteq \mathcal{B}$.  Pokažimo da za svaku ćeliju $C$ u šumi važi
 	  da je $C \in \mathcal{B}$. Dokaz izvodimo indukcijom po strukturi stabla,
@@ -1598,8 +1700,8 @@ join=round, line width=22pt]
 					  C_k \in \mathcal{A} \subseteq \mathcal{B}$.
 				  \item[2\degree] Ako je $C \not \in \mathcal{A}$, onda su $C_1,
 					  \dots, C_{s-1}, C_{s+1}, \dots, C_k \in \mathcal{A} \subseteq
-					  \mathcal{B}$. Tada je $\psi(G, x, C_s) = \psi(G, x, C) -
-					  \sum_{1 \leq i \leq k, i \neq s} \psi(G, x, C_i)$, pa je
+					  \mathcal{B}$. Tada je $\widetilde{\psi}(G, x, C_s) = \widetilde{\psi}(G, x, C) -
+					  \sum_{1 \leq i \leq k, i \neq s} \widetilde{\psi}(G, x, C_i)$, pa je
 					  i $C_s \in \mathcal{B}$.
 			  \end{itemize}
 	  \end{itemize}
@@ -1870,9 +1972,16 @@ join=round, line width=22pt]
 	  graf} $Q(G, \pi) = (V_Q, d_Q, \psi_Q)$ je struktura takva da je $V_Q$
 	  skup od $|\pi|$ čvorova, $d_Q : V_Q \to \mathbb{N}$ preslikavanje takvo
 	  da je $d_Q(c) = |\pi^{-1}(c)|$ i $\psi_Q : V_Q^2 \to \mathbb{N}$
-	  preslikavanje takvo da važi $\psi_Q(c_1, c_2) = \psi(G, v,
+	  preslikavanje takvo da važi $\psi_Q(c_1, c_2) = \widetilde{\psi}(G, v,
 	  \pi^{-1}(c_2))$ za bilo koje $v \in \pi^{-1}(c_1)$.
   \end{definition}
+
+  \begin{example}
+	  Na slici \ref{img:quotient} prikazan je graf sa ekvitabilnim bojenjem i
+	  odgovarajući količnički graf. Vrednosti $d_Q$ upisane su u čvorove
+	  količničkog grafa. Vrednosti $\psi_Q$ napisane su pored grana, dok grane
+	  kojima je $\psi_Q$ jednako nuli nisu vidljive.
+  \end{example}
 
    \begin{figure}[htp]
 	   \centering
@@ -1936,8 +2045,7 @@ join=round, line width=22pt]
 			   \path [->] (2) edge[arrow, bend right = 10] node[label=150:1]{} (0);
 		   \end{scope}
 	   \end{tikzpicture}
-	   \caption{Graf sa ekvitabilnim bojenjem (levo) i odgovarajući količnički
-	   graf (desno).}
+	   \caption{Ekvitabilno bojenje (levo) i količnički graf (desno).}
 	   \label{img:quotient}
    \end{figure}
 
@@ -1959,12 +2067,12 @@ join=round, line width=22pt]
 	  (\pi^g)^{-1}(c_1)$. Tada važi 
 	  \begin{align*}
 		  $$
-		  \psi_{Q(G^g, \pi^g)}(c_1, c_2) &= \psi(G^g, u', (\pi^g)^{-1}(c_2)) \\
+		  \psi_{Q(G^g, \pi^g)}(c_1, c_2) &= \widetilde{\psi}(G^g, u', (\pi^g)^{-1}(c_2)) \\
 		  &= \sum_{v' \in (\pi^g)^{-1}(c_2)} \psi(G^g, u', v') \\
 		  &= \sum_{v^g \in (\pi^g)^{-1}(c_2)} \psi(G^g, u^g, v^g) &\text{smena }u'=u^g, v'=v^g\\
 		  &= \sum_{v \in \pi^{-1}(c_2)} \psi(G^g, u^g, v^g) &(\pi^g)^{-1}(c_2) = \pi^{-1}(c_2)^g\\
 		  &= \sum_{v \in \pi^{-1}(c_2)} \psi(G, u, v) &(\psi2)\\
-		  &= \psi(G, u, \pi^{-1}(c_2)) \\
+		  &= \widetilde{\psi}(G, u, \pi^{-1}(c_2)) \\
 		  &= \psi_{Q(G, \pi)}(c_1, c_2) &(\pi^g)^{-1}(c_1) = \pi^{-1}(c_1)^g\\
 		  $$
 	  \end{align}
@@ -1972,7 +2080,7 @@ join=round, line width=22pt]
 
   \begin{corrolary}
 	  Preslikavanje $f_Q : \mathcal{G} \times \Pi \times V^* \to \mathcal{Q}$
-	  dato sa $f_Q(G, \pi, \nu) = Q(G, R(G, \pi, \nu))$ je funkcija
+	  definisano sa $f_Q(G, \pi, \nu) = Q(G, R(G, \pi, \nu))$ je funkcija
 	  invarijantna na imenovanje čvorova.
   \end{corrolary}
 
@@ -1983,16 +2091,33 @@ join=round, line width=22pt]
   realizovati ceo količnički graf. Ovo je moguće rešiti posmatranjem manjeg
   dela količničkog grafa i to bez gubitka korisnih informacija.
 
-  \begin{lemma}
-	  Neka je $(G, \pi)$ obojen graf i $\nu = \nu' \| w$ čvor stabla različit od
-	  korena. Uvedimo oznake $\pi_1 = R(G, \pi, \nu')$ i $\pi_2 = R(G, \pi, \nu)$.
-	  Neka su $c_1, \dots, c_k$ boje takve da za sve $1 \leq i \leq k$
+  \begin{definition}
+	  Neka je $(G, \pi)$ obojen graf i $\nu = \nu' \| w$ čvor stabla različit
+	  od korena. Uvedimo oznake $\pi_1 = R(G, \pi, \nu')$ i $\pi_2 = R(G, \pi,
+	  \nu)$.  Neka su $c_1, \dots, c_k$ boje takve da za sve $1 \leq i \leq k$
 	  važi da $\pi_2^{-1}(c_i)$ nije ćelija bojenja $\pi_1$. Označimo sa $f_i$
 	  niz vrednosti $(c_i, d_{Q(G, \pi_2)}(c_i), \psi_{Q(G, \pi_2)}(c_i, c_1),
-	  \dots, \psi_{Q(G, \pi_2)}(c_i, c_k))$. Tada je preslikavanje $f(G, \pi,
-	  \nu)$ čija je vrednost prazan niz $()$ u slučaju korena $\nu$, odnosno
-	  dobijena nadovezivanjem nizova $f_1, \dots, f_k$ u suprotnom, funkcija
-	  invarijantna na imenovanje čvorova.
+	  \dots, \psi_{Q(G, \pi_2)}(c_i, c_k))$. Preslikavanje $f(G, \pi, \nu)$
+	  čija je vrednost prazan niz $()$ u slučaju korena $\nu$, odnosno dobijena
+	  nadovezivanjem nizova $f_1, \dots, f_k$ u suprotnom, zovemo
+	  \emph{razlikom količničkih grafova}.
+  \end{definition}
+
+  \begin{example}
+	  Posmatrajmo najlevlji list i njegovog roditelja u stablu pretrage
+	  prikazanom na slici \ref{img:refinedtree}. Bojenje $[1 \mid 6 \mid 4 \mid
+	  5 \mid 3 \mid 2]$ ima četiri ćelije koje nisu u bojenju $[1 \mid 6 \mid
+	  4\ 5 \mid 2\ 3]$. To su $\{4\}, \{5\}, \{3\}, \{2\}$, redom za boje $c_1
+	  = 3, c_2 = 4, c_3 = 5, c_4 = 6$. Tada je $f_1 = (c_1, d_{Q}(c_1),
+	  \psi_Q(c_1, c_1), \psi_Q(c_1, c_2), \psi_Q(c_1, c_3), \psi_Q(c_1, c_4)) =
+	  (3, 1, 0, 1, 0, 1)$. Dalje, $f_2 = (4, 1, 1, 0, 1, 0), f_3 = (5, 1, 0, 1,
+	  0, 1), f_4 = (6, 1, 1, 0, 1, 0)$, pa je $f(G, \pi, \nu) = (3, 1, 0, 1, 0,
+	  1, 4, 1, 1, 0, 1, 0, 5, 1, 0, 1, 0, 1, 6, 1, 1, 0, 1, 0)$.
+  \end{exampel}
+
+  \begin{lemma}
+	  Razlika količničkih grafova $f$ je funkcija invarijantna na imenovanje
+	  čvorova.
   \end{lemma}
 
   \begin{proof}
@@ -2007,17 +2132,21 @@ join=round, line width=22pt]
 	  čvorova.
   \end{proof}
 
-  \begin{lemma}
+  Naredna teorema opravdava upotrebu invarijante stabla koja se ne oslanja na
+  ceo količnički graf i pokazuje da ne postoji gubitak informacije prilikom
+  njenog izračunavanja.
+
+  \begin{theorem}
 	  Neka je $(G, \pi)$ obojen graf i $\nu \| w_1$ i $\nu \| w_2$ različiti
 	  čvorovi stabla. Tada je $f(G, \pi, \nu \| w_1) = f(G, \pi, \nu \| w_2)$
 	  ako i samo ako $f_Q(G, \pi, \nu \| w_1) = f_Q(G, \pi, \nu \| w_2)$.
-  \end{lemma}
+  \end{theorem}
   
   \begin{proof}
 	  Dokaz implikacije ulevo je trivijalan. Za smer udesno dokazaćemo
 	  kontrapoziciju tvrđenja.
 
-	  Označimo $\pi_1 = R(G, \pi, \nu \| w_1)$ i $\pi_2 = R(G, \pi, \nu \|
+	  Uvedimo oznake $\pi_1 = R(G, \pi, \nu \| w_1)$ i $\pi_2 = R(G, \pi, \nu \|
 	  w_2)$. Pretpostavimo da je $Q(G, \pi_1) \neq Q(G, \pi_2)$. Ako je
 	  $V_{Q(G, \pi_1)} \neq V_{Q(G, \pi_2)}$ ili $d_{Q(G, \pi_1)} \neq d_{Q(G,
 	  \pi_2)}$ onda je skup ćelija bojenja $\pi_1$ i $\pi_2$ koje nisu ćelije u
@@ -2037,20 +2166,20 @@ join=round, line width=22pt]
 	  \psi_{Q(G, \pi_2)}(c_1, c_2)$, a znamo da su u obe jednakosti isti $d_1$
 	  i $d_2$ u pitanju jer su $\pi_1, \pi_2 \leq \pi_\nu$.
 
-	  Pretpostavimo da je $\pi_1^{-1}(c_1)$ ćelija bojenja $\pi_\nu$. Tada nije
+	  Pretpostavimo da je $\pi_1^{-1}(c_1)$ ćelija bojenja $\pi_\nu$. Tada ne važi
 	  $\psi_{Q(G, \pi_1)}(c_1, c_2) \neq \psi_{Q(G, \pi_2)}(c_1, c_2)$ zato što
 	  po prethodno pokazanom važi $|\pi_1^{-1}(c_1)|\psi_{Q(G, \pi_1)}(c_1,
 	  c_2) = |\pi_1^{-1}(c_2)|\psi_{Q(G, \pi_1)}(c_2, c_1) =
 	  |\pi_2^{-1}(c_2)|\psi_{Q(G, \pi_2)}(c_2, c_1) =
 	  |\pi_2^{-1}(c_1)|\psi_{Q(G, \pi_2)}(c_1, c_2)$.
 
-	  Dokažimo još korišćeno svojstvo $|\pi^{-1}(c_1)|\psi(c_1, c_2) =
-	  |\pi^{-1}(c_2)|\psi(c_2, c_1)$. Ono važi zato što za sve $u \in
-	  \pi^{-1}(c_1)$ važi $|\pi^{-1}(c_1)|\psi(c_1, c_2) =
-	  |\pi^{-1}(c_1)|\psi(G, u, \pi^{-1}(c_2)) = \sum_{u \in \pi^{-1}(c_1)}
-	  \psi(G, u, \pi^{-1}(c_2)) = \sum_{u \in \pi^{-1}(c_1)} \sum_{v \in
-	  \pi^{-1}(c_2)} \psi(G, u, v)$. Iz simetričnosti $(\psi1)$ i mogućnosti
-	  zamene mesta suma sledi tražena jednakost.
+	  Dokažimo još korišćeno svojstvo $|C_1|\psi_{Q(G, \pi)}(c_1, c_2) =
+	  |C_2|\psi_{Q(G, \pi)}(c_2, c_1)$ za $C_1 = \pi^{-1}(c_1)$ i $C_2 =
+	  \pi^{-1}(c_2)$. Ono važi zato što za svako $u \in C_1$ važi
+	  $|C_1|\psi_{Q(G, \pi)}(c_1, c_2) = |C_1|\widetilde{\psi}(G, u, C_2) =
+	  \sum_{u \in C_1} \widetilde{\psi}(G, u, C_2) = \sum_{u \in C_1} \sum_{v
+	  \in C_2} \psi(G, u, v)$. Iz simetričnosti $(\psi1)$ i mogućnosti zamene
+	  mesta suma sledi tražena jednakost.
   \end{proof}
 
   Primetimo da je vremenska složenost određivanja invarijante u čvoru $\nu \|
@@ -2082,10 +2211,10 @@ join=round, line width=22pt]
   Neka je $S = \{g_1, \dots, g_n\}$ skup automorfizama. Definišimo $stab_S(v) =
   \{g \in S \mid v^{g} = v\}$. Grupa automorfizama generisana skupom $S_\nu =
   \bigcap_{1 \leq j \leq k} stab_S(v_j)$ je podgrupa stabilizatora niza $\nu =
-  (v_1, \dots, v_k)$, odnosno $< \negmedspace S_\nu \negmedspace > \  \leq \
-  \Sigma^{Aut(G, \pi)}_\nu$.
+  (v_1, \dots, v_k)$, odnosno $\langle S_\nu \rangle \leq \Sigma^{Aut(G,
+  \pi)}_\nu = Aut(G, \pi_\nu)$.
 
-  Definišimo $mcr_S(v) = \min \Omega_v^{< S >}$. Neka je $\nu$ čvor stabla.
+  Definišimo $mcr_S(v) = \min \Omega_v^{\langle S \rangle}$. Neka je $\nu$ čvor stabla.
   Kako je prema prethodno pokazanom $P_C$ moguće primenjivati za bilo koja dva
   čvora iz iste orbite stabilizatora, možemo odseći pretragu u bilo kom čvoru
   $\nu \| v$ za koji važi $v \neq mcr_{S_\nu}(v)$.
@@ -2269,12 +2398,12 @@ join=round, line width=22pt]
 
  \section{Invarijanta grafa}
 
-  U definiciji ekvitabilnog bojenja korišćena je funkcija $\psi(G, u, W) =
-  \sum_{v \in W} \psi(G, u, v)$ koja predstavlja broj grana koje povezuju čvor
-  $u$ sa čvorovima iz skupa $W$. Možemo primetiti da se stavovi i dokazi koji
-  koriste koncept ekvitabilnosti ne pozivaju na konkretno značenje funkcije
-  $\psi$, već samo na određena svojstva te funkcije koja nam omogućavaju da
-  uopštimo značenje ekvitabilnog bojenja.
+  U definiciji pojma ekvitabilnog bojenja uvedeno je preslikavanje
+  $\widetilde{\psi}(G, u, W) = \sum_{v \in W} \psi(G, u, v)$ koja predstavlja
+  broj grana koje povezuju čvor $u$ sa čvorovima iz skupa $W$. Možemo primetiti
+  da se stavovi i dokazi koji koriste koncept ekvitabilnosti ne pozivaju na
+  konkretno značenje funkcije $\psi$, već samo na određena svojstva te funkcije
+  koja nam omogućavaju da uopštimo značenje ekvitabilnog bojenja.
 
   \begin{definition}
 	  Preslikavanje $\psi : \mathcal{G} \times V \times V \to \mathbb{N}$ je
@@ -2287,7 +2416,7 @@ join=round, line width=22pt]
 	  \end{itemize}
   \end{definition}
 
-  Onda možemo definisati $\psi(G, u, W) = \sum_{v \in W} \{\psi(G, u, v)\}$ pri
+  Onda možemo definisati $\widetilde{\psi}(G, u, W) = \sum_{v \in W} \{\psi(G, u, v)\}$ pri
   čemu sada sumu interpretiramo kao sabiranje multiskupova.
 
   Značaj uvedenog pojma dolazi iz činjenice da je dovoljno jednom, pre
@@ -2382,12 +2511,12 @@ join=round, line width=22pt]
 		   \draw [thick, color=blue] (0, -2) circle (1.4);
 	   \end{tikzpicture}
 	   \caption{Levo je prikazana particija usled standardne procedure
-	   profinjavanja. Količnički graf sadrži jedan čvor $c$ i važi $\psi(c, c)
+	   profinjavanja. Količnički graf sadrži jedan čvor $c$ i važi $\psi_Q(c, c)
 	   = 2$. Desno je prikazana particija usled profinjavanja sa invarijantom
 	   najkraćeg puta. Količnički graf sadrži tri čvora {\color{red}$a$},
-	   {\color{green}$b$} i {\color{blue}$c$} i važi $\psi( a, a) = \{0, 1,
-	   1\}$, $\psi(b, b) = \{0, 1, 1, 2\}$ i $\psi(c, c) = \{0, 1, 1, 2, 2\}$,
-	   dok su $\psi(x, y)$ za različite $x$ i $y$ multiskupovi sa različitim
+	   {\color{green}$b$} i {\color{blue}$c$} i važi $\psi_Q( a, a) = \{0, 1,
+	   1\}$, $\psi_Q(b, b) = \{0, 1, 1, 2\}$ i $\psi_Q(c, c) = \{0, 1, 1, 2, 2\}$,
+	   dok su $\psi_Q(x, y)$ za različite $x$ i $y$ multiskupovi sa različitim
 	   brojem beskonačnosti.}
 	   \label{img:graphinv}
    \end{figure}
