@@ -19,6 +19,10 @@
 \usepackage[noend]{algpseudocode}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta}
+\usepackage{pgfplots}
+\pgfplotsset{width=7cm, compat=1.9, every tick label/.append style={font=\scriptsize}}
+\usepgfplotslibrary{external}
+\tikzexternalize
 
 % Teoreme, definicije
 \newtheorem{theorem}{Teorema}
@@ -41,6 +45,9 @@
 \tikzstyle{arrow}=[draw=black, >={Latex[length=2mm]}]
 \tikzstyle{cover}=[draw, opacity=.2, line cap=round, line
 join=round, line width=22pt]
+
+% Definisane komande
+\def\CC{{C\nolinebreak[4]\hspace{-.05em}\raisebox{.4ex}{\tiny\bf ++}}}
 
 % Paket koji definiše sve specifičnosti master rada Matematičkog fakulteta
 \usepackage[latinica]{matfmaster} 
@@ -356,14 +363,20 @@ join=round, line width=22pt]
    \end{figure}
 
 
-   \subsection{Dejstvo grupe}
+   \subsection{Generatori i dejstvo grupe}
+
+   Neka je $G$ grupa i $H$ podskup od $G$. Tada sa $\langle H \rangle$
+   označavamo minimalnu podgrupu grupe $G$ koja sadrži sve elemente skupa $H$ i
+   kažemo da je ona \emph{generisana elementima skupa $H$}. Ukoliko je $H =
+   \{g_1, \dots, g_n\}$ za neki prirodan broj $n$, koristimo i oznaku $\langle
+   g_1, \dots, g_n \rangle$.
 
    Neka je nad grupom $G$ i skupom $S$ definisano dejstvo. Dejstvo elementa
    grupe $g \in G$ na element skupa $s \in S$ označavamo sa $gs$ ili $s^g$, pri
    čemu ako su $g_1, g_2 \in G$ tada je $(g_1g_2)s = g_1(g_2s)$ odnosno
-   $s^{g_1g_2} = (s^{g_2})^{g_1}$.  Orbita elementa $s$ je skup $\Omega_s^G =
-   \{s^g \mid g \in G\}$.  Stabilizator elementa $s$ je skup $\Sigma_s^G = \{g
-   \in G \mid s^g=s\}$ koji čini jednu podgrupu od $G$.
+   $s^{g_1g_2} = (s^{g_2})^{g_1}$.  \emph{Orbita} elementa $s$ je skup
+   $\Omega_s^G = \{s^g \mid g \in G\}$.  \emph{Stabilizator} elementa $s$ je
+   skup $\Sigma_s^G = \{g \in G \mid s^g=s\}$ koji čini jednu podgrupu od $G$.
 
    Na skupu čvorova $V$ definisano je dejstvo grupe $S_n$ sa $v^g = g(v)$ za $v
    \in V$ i $g \in S_n$.  Definiciju dejstva grupe permutacija možemo proširiti
@@ -1180,49 +1193,19 @@ join=round, line width=22pt]
    Bojenje $\pi \in \Pi_n$ predstavljeno je permutacijom $p$ i nizom $cells$.
    Permutacija $p$ predstavlja niz koji se dobija nadovezivanjem ćelija
    $\pi^{-1}(1), \dots, \pi^{-1}(k)$ redom, pri čemu su elementi jedne ćelije
-   uređeni rastuće. Preciznije, $p$ je permutacija takva da je $p(u) \in
-   \pi^{-1}(c)$ ako i samo ako je $\sum_{i = 1}^{c-1} |\pi^{-1}(i)| \leq u <
-   \sum_{i = 1}^c |\pi^{-1}(i)|$ i da ako važi $\pi(u) = \pi(v)$ onda je $u < v
-   \iff p^{-1}(u) < p^{-1}(v)$.
+   uređeni rastuće. Na primer, bojenje $\pi = [2\ 6 \mid 4\ 3\ 5 \mid 1]$
+   predstavljeno je permutacijom $p : \begin{pmatrix} 1 & 2 & 3 & 4 & 5 & 6\\ 2
+   & 6 & 3 & 4 & 5 & 1 \end{pmatrix}$.
 
    Niz $cells$ dužine $n$ upotpunjava permutaciju $p$ podacima o granicama
    ćelija bojenja $\pi$. Ako pozicija $u$ predstavlja početak nove ćelije, tada
    je $cells_u$ takvo da ta ćelija obuhvata tačno pozicije $[u, cells_u)$
-   permutacije $p$.  Formalno,
-   $$ cells(u) =
-     \begin{cases}
-		 u + |\pi^{-1}(\pi(p(u)))|, & \quad \text{ako je } u = 1 \text{ ili }
-		 \pi(p(u)) \neq \pi(p(u-1)) \\
-		 -1, & \quad \text{inače.} \\
-	 \end{cases}
-   $$
+   permutacije $p$, a u suprotnom je $cells_u = -1$. Na istom primeru, počeci
+   novih ćelija nalaze se na pozicijama 1, 3 i 6, pa je $cells_1 = 3$, $cells_3
+   = 6$ i $cells_6 = 7$, dok su vrednosti na ostalim pozicijama -1, odnosno
+   $cells = (3, -1, 6, -1, -1, 7)$.
 
-   \begin{example}
-	   Neka je $\pi = [2\ 5 \mid 4\ 3\ 5 \mid 1]$ jedno bojenje. Tada je ono
-	   predstavljeno permutacijom
-	   $p :
-	   \begin{pmatrix}
-		   1 & 2 & 3 & 4 & 5 & 6\\
-		   2 & 5 & 3 & 4 & 5 & 1
-	   \end{pmatrix}$ i nizom $cells = (3, -1, 6, -1, -1, 7)$.
-   \end{example}
-
-   Primetimo da u slučaju diskretnog bojenja $\pi$ permutacija $p$ predstavlja
-   inverz permutacije $\pi$.
-
-   \begin{example}
-	   Bojenje $\pi = [2 \mid 4 \mid 3 \mid 1]$ koje je zapravo preslikavanje
-	   $\pi :
-	   \begin{pmatrix}
-		   1 & 2 & 3 & 4\\
-		   4 & 1 & 3 & 2
-	   \end{pmatrix}$ predstavljeno je permutacijom
-	   $p :
-	   \begin{pmatrix}
-		   1 & 2 & 3 & 4\\
-		   2 & 4 & 3 & 1
-	   \end{pmatrix}$.
-   \end{example}
+   Primetimo da u slučaju diskretnog bojenja $\pi$ važi $p = \pi^{-1}$.
 
    Jedna od ključnih operacija nad bojenjem je profinjavanje jedne ćelije. Neka
    je $\pi^{-1}(c)$ jedna ćelija bojenja $\pi$ i neka je svakom čvoru $v$ te
@@ -2522,8 +2505,598 @@ join=round, line width=22pt]
    \end{figure}
 
 % ------------------------------------------------------------------------------
-\chapter{Rezultati testiranja}
+\chapter{Rezultati}
 % ------------------------------------------------------------------------------
+
+  U ovoj glavi prikazani su rezultati vremena izvršavanja implementacije
+  algoritma na raznim klasama grafova. Algoritam je implementiran u programskom
+  jeziku \CC\ u okviru programa \emph{morphi}. Izvorni kod je dostupan na
+  adresi \url{https://github.com/idrecun/morphi}.  Testiranje je vršeno na
+  grafovima iz kolekcije programa \emph{bliss} citeBliss i na nekoliko klasa
+  slučajnih grafova. Svi grafovi preuzeti su sa
+  \url{https://pallini.di.uniroma1.it/Graphs.html}.
+
+  \section{Detalji testiranja}
+
+	U rezultatima prikazano je vreme izvršavanja programa mereno komandom
+	\emph{time} ugrađenom u \emph{Bash}, kao zbir vremena koje je program
+	proveo u korisničkom i sistemskom režimu. Granica za vreme izvršavanja je u
+	svim primerima postavljena na 100 sekundi. Testiranje je vršeno na HP
+	Spectre x360 laptop računaru sa Intel i5 procesorom. U trenutku testiranja
+	implementacija nije podržavala izvršavanje na više procesorskih jezgara.
+
+	Testirane su dve varijante algoritma. U prvoj je za invarijantu grafa uzeta
+	matrica povezanosti (označena sa \emph{n} i predstavljena plavom bojom),
+	dok je u drugoj korišćena invarijanta najkraćeg puta (označena sa \emph{d}
+	i predstavljena crvenom bojom). Horizontalna osa grafika predstavlja broj
+	čvorova grafa, a vertikalna osa vreme izvršavanja u sekundama (na
+	logaritamskoj skali).
+
+	\pagebreak
+
+  \section{Slučajni grafovi}
+
+	U ovom odeljku su prikazani rezultati testiranja na klasama slučajnih
+	grafova navedenih u nastavku. Rezultati za klasu \emph{rnd-3-reg} bez
+	upotrebe invarijante razdaljine nisu prikazani zato što za većinu primera
+	program nije prekinuo izvršavanje pre granice od 100 sekundi.
+	\begin{itemize}
+		\item \emph{rantree} - Stabla
+		\item \emph{ran2} - Grafovi sa verovatnoćom grane $\frac{1}{2}$
+		\item \emph{ran10} - Grafovi sa verovatnoćom grane $\frac{1}{10}$
+		\item \emph{ransq} - Grafovi sa verovatnoćom grane $\frac{1}{n}$ za $n$ čvorova
+		\item \emph{ranreg} - Regularni grafovi
+		\item \emph{rnd-3-reg} - 3-regularni grafovi (iz \emph{bliss} kolekcije)
+	\end{itemize}
+	
+
+	%U klasama \emph{ran2}, \emph{ran10} i \emph{ransq} složenost
+	%pretprocesiranja invarijante grafa najkraćeg puta ($O(nm)$ za $n$ čvorova i
+	%$m$ grana) dominira. Pojačanje procedure profinjavanja je u ovom slučaju
+	%zanemarljivo - za skoro sve primere se i bez upotrebe invarijante grafa
+	%generiše jedan čvor stabla pretrage.
+
+    \begin{tikzpicture}
+		\begin{axis}[
+				title={\emph{rantree}},
+				ymode=log,
+				xmajorgrids=true,
+				ymajorgrids=true,
+				grid style=dashed,
+				legend pos=south east,
+			]
+
+			\addplot[color=blue, mark=square*]
+				table{data/rantree.csv};
+
+			\addplot[color=red, mark=*]
+				table{data/rantree.csv};
+
+			\legend{n, d};
+		\end{axis}
+	\end{tikzpicture}
+    \begin{tikzpicture}
+		\begin{axis}[
+				title={\emph{ran2}},
+				ymode=log,
+				xmajorgrids=true,
+				ymajorgrids=true,
+				grid style=dashed,
+				legend pos=south east,
+			]
+
+			\addplot[color=blue, mark=square*]
+				table{data/ran2.csv};
+
+			\addplot[color=red, mark=*]
+				table{data/ran2-d.csv};
+
+			\legend{n, d};
+		\end{axis}
+	\end{tikzpicture}
+
+    \begin{tikzpicture}
+		\begin{axis}[
+				title={\emph{ran10}},
+				ymode=log,
+				xmajorgrids=true,
+				ymajorgrids=true,
+				grid style=dashed,
+				legend pos=south east,
+			]
+
+			\addplot[color=blue, mark=square*]
+				table{data/ran10.csv};
+
+			\addplot[color=red, mark=*]
+				table{data/ran10-d.csv};
+
+			\legend{n, d};
+		\end{axis}
+	\end{tikzpicture}
+    \begin{tikzpicture}
+		\begin{axis}[
+				title={\emph{ransq}},
+				ymode=log,
+				xmajorgrids=true,
+				ymajorgrids=true,
+				grid style=dashed,
+				legend pos=south east,
+			]
+
+			\addplot[color=blue, mark=square*]
+				table{data/ransq.csv};
+
+			\addplot[color=red, mark=*]
+				table{data/ransq-d.csv};
+
+			\legend{n, d};
+		\end{axis}
+	\end{tikzpicture}
+
+    \begin{tikzpicture}
+		\begin{axis}[
+				title={\emph{ranreg}},
+				ymode=log,
+				xmajorgrids=true,
+				ymajorgrids=true,
+				grid style=dashed,
+				legend pos=south east,
+			]
+
+			\addplot[color=blue, mark=square*]
+				table{data/ranreg.csv};
+
+			\addplot[color=red, mark=*]
+				table{data/ranreg-d.csv};
+
+			\legend{n, d};
+		\end{axis}
+	\end{tikzpicture}
+    \begin{tikzpicture}
+		\begin{axis}[
+				title={\emph{rnd-3-reg}},
+				ymode=log,
+				xmajorgrids=true,
+				ymajorgrids=true,
+				grid style=dashed,
+				legend pos=south east,
+			]
+
+			%\addplot[color=blue, mark=square*]
+			%	table{data/rnd-3-reg.csv};
+
+			\addplot[color=red, mark=*]
+				table{data/rnd-3-reg-d.csv};
+
+			\legend{d};
+		\end{axis}
+	\end{tikzpicture}
+    
+  \section{Grafovi donje granice nekih algoritama}
+
+	Klasa \emph{cfi} je klasa grafova opisanih kao težak primer za
+	\emph{k}-dimenzioni WL-metod citeCFI.
+
+	\begin{figure}[!h]
+	\center
+    \begin{tikzpicture}
+		\begin{axis}[
+				title={\emph{cfi}},
+				ymode=log,
+				xmajorgrids=true,
+				ymajorgrids=true,
+				grid style=dashed,
+				legend pos=south east,
+			]
+
+			\addplot[color=blue]
+				table{data/cfi.csv};
+
+			\addplot[color=red]
+				table{data/cfi-d.csv};
+
+			\legend{n, d};
+		\end{axis}
+	\end{tikzpicture}
+	\end{figure}
+
+	Klase \emph{mz}, \emph{cmz}, \emph{mz-aug}, \emph{mz-aug2} su zasnovane na
+	klasi \emph{Mijazakijevih grafova} opisanih kao teški primeri za Mekejev
+	algoritam citeMiyazaki koji je centralna tema ovog rada.
+
+    \begin{tikzpicture}
+		\begin{axis}[
+				title={\emph{mz}},
+				ymode=log,
+				xmajorgrids=true,
+				ymajorgrids=true,
+				grid style=dashed,
+				legend pos=south east,
+			]
+
+			\addplot[color=blue, mark=square*]
+				table{data/mz.csv};
+
+			\addplot[color=red, mark=*]
+				table{data/mz-d.csv};
+
+			\legend{n, d};
+		\end{axis}
+	\end{tikzpicture}
+    \begin{tikzpicture}
+		\begin{axis}[
+				title={\emph{cmz}},
+				ymode=log,
+				xmajorgrids=true,
+				ymajorgrids=true,
+				grid style=dashed,
+				legend pos=south east,
+			]
+
+			\addplot[color=blue, mark=square*]
+				table{data/cmz.csv};
+
+			\addplot[color=red]
+				table{data/cmz-d.csv};
+
+			\legend{n, d};
+		\end{axis}
+	\end{tikzpicture}
+
+    \begin{tikzpicture}
+		\begin{axis}[
+				title={\emph{mz-aug}},
+				ymode=log,
+				xmajorgrids=true,
+				ymajorgrids=true,
+				grid style=dashed,
+				legend pos=south east,
+			]
+
+			\addplot[color=blue, mark=square*]
+				table{data/mz-aug.csv};
+
+			\addplot[color=red, mark=*]
+				table{data/mz-aug-d.csv};
+
+			\legend{n, d};
+		\end{axis}
+	\end{tikzpicture}
+    \begin{tikzpicture}
+		\begin{axis}[
+				title={\emph{mz-aug2}},
+				ymode=log,
+				xmajorgrids=true,
+				ymajorgrids=true,
+				grid style=dashed,
+				legend pos=south east,
+			]
+
+			\addplot[color=blue, mark=square*]
+				table{data/mz-aug2.csv};
+
+			\addplot[color=red, mark=*]
+				table{data/mz-aug2-d.csv};
+
+			\legend{n, d};
+		\end{axis}
+	\end{tikzpicture}
+
+  \section{Mreže}
+
+	Grafovi klase \emph{grid} su grafovi koordinatnih mreža u dve i tri
+	dimenzije. Grafovi klase \emph{grid-sw} su isti ti grafovi sa razmenjenim
+	parovima nekih grana. \emph{triang} predstavlja klasu trougaonih grafova.
+	Još mreža nalazi se u klasi \emph{lattice}.
+
+    \begin{tikzpicture}
+		\begin{axis}[
+				title={\emph{grid}},
+				ymode=log,
+				xmajorgrids=true,
+				ymajorgrids=true,
+				grid style=dashed,
+				legend pos=south east,
+			]
+
+			\addplot[color=blue, mark=square*]
+				table{data/grid.csv};
+
+			\addplot[color=red, mark=*]
+				table{data/grid-d.csv};
+
+			\legend{n, d};
+		\end{axis}
+	\end{tikzpicture}
+    \begin{tikzpicture}
+		\begin{axis}[
+				title={\emph{grid-sw}},
+				ymode=log,
+				xmajorgrids=true,
+				ymajorgrids=true,
+				grid style=dashed,
+				legend pos=south east,
+			]
+
+			\addplot[color=blue, mark=square*]
+				table{data/grid-w.csv};
+
+			\addplot[color=red, mark=*]
+				table{data/grid-w-d.csv};
+
+			\legend{n, d};
+		\end{axis}
+	\end{tikzpicture}
+
+    \begin{tikzpicture}
+		\begin{axis}[
+				title={\emph{lattice}},
+				ymode=log,
+				xmajorgrids=true,
+				ymajorgrids=true,
+				grid style=dashed,
+				legend pos=south east,
+			]
+
+			\addplot[color=blue, mark=square*]
+				table{data/lattice.csv};
+
+			\addplot[color=red, mark=*]
+				table{data/lattice-d.csv};
+
+			\legend{n, d};
+		\end{axis}
+	\end{tikzpicture}
+    \begin{tikzpicture}
+		\begin{axis}[
+				title={\emph{triang}},
+				ymode=log,
+				xmajorgrids=true,
+				ymajorgrids=true,
+				grid style=dashed,
+				legend pos=south east,
+			]
+
+			\addplot[color=blue, mark=square*]
+				table{data/triang.csv};
+
+			\addplot[color=red, mark=*]
+				table{data/triang-d.csv};
+
+			\legend{n, d};
+		\end{axis}
+	\end{tikzpicture}
+
+  \section{Grafovi nekih kombinatornih objekata}
+
+	U ovom odeljku su prikazani rezultati testiranja na klasama grafova iz
+	\emph{bliss} kolekcije navedenih u nastavku.
+	\begin{itemize}
+		\item \emph{ag} - Grafovi afine geometrije
+		\item \emph{had} - Grafovi Adamarovih matrica
+		\item \emph{latin} - Grafovi latinskih kvadrata
+		\item \emph{latin-sw} - Grafovi latinskih kvadrata sa razmenjenim parovima grana
+		\item \emph{k} - Kompletni grafovi
+		\item \emph{paley} - Pejlijevi grafovi
+		\item \emph{pg} - Grafovi Dezargovih ravni
+		\item \emph{pp} - Grafovi projektivnih ravni
+		\item \emph{sts} - Grafovi Štajnerovih sistema trojki
+		\item \emph{sts-sw} - Grafovi Štajnerovih sistema trojki sa razmenjenim parovima grana
+	\end{itemize}
+	Pored navedenih klasa, u \emph{bliss} kolekciji postoje i klase
+	\emph{had-sw} i \emph{kef}. Rezultati za klasu \emph{had-sw} nisu prikazani
+	zato što za većinu primera program nije prekinuo izvršavanje pre granice od
+	100 sekundi. Rezultati za klasu obojenih grafova \emph{kef} nisu prikazani
+	zato što prilikom testiranja implementacija nije podržavala unošenje
+	obojenih grafova.
+
+    \begin{tikzpicture}
+		\begin{axis}[
+				title={\emph{ag}},
+				ymode=log,
+				xmajorgrids=true,
+				ymajorgrids=true,
+				grid style=dashed,
+				legend pos=south east,
+			]
+
+			\addplot[color=blue, mark=square*]
+				table{data/ag.csv};
+
+			\addplot[color=red, mark=*]
+				table{data/ag-d.csv};
+
+			\legend{n, d};
+		\end{axis}
+	\end{tikzpicture}
+    \begin{tikzpicture}
+		\begin{axis}[
+				title={\emph{had}},
+				ymode=log,
+				xmajorgrids=true,
+				ymajorgrids=true,
+				grid style=dashed,
+				legend pos=south east,
+			]
+
+			\addplot[color=blue, only marks, mark=square*]
+				table{data/had.csv};
+
+			\addplot[color=red, only marks, mark=*]
+				table{data/had-d.csv};
+
+			\addplot[color=white, only marks, mark=x]
+				table{data/had-bad.csv};
+
+			\legend{n, d};
+		\end{axis}
+	\end{tikzpicture}
+
+
+    \begin{tikzpicture}
+		\begin{axis}[
+				title={\emph{latin}},
+				ymode=log,
+				xmajorgrids=true,
+				ymajorgrids=true,
+				grid style=dashed,
+				legend pos=south east,
+			]
+
+			\addplot[color=blue, mark=square*]
+				table{data/latin.csv};
+
+			\addplot[color=red, mark=*]
+				table{data/latin-d.csv};
+
+			\legend{n, d};
+		\end{axis}
+	\end{tikzpicture}
+    \begin{tikzpicture}
+		\begin{axis}[
+				title={\emph{latin-sw}},
+				ymode=log,
+				xmajorgrids=true,
+				ymajorgrids=true,
+				grid style=dashed,
+				legend pos=south east,
+			]
+
+			\addplot[color=blue, mark=square*]
+				table{data/latin-sw.csv};
+
+			\addplot[color=red, only marks, mark=*]
+				table{data/latin-sw-d.csv};
+
+			\addplot[color=white, only marks, mark=x]
+				table{data/latin-sw-d-bad.csv};
+
+			\legend{n, d};
+		\end{axis}
+	\end{tikzpicture}
+
+    \begin{tikzpicture}
+		\begin{axis}[
+				title={\emph{k}},
+				ymode=log,
+				xmajorgrids=true,
+				ymajorgrids=true,
+				grid style=dashed,
+				legend pos=south east,
+			]
+
+			\addplot[color=blue, mark=square*]
+				table{data/k.csv};
+
+			\addplot[color=red, mark=*]
+				table{data/k-d.csv};
+
+			\legend{n, d};
+		\end{axis}
+	\end{tikzpicture}
+    \begin{tikzpicture}
+		\begin{axis}[
+				title={\emph{paley}},
+				ymode=log,
+				xmajorgrids=true,
+				ymajorgrids=true,
+				grid style=dashed,
+				legend pos=south east,
+			]
+
+			\addplot[color=blue, mark=square*]
+				table{data/paley.csv};
+
+			\addplot[color=red, mark=*]
+				table{data/paley-d.csv};
+
+			\legend{n, d};
+		\end{axis}
+	\end{tikzpicture}
+
+    \begin{tikzpicture}
+		\begin{axis}[
+				title={\emph{pg}},
+				ymode=log,
+				xmajorgrids=true,
+				ymajorgrids=true,
+				grid style=dashed,
+				legend pos=south east,
+			]
+
+			\addplot[color=blue, mark=square*]
+				table{data/pg.csv};
+
+			\addplot[color=red, mark=*]
+				table{data/pg-d.csv};
+
+			\legend{n, d};
+		\end{axis}
+	\end{tikzpicture}
+    \begin{tikzpicture}
+		\begin{axis}[
+				title={\emph{pp}},
+				ymode=log,
+				xmajorgrids=true,
+				ymajorgrids=true,
+				grid style=dashed,
+				legend pos=south east,
+			]
+
+			\addplot[color=blue, only marks, mark=square*]
+				table{data/pp.csv};
+
+			\addplot[color=red, only marks, mark=*]
+				table{data/pp-d.csv};
+
+			\legend{n, d};
+		\end{axis}
+	\end{tikzpicture}
+
+    \begin{tikzpicture}
+		\begin{axis}[
+				title={\emph{sts}},
+				ymode=log,
+				xmajorgrids=true,
+				ymajorgrids=true,
+				grid style=dashed,
+				legend pos=south east,
+			]
+
+			\addplot[color=blue, only marks, mark=square*]
+				table{data/sts.csv};
+
+			\addplot[color=red, only marks, mark=*]
+				table{data/sts-d.csv};
+
+			\addplot[color=white, only marks, mark=x]
+				table{data/sts-bad.csv};
+
+			\legend{n, d};
+		\end{axis}
+	\end{tikzpicture}
+    \begin{tikzpicture}
+		\begin{axis}[
+				title={\emph{sts-sw}},
+				ymode=log,
+				xmajorgrids=true,
+				ymajorgrids=true,
+				grid style=dashed,
+				legend pos=south east,
+			]
+
+			\addplot[color=blue, mark=square*]
+				table{data/sts-sw.csv};
+
+			\addplot[color=red, mark=*]
+				table{data/sts-sw-d.csv};
+
+			\legend{n, d};
+		\end{axis}
+	\end{tikzpicture}
+	
+
 
 % ------------------------------------------------------------------------------
 \chapter{Zaključak}
