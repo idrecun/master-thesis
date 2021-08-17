@@ -135,6 +135,41 @@ join=round, line width=22pt]
 \chapter{Uvod}
 % ------------------------------------------------------------------------------
 
+ Dva grafa su izomorfna ukoliko su jednaki do na promenu imenovanja čvorova.
+ Problem ispitivanja izomorfizma grafova \textbf{GI} je problem određivanja
+ postojanja takvog preimenovanja. Trenutno nije poznat algoritam polinomijalne
+ složenosti koji rešava ovaj problem u opštem slučaju \cite{Babai}. Ipak, sa
+ praktičnog stanovišta bi se moglo kazati da je problem rešen. Najuspešniji
+ rešavači za \textbf{GI} (nauty \cite{McKay1,McKay}, Traces
+ \cite{Piperno,McKay}, bliss \cite{Bliss}, conauto \cite{Conauto}, saucy
+ \cite{Saucy}) sposobni su da reše velike instance teških klasa grafova u
+ realnom vremenu. Pritom, sastavljanje teških klasa grafova za ove rešavače
+ nije trivijalno i u realnoj upotrebi se takvi grafovi veoma retko javljaju. Na
+ grafovima bez konkretne kombinatorne strukture se ti algoritmi čak ponašaju
+ linearno \cite{Benchmark}.
+
+ Postoje dva pristupa praktičnom rešavanju problema izomorfizma grafova. Prvi,
+ neposredniji pristup je direktna pretraga izomorfizma između dva zadata grafa.
+ Algoritmi zasnovani na ovom pristupu imaju korisnu osobinu da je moguće
+ prekinuti pretragu pre ispitivanja velikog dela prostora pretrage, na primer
+ kada je izomorfizam pronađen ili kada je pronađeno neko svojstvo grafova iz
+ kog je moguće zaključiti njihov neizomorfizam. Drugi pristup oslanja se na
+ mogućnost svođenja grafa na neki kanonski oblik. Time je omogućena jednostavna
+ provera izomorfizma dva grafa - ispitivanjem jednakosti tako dobijenih
+ kanonskih grafova. Ovakav pristup je znatno pogodniji od prvog u situacijama
+ kada je neophodno efikasno ispitivanje izomorfizma u radu sa većim brojem
+ grafova, na primer ukoliko je potrebno odrediti sve parove izomorfnih grafova
+ u nekoj kolekciji grafova.  Uprkos tome što algoritmi za određivanje kanonske
+ forme ne poseduju mogućnost ranijeg zaustavljanja pretrage, neki od
+ najuspešnijih modernih alata za rešavanje \textbf{GI} zasnovani su upravo na
+ tom pristupu. 
+
+ Centralna tema ovog rada je Mekejev algoritam za određivanje kanonske forme.
+ Pojmovi i tvrđenja uvedeni su u skladu sa opisom opšteg okvira za konstrukciju
+ algoritma prikazanim u radu \cite{McKay} na osnovu kog je zatim konstruisan
+ konkretan algoritam. Uvedeno je i originalno uopštenje algoritma i prikazani
+ su rezultati vremena izvršavanja implementiranog algoritma sa i bez tog
+ uopštenja.
 
 % ------------------------------------------------------------------------------
 \chapter{Opšti algoritam}
@@ -1263,10 +1298,10 @@ join=round, line width=22pt]
 
  Jedna mogućnost je odabir neke (konkretno prve) višečlane ćelije bojenja
  najmanje veličine. Obrazloženje za ovakav izbor je da manje ćelije imaju veću
- šansu da sadrže mali broj orbita (ili čak jednu) cite{McKay} i da je samim
+ šansu da sadrže mali broj orbita (ili čak jednu) \cite{McKay} i da je samim
  tim očekivani faktor grananja manji.
 
- Druga mogućnost, koja se ispostavila kao bolja u većini slučajeva cite{McKay}
+ Druga mogućnost, koja se ispostavila kao bolja u većini slučajeva \cite{McKay1}
  je odabir prve višečlane ćelije bez obzira na njenu veličinu. U daljem radu
  pretpostavljamo postojanje procedure \texttt{Target\_cell($\pi$)} koja
  implementira ovu strategiju.
@@ -1344,10 +1379,8 @@ join=round, line width=22pt]
 	  invarijantna na imenovanje čvorova takva da je $F(G, \pi, \nu) \leq \pi$.
 	  Tada je preslikavanje definisano sa
 	  \begin{align*}
-		  $$
 		  &R(G, \pi, ()) = F(G, \pi, ()) \\
 		  &R(G, \pi, \nu \| w) = F(G, I(R(G, \pi, \nu), w), \nu \| w)
-		  $$
 	  \end{align}
 	  funkcija profinjavanja.
   \end{lemma}
@@ -1752,12 +1785,12 @@ join=round, line width=22pt]
 
 	  Konačno,
 	  \begin{align*}
-		  $$\sum_{W \in \mathcal{W}} |W| &= \sum_{W \in \mathcal{W}} \sum_{v \in W} 1\\
+		  \sum_{W \in \mathcal{W}} |W| &= \sum_{W \in \mathcal{W}} \sum_{v \in W} 1\\
 		  &= \sum_{W \in \mathcal{W}} \sum_{v \in V} \chi_W(v)\\
 		  &= \sum_{v \in V} \sum_{W \in \mathcal{W}} \chi_W(v) \\
 		  &= \sum_{v \in V} k_v\\
 		  &\leq \sum_{v \in V} (1 + \log_2 n)\\
-		  &= n (1 + \log_2 n)$$
+		  &= n (1 + \log_2 n)
 	  \end{align}
 	  gde je $\chi_W : V \to \{0, 1\}$ karakteristična funkcija skupa $W$.
   \end{proof}
@@ -2049,15 +2082,13 @@ join=round, line width=22pt]
 	  |\pi^{-1}(c)| = d_{Q(G, \pi)}(c)$. Konačno, neka je $u' \in
 	  (\pi^g)^{-1}(c_1)$. Tada važi 
 	  \begin{align*}
-		  $$
 		  \psi_{Q(G^g, \pi^g)}(c_1, c_2) &= \widetilde{\psi}(G^g, u', (\pi^g)^{-1}(c_2)) \\
 		  &= \sum_{v' \in (\pi^g)^{-1}(c_2)} \psi(G^g, u', v') \\
 		  &= \sum_{v^g \in (\pi^g)^{-1}(c_2)} \psi(G^g, u^g, v^g) &\text{smena }u'=u^g, v'=v^g\\
 		  &= \sum_{v \in \pi^{-1}(c_2)} \psi(G^g, u^g, v^g) &(\pi^g)^{-1}(c_2) = \pi^{-1}(c_2)^g\\
 		  &= \sum_{v \in \pi^{-1}(c_2)} \psi(G, u, v) &(\psi2)\\
 		  &= \widetilde{\psi}(G, u, \pi^{-1}(c_2)) \\
-		  &= \psi_{Q(G, \pi)}(c_1, c_2) &(\pi^g)^{-1}(c_1) = \pi^{-1}(c_1)^g\\
-		  $$
+		  &= \psi_{Q(G, \pi)}(c_1, c_2) &(\pi^g)^{-1}(c_1) = \pi^{-1}(c_1)^g
 	  \end{align}
   \end{proof}
 
@@ -2372,12 +2403,12 @@ join=round, line width=22pt]
   grupe automorfizama, ali u tom slučaju sama provera ekvivalentnosti listova
   prilikom otkrivanja automorfizma postaje sporija.
 
-  Moguće su i drugačije strategije obilaska stabla. Program Traces cite{McKay}
-  vrši pretragu stabla u širinu što omogućava odsecanje svih čvorova stabla
-  nekog nivoa čija invarijanta nije maksimalna. Pošto ovakvim obilaskom nije
-  moguće direktno otkrivati automorfizme kao u slučaju pretrage u dubinu,
-  puštaju se pomoćni slučajni putevi do listova stabla prilikom pretrage sa
-  svrhom otkrivanja automorfizama na način sličan prethodno opisanom.
+  Moguće su i drugačije strategije obilaska stabla. Program Traces vrši
+  pretragu stabla u širinu što omogućava odsecanje svih čvorova stabla nekog
+  nivoa čija invarijanta nije maksimalna. Pošto ovakvim obilaskom nije moguće
+  direktno otkrivati automorfizme kao u slučaju pretrage u dubinu, puštaju se
+  pomoćni slučajni putevi do listova stabla prilikom pretrage sa svrhom
+  otkrivanja automorfizama na način sličan prethodno opisanom.
 
  \section{Invarijanta grafa}
 
@@ -2512,7 +2543,7 @@ join=round, line width=22pt]
   algoritma na raznim klasama grafova. Algoritam je implementiran u programskom
   jeziku \CC\ u okviru programa \emph{morphi}. Izvorni kod je dostupan na
   adresi \url{https://github.com/idrecun/morphi}.  Testiranje je vršeno na
-  grafovima iz kolekcije programa \emph{bliss} citeBliss i na nekoliko klasa
+  grafovima iz kolekcije programa \emph{bliss} i na nekoliko klasa
   slučajnih grafova. Svi grafovi preuzeti su sa
   \url{https://pallini.di.uniroma1.it/Graphs.html}.
 
@@ -2675,8 +2706,8 @@ join=round, line width=22pt]
     
   \section{Grafovi donje granice nekih algoritama}
 
-	Klasa \emph{cfi} je klasa grafova opisanih kao težak primer za
-	\emph{k}-dimenzioni WL-metod citeCFI.
+	Klasa \emph{cfi} iz \emph{bliss} kolekcije je klasa grafova opisanih kao
+	težak primer za \emph{k}-dimenzioni WL-metod \cite{CFI}.
 
 	\begin{figure}[!h]
 	\center
@@ -2703,7 +2734,7 @@ join=round, line width=22pt]
 
 	Klase \emph{mz}, \emph{cmz}, \emph{mz-aug}, \emph{mz-aug2} su zasnovane na
 	klasi \emph{Mijazakijevih grafova} opisanih kao teški primeri za Mekejev
-	algoritam citeMiyazaki koji je centralna tema ovog rada.
+	algoritam \cite{Miyazaki} koji je centralna tema ovog rada.
 
     \begin{tikzpicture}
 		\begin{axis}[
@@ -3099,8 +3130,58 @@ join=round, line width=22pt]
 
 
 % ------------------------------------------------------------------------------
-\chapter{Zaključak}
+\chapter{Zaključak i dalji rad}
 % ------------------------------------------------------------------------------
+
+  Cilj ovog rada bio je izučavanje i opis savremenog okvira za konstrukciju
+  algoritma za ispitivanje izomorfizma grafova. Konstruisan je i implementiran
+  algoritam zasnovan na tom okviru i prikazani su rezultati vremena izvršavanja
+  implementiranog algoritma na reprezentativnom skupu ulaza. Uvedeno je
+  uopštenje algoritma variranjem korišćene invarijante grafa. Rezultati
+  testiranja pokazali su da algoritam može biti značajno optimizovan na nekim
+  klasama grafova korišćenjem tog uopštenja.
+
+  Postoji više mogućih pravaca za dalji rad. Jedan od njih podrazumeva analizu
+  i implementaciju efikasnijih struktura podataka i dodatnih optimizacija sa
+  svrhom poboljšanja vremena izvršavanja programa. Jedna optimizacija koja u
+  radu nije obrađena je mogućnost otkrivanja automorfizama u unutrašnjim
+  čvorovima stabla pretrage na osnovu specifičnih svojstava bojenja. Još jedna
+  optimizacija vezana za automorfizme je određivanje orbita u datom čvoru
+  stabla. Dok smo u radu razmatrali samo podskup automorfizama koji stabilizuju
+  niz individualizovanih čvorova, moguće je koristiti pametniju strukturu
+  podataka poput Šrajer-Sims metoda ili njegove probabalističke varijante
+  \cite{Seress}.
+
+  Još jedna oblast od interesa za dalje istraživanje je uvedeni pojam
+  invarijante grafa. Pored toga što je moguće konstruisati invarijantu grafa
+  koja daje jednaku ili bolju proceduru profinjavanja, postoji još pitanja
+  kojima se u radu nismo bavili.  Kako je cilj profinjavanja particionisanje
+  čvorova u klase što približnije orbitama čvorova, nameće se pitanje u kojoj
+  meri je ovo moguće izvesti u opštem slučaju, odnosno da li postoji
+  invarijanta grafa koja proizvoljan graf particioniše tačno u orbite ili makar
+  u particiju koja se u odnosu na particiju orbita razlikuje na neki odozgo
+  ograničen način. Slično pitanje moguće je postaviti i za određene klase
+  grafova, kao što je na primeru prikazano da 2-regularne grafove u potpunosti
+  rešava invarijanta razdaljine čvorova.  Još jedno srodno, možda suprotno
+  pitanje je da li postoji klasa grafova na kojoj proizvoljna invarijanta grafa
+  nije značajno bolja od matrice povezanosti.
+
+  Iako je problem vremenske složenosti sa praktičnog stanovišta rešen, ono što
+  ostaje kao otvoren problem je korektnost implementacije i verifikabilnost
+  rezultata. Postoje dva moguća pristupa ovom problemu. Jedan podrazumeva
+  implementaciju algoritma i formalan dokaz korektnosti te implementacije. Mana
+  ovog pristupa je efikasnost ovakvih implementacija koje mogu biti znatno
+  sporije u odnosu na implementacije razvijene u nekom nižem jeziku. Drugi
+  pristup podrazumeva generisanje sertifikata uz rezultat izvršavanja efikasno
+  implementiranog programa. Sertifikat bi po završetku izvršavanja programa
+  mogao biti analiziran verifikatorom (programom čija je korektnost dokazana)
+  koji bi sertifikat koristio kao svedoka da dokaže da je izlaz programa
+  korektan. Cilj je koncipirati sertifikat na taj način da implementacija
+  verifikatora, iako pisana u višem programskom jeziku koji omogućava formalan
+  dokaz korektnosti, bude efikasnija od implementacije samog rešavača. Na
+  primer, program za ispitivanje izomorfizma dva grafa kao sertifikat u slučaju
+  da su grafovi izomorfni može koristiti pronađen izomorfizam, dok slučaj
+  neizomorfnih grafova nije na isti način trivijalan.
 
 % ------------------------------------------------------------------------------
 % Literatura
