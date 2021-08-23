@@ -46,8 +46,21 @@
 \tikzstyle{cover}=[draw, opacity=.2, line cap=round, line
 join=round, line width=22pt]
 
+\pgfplotscreateplotcyclelist{mylist}{%
+cyan!80!black,mark=square*\\%
+red!90!black,mark=square*\\%
+blue,mark=*\\%
+orange,mark=*\\%
+green!80!black,mark=diamond*\\%
+}
+
 % Definisane komande
 \def\CC{{C\nolinebreak[4]\hspace{-.05em}\raisebox{.4ex}{\tiny\bf ++}}}
+
+\makeatletter
+\def\blfootnote{\gdef\@thefnmark{}\@footnotetext}
+\makeatother
+
 
 % Paket koji definiše sve specifičnosti master rada Matematičkog fakulteta
 \usepackage[latinica]{matfmaster} 
@@ -2441,6 +2454,7 @@ join=round, line width=22pt]
   grananja stabla pretrage.
 
   \begin{example}
+	  \label{ex:graphinv}
 	  Posmatrajmo (nepovezan) graf sa slike \ref{img:graphinv}. Standardna
 	  procedura profinjavanja koja koristi matricu povezanosti će kao rezultat
 	  vratiti bojenje jednako početnom. Procedura profinjavanja koja koristi
@@ -2535,6 +2549,13 @@ join=round, line width=22pt]
 	   \label{img:graphinv}
    \end{figure}
 
+   Napomenimo da u radu \cite{McKay} i detaljnije u \cite{nug} postoji uveden
+   sličan pojam invarijante grafa koji svakom čvoru (nasuprot parovima čvorova
+   u našoj definiciji) obojenog grafa dodeljuje neku vrednost. Ovake
+   invarijante se mogu koristiti za dodatno profinjavanje bojenja, najčešće u
+   prvih nekoliko nivoa stabla pretrage. Ističemo činjenicu da njima nije
+   moguće efektivno pojačati samu proceduru profinjavanja.
+
 % ------------------------------------------------------------------------------
 \chapter{Rezultati}
 % ------------------------------------------------------------------------------
@@ -2544,7 +2565,7 @@ join=round, line width=22pt]
   jeziku \CC\ u okviru programa \emph{morphi}. Izvorni kod je dostupan na
   adresi \url{https://github.com/idrecun/morphi}.  Testiranje je vršeno na
   grafovima iz kolekcije programa \emph{bliss} i na nekoliko klasa
-  slučajnih grafova. Svi grafovi preuzeti su sa
+  nasumično generisanih grafova. Svi grafovi preuzeti su sa
   \url{https://pallini.di.uniroma1.it/Graphs.html}.
 
   \section{Detalji testiranja}
@@ -2556,37 +2577,36 @@ join=round, line width=22pt]
 	Spectre x360 laptop računaru sa Intel i5 procesorom. U trenutku testiranja
 	implementacija nije podržavala izvršavanje na više procesorskih jezgara.
 
-	Testirane su dve varijante algoritma. U prvoj je za invarijantu grafa uzeta
-	matrica povezanosti (označena sa \emph{n} i predstavljena plavom bojom),
-	dok je u drugoj korišćena invarijanta najkraćeg puta (označena sa \emph{d}
-	i predstavljena crvenom bojom). Horizontalna osa grafika predstavlja broj
+	Testirane su dve varijante algoritma, bez i sa upotrebom invarijante
+	najkraćeg puta iz primera \ref{ex:graphinv}.  Poređenja radi su prikazani
+	rezultati vremena izvršavanja programa \emph{nauty} (na mestima gde je
+	značajno i sa upotrebom invarijante najkraćeg puta opisane u \cite{nug}) i
+	\emph{Traces} na istim primerima. Za \emph{nauty} su za svaku klasu grafova
+	prikazani rezultati za onu reprezentaciju grafa (normalna ili proređena)
+	koja je dala bolje rezultate. Horizontalna osa grafika predstavlja broj
 	čvorova grafa, a vertikalna osa vreme izvršavanja u sekundama (na
 	logaritamskoj skali).
 
 	\pagebreak
 
-  \section{Slučajni grafovi}
+  \section{Nasumično generisani grafovi}
 
-	U ovom odeljku su prikazani rezultati testiranja na klasama slučajnih
-	grafova navedenih u nastavku. Rezultati za klasu \emph{rnd-3-reg} bez
-	upotrebe invarijante razdaljine nisu prikazani zato što za većinu primera
-	program nije prekinuo izvršavanje pre granice od 100 sekundi.
+	U ovom odeljku su prikazani rezultati testiranja na klasama nasumično
+	generisanih grafova navedenih u nastavku. Rezultati za klasu
+	\emph{rnd-3-reg} bez upotrebe invarijante razdaljine nisu prikazani zato
+	što za većinu primera program nije prekinuo izvršavanje pre granice od 100
+	sekundi.
 	\begin{itemize}
 		\item \emph{rantree} - Stabla
 		\item \emph{ran2} - Grafovi sa verovatnoćom grane $\frac{1}{2}$
 		\item \emph{ran10} - Grafovi sa verovatnoćom grane $\frac{1}{10}$
-		\item \emph{ransq} - Grafovi sa verovatnoćom grane $\frac{1}{n}$ za $n$ čvorova
+		\item \emph{ransq} - Grafovi sa verovatnoćom grane $\frac{1}{\sqrt{n}}$ za $n$ čvorova
 		\item \emph{ranreg} - Regularni grafovi
 		\item \emph{rnd-3-reg} - 3-regularni grafovi (iz \emph{bliss} kolekcije)
 	\end{itemize}
-	
 
-	%U klasama \emph{ran2}, \emph{ran10} i \emph{ransq} složenost
-	%pretprocesiranja invarijante grafa najkraćeg puta ($O(nm)$ za $n$ čvorova i
-	%$m$ grana) dominira. Pojačanje procedure profinjavanja je u ovom slučaju
-	%zanemarljivo - za skoro sve primere se i bez upotrebe invarijante grafa
-	%generiše jedan čvor stabla pretrage.
-
+	\begin{figure}[!h]
+	\center
     \begin{tikzpicture}
 		\begin{axis}[
 				title={\emph{rantree}},
@@ -2594,16 +2614,25 @@ join=round, line width=22pt]
 				xmajorgrids=true,
 				ymajorgrids=true,
 				grid style=dashed,
-				legend pos=south east,
+				cycle list name=mylist
 			]
 
-			\addplot[color=blue, mark=square*]
+			\addplot
 				table{data/rantree.csv};
 
-			\addplot[color=red, mark=*]
-				table{data/rantree.csv};
+			\addplot
+				table{data/rantree-d.csv};
 
-			\legend{n, d};
+			\addplot
+				table{data/nauty/nauty-rantree-As.csv};
+
+			%\addplot
+			%	table{data/nauty/nauty-rantree-As-d.csv};
+			\addplot table{};
+
+			\addplot
+				table{data/nauty/nauty-rantree-At.csv};
+
 		\end{axis}
 	\end{tikzpicture}
     \begin{tikzpicture}
@@ -2613,16 +2642,25 @@ join=round, line width=22pt]
 				xmajorgrids=true,
 				ymajorgrids=true,
 				grid style=dashed,
-				legend pos=south east,
+				cycle list name=mylist
 			]
 
-			\addplot[color=blue, mark=square*]
+			\addplot
 				table{data/ran2.csv};
 
-			\addplot[color=red, mark=*]
+			\addplot
 				table{data/ran2-d.csv};
 
-			\legend{n, d};
+			\addplot
+				table{data/nauty/nauty-ran2-An.csv};
+
+			%\addplot
+			%	table{data/nauty/nauty-ran2-An-d.csv};
+			\addplot table{};
+
+			\addplot
+				table{data/nauty/nauty-ran2-At.csv};
+
 		\end{axis}
 	\end{tikzpicture}
 
@@ -2633,16 +2671,25 @@ join=round, line width=22pt]
 				xmajorgrids=true,
 				ymajorgrids=true,
 				grid style=dashed,
-				legend pos=south east,
+				cycle list name=mylist
 			]
 
-			\addplot[color=blue, mark=square*]
+			\addplot
 				table{data/ran10.csv};
 
-			\addplot[color=red, mark=*]
+			\addplot
 				table{data/ran10-d.csv};
 
-			\legend{n, d};
+			\addplot
+				table{data/nauty/nauty-ran10-An.csv};
+
+			%\addplot
+				%table{data/nauty/nauty-ran10-An-d.csv};
+			\addplot table{};
+
+			\addplot
+				table{data/nauty/nauty-ran10-At.csv};
+
 		\end{axis}
 	\end{tikzpicture}
     \begin{tikzpicture}
@@ -2652,19 +2699,57 @@ join=round, line width=22pt]
 				xmajorgrids=true,
 				ymajorgrids=true,
 				grid style=dashed,
-				legend pos=south east,
+				cycle list name=mylist
 			]
 
-			\addplot[color=blue, mark=square*]
+			\addplot
 				table{data/ransq.csv};
 
-			\addplot[color=red, mark=*]
+			\addplot
 				table{data/ransq-d.csv};
 
-			\legend{n, d};
+			\addplot
+				table{data/nauty/nauty-ransq-As.csv};
+
+			%\addplot
+				%table{data/nauty/nauty-ransq-As-d.csv};
+			\addplot table{};
+
+			\addplot
+				table{data/nauty/nauty-ransq-At.csv};
+
 		\end{axis}
 	\end{tikzpicture}
+	\end{figure}
 
+	\begin{figure}[!h]
+		\center
+		\begin{tikzpicture}
+			\begin{axis}[
+					hide axis,
+					xmin=0,
+					xmax=1,
+					ymin=0,
+					ymax=1,
+					grid style=dashed,
+					cycle list name=mylist,
+					legend columns=5
+				]
+				\addlegendimage{cyan!80!black,mark=square*}
+				\addlegendentry{\small morphi}
+				\addlegendimage{red!90!black,mark=square*}
+				\addlegendentry{\small morphi/inv}
+				\addlegendimage{blue,mark=*}
+				\addlegendentry{\small nauty}
+				\addlegendimage{orange,mark=*}
+				\addlegendentry{\small nauty/inv}
+				\addlegendimage{green!80!black,mark=diamond*}
+				\addlegendentry{\small Traces}
+			\end{axis}
+		\end{tikzpicture}
+	\end{figure}
+	\begin{figure}[!h]
+	\center
     \begin{tikzpicture}
 		\begin{axis}[
 				title={\emph{ranreg}},
@@ -2672,16 +2757,24 @@ join=round, line width=22pt]
 				xmajorgrids=true,
 				ymajorgrids=true,
 				grid style=dashed,
-				legend pos=south east,
+				cycle list name=mylist
 			]
 
-			\addplot[color=blue, mark=square*]
+			\addplot
 				table{data/ranreg.csv};
 
-			\addplot[color=red, mark=*]
+			\addplot
 				table{data/ranreg-d.csv};
 
-			\legend{n, d};
+			\addplot
+				table{data/nauty/nauty-ranreg-As.csv};
+
+			\addplot
+				table{data/nauty/nauty-ranreg-As-d.csv};
+
+			\addplot
+				table{data/nauty/nauty-ranreg-At.csv};
+
 		\end{axis}
 	\end{tikzpicture}
     \begin{tikzpicture}
@@ -2691,18 +2784,26 @@ join=round, line width=22pt]
 				xmajorgrids=true,
 				ymajorgrids=true,
 				grid style=dashed,
-				legend pos=south east,
+				cycle list name=mylist
 			]
 
-			%\addplot[color=blue, mark=square*]
-			%	table{data/rnd-3-reg.csv};
+			\addplot table{};
 
-			\addplot[color=red, mark=*]
+			\addplot
 				table{data/rnd-3-reg-d.csv};
 
-			\legend{d};
+			\addplot
+				table{data/nauty/nauty-rnd-3-reg-As.csv};
+
+			\addplot
+				table{data/nauty/nauty-rnd-3-reg-As-d.csv};
+
+			\addplot
+				table{data/nauty/nauty-rnd-3-reg-At.csv};
+
 		\end{axis}
 	\end{tikzpicture}
+	\end{figure}
     
   \section{Grafovi donje granice nekih algoritama}
 
@@ -2713,21 +2814,30 @@ join=round, line width=22pt]
 	\center
     \begin{tikzpicture}
 		\begin{axis}[
+				width=10cm,
 				title={\emph{cfi}},
 				ymode=log,
 				xmajorgrids=true,
 				ymajorgrids=true,
 				grid style=dashed,
-				legend pos=south east,
+				cycle list name=mylist
 			]
 
-			\addplot[color=blue]
+			\addplot
 				table{data/cfi.csv};
 
-			\addplot[color=red]
+			\addplot
 				table{data/cfi-d.csv};
 
-			\legend{n, d};
+			\addplot
+				table{data/nauty/nauty-cfi-As.csv};
+
+			\addplot
+				table{data/nauty/nauty-cfi-As-d.csv};
+
+			\addplot
+				table{data/nauty/nauty-cfi-At.csv};
+
 		\end{axis}
 	\end{tikzpicture}
 	\end{figure}
@@ -2736,6 +2846,8 @@ join=round, line width=22pt]
 	klasi \emph{Mijazakijevih grafova} opisanih kao teški primeri za Mekejev
 	algoritam \cite{Miyazaki} koji je centralna tema ovog rada.
 
+	\begin{figure}[!h]
+	\center
     \begin{tikzpicture}
 		\begin{axis}[
 				title={\emph{mz}},
@@ -2743,16 +2855,24 @@ join=round, line width=22pt]
 				xmajorgrids=true,
 				ymajorgrids=true,
 				grid style=dashed,
-				legend pos=south east,
+				cycle list name=mylist
 			]
 
-			\addplot[color=blue, mark=square*]
+			\addplot
 				table{data/mz.csv};
 
-			\addplot[color=red, mark=*]
+			\addplot
 				table{data/mz-d.csv};
 
-			\legend{n, d};
+			\addplot
+				table{data/nauty/nauty-mz-As.csv};
+
+			\addplot
+				table{data/nauty/nauty-mz-As-d.csv};
+
+			\addplot
+				table{data/nauty/nauty-mz-At.csv};
+
 		\end{axis}
 	\end{tikzpicture}
     \begin{tikzpicture}
@@ -2762,16 +2882,24 @@ join=round, line width=22pt]
 				xmajorgrids=true,
 				ymajorgrids=true,
 				grid style=dashed,
-				legend pos=south east,
+				cycle list name=mylist
 			]
 
-			\addplot[color=blue, mark=square*]
+			\addplot
 				table{data/cmz.csv};
 
-			\addplot[color=red]
+			\addplot
 				table{data/cmz-d.csv};
 
-			\legend{n, d};
+			\addplot
+				table{data/nauty/nauty-cmz-As.csv};
+
+			\addplot
+				table{data/nauty/nauty-cmz-As-d.csv};
+
+			\addplot
+				table{data/nauty/nauty-cmz-At.csv};
+
 		\end{axis}
 	\end{tikzpicture}
 
@@ -2782,16 +2910,24 @@ join=round, line width=22pt]
 				xmajorgrids=true,
 				ymajorgrids=true,
 				grid style=dashed,
-				legend pos=south east,
+				cycle list name=mylist
 			]
 
-			\addplot[color=blue, mark=square*]
+			\addplot
 				table{data/mz-aug.csv};
 
-			\addplot[color=red, mark=*]
+			\addplot
 				table{data/mz-aug-d.csv};
 
-			\legend{n, d};
+			\addplot
+				table{data/nauty/nauty-mz-aug-As.csv};
+
+			\addplot
+				table{data/nauty/nauty-mz-aug-As-d.csv};
+
+			\addplot
+				table{data/nauty/nauty-mz-aug-At.csv};
+
 		\end{axis}
 	\end{tikzpicture}
     \begin{tikzpicture}
@@ -2801,18 +2937,27 @@ join=round, line width=22pt]
 				xmajorgrids=true,
 				ymajorgrids=true,
 				grid style=dashed,
-				legend pos=south east,
+				cycle list name=mylist
 			]
 
-			\addplot[color=blue, mark=square*]
+			\addplot
 				table{data/mz-aug2.csv};
 
-			\addplot[color=red, mark=*]
+			\addplot
 				table{data/mz-aug2-d.csv};
 
-			\legend{n, d};
+			\addplot
+				table{data/nauty/nauty-mz-aug2-As.csv};
+
+			\addplot
+				table{data/nauty/nauty-mz-aug2-As-d.csv};
+
+			\addplot
+				table{data/nauty/nauty-mz-aug2-At.csv};
+
 		\end{axis}
 	\end{tikzpicture}
+	\end{figure}
 
   \section{Mreže}
 
@@ -2821,6 +2966,8 @@ join=round, line width=22pt]
 	parovima nekih grana. \emph{triang} predstavlja klasu trougaonih grafova.
 	Još mreža nalazi se u klasi \emph{lattice}.
 
+	\begin{figure}[!h]
+	\center
     \begin{tikzpicture}
 		\begin{axis}[
 				title={\emph{grid}},
@@ -2828,16 +2975,25 @@ join=round, line width=22pt]
 				xmajorgrids=true,
 				ymajorgrids=true,
 				grid style=dashed,
-				legend pos=south east,
+				cycle list name=mylist
 			]
 
-			\addplot[color=blue, mark=square*]
+			\addplot
 				table{data/grid.csv};
 
-			\addplot[color=red, mark=*]
+			\addplot
 				table{data/grid-d.csv};
 
-			\legend{n, d};
+			\addplot
+				table{data/nauty/nauty-grid-As.csv};
+
+			%\addplot
+				%table{data/nauty/nauty-grid-As-d.csv};
+			\addplot table{};
+
+			\addplot
+				table{data/nauty/nauty-grid-At.csv};
+
 		\end{axis}
 	\end{tikzpicture}
     \begin{tikzpicture}
@@ -2847,19 +3003,57 @@ join=round, line width=22pt]
 				xmajorgrids=true,
 				ymajorgrids=true,
 				grid style=dashed,
-				legend pos=south east,
+				cycle list name=mylist
 			]
 
-			\addplot[color=blue, mark=square*]
+			\addplot
 				table{data/grid-w.csv};
 
-			\addplot[color=red, mark=*]
+			\addplot
 				table{data/grid-w-d.csv};
 
-			\legend{n, d};
+			\addplot
+				table{data/nauty/nauty-grid-w-As.csv};
+
+			%\addplot
+				%table{data/nauty/nauty-grid-w-As-d.csv};
+			\addplot table{};
+
+			\addplot
+				table{data/nauty/nauty-grid-w-At.csv};
+
 		\end{axis}
 	\end{tikzpicture}
+	\end{figure}
 
+	\begin{figure}[!h]
+		\center
+		\begin{tikzpicture}
+			\begin{axis}[
+					hide axis,
+					xmin=0,
+					xmax=1,
+					ymin=0,
+					ymax=1,
+					grid style=dashed,
+					cycle list name=mylist,
+					legend columns=5
+				]
+				\addlegendimage{cyan!80!black,mark=square*}
+				\addlegendentry{\small morphi}
+				\addlegendimage{red!90!black,mark=square*}
+				\addlegendentry{\small morphi/inv}
+				\addlegendimage{blue,mark=*}
+				\addlegendentry{\small nauty}
+				\addlegendimage{orange,mark=*}
+				\addlegendentry{\small nauty/inv}
+				\addlegendimage{green!80!black,mark=diamond*}
+				\addlegendentry{\small Traces}
+			\end{axis}
+		\end{tikzpicture}
+	\end{figure}
+	\begin{figure}[!h]
+	\center
     \begin{tikzpicture}
 		\begin{axis}[
 				title={\emph{lattice}},
@@ -2867,16 +3061,25 @@ join=round, line width=22pt]
 				xmajorgrids=true,
 				ymajorgrids=true,
 				grid style=dashed,
-				legend pos=south east,
+				cycle list name=mylist
 			]
 
-			\addplot[color=blue, mark=square*]
+			\addplot
 				table{data/lattice.csv};
 
-			\addplot[color=red, mark=*]
+			\addplot
 				table{data/lattice-d.csv};
 
-			\legend{n, d};
+			\addplot
+				table{data/nauty/nauty-lattice-As.csv};
+
+			%\addplot
+				%table{data/nauty/nauty-lattice-As-d.csv};
+			\addplot table{};
+
+			\addplot
+				table{data/nauty/nauty-lattice-At.csv};
+
 		\end{axis}
 	\end{tikzpicture}
     \begin{tikzpicture}
@@ -2886,18 +3089,28 @@ join=round, line width=22pt]
 				xmajorgrids=true,
 				ymajorgrids=true,
 				grid style=dashed,
-				legend pos=south east,
+				cycle list name=mylist
 			]
 
-			\addplot[color=blue, mark=square*]
+			\addplot
 				table{data/triang.csv};
 
-			\addplot[color=red, mark=*]
+			\addplot
 				table{data/triang-d.csv};
 
-			\legend{n, d};
+			\addplot
+				table{data/nauty/nauty-triang-As.csv};
+
+			%\addplot
+				%table{data/nauty/nauty-triang-As-d.csv};
+			\addplot table{};
+
+			\addplot
+				table{data/nauty/nauty-triang-At.csv};
+
 		\end{axis}
 	\end{tikzpicture}
+	\end{figure}
 
   \section{Grafovi nekih kombinatornih objekata}
 
@@ -2911,17 +3124,46 @@ join=round, line width=22pt]
 		\item \emph{k} - Kompletni grafovi
 		\item \emph{paley} - Pejlijevi grafovi
 		\item \emph{pg} - Grafovi Dezargovih ravni
-		\item \emph{pp} - Grafovi projektivnih ravni
 		\item \emph{sts} - Grafovi Štajnerovih sistema trojki
 		\item \emph{sts-sw} - Grafovi Štajnerovih sistema trojki sa razmenjenim parovima grana
 	\end{itemize}
 	Pored navedenih klasa, u \emph{bliss} kolekciji postoje i klase
-	\emph{had-sw} i \emph{kef}. Rezultati za klasu \emph{had-sw} nisu prikazani
-	zato što za većinu primera program nije prekinuo izvršavanje pre granice od
-	100 sekundi. Rezultati za klasu obojenih grafova \emph{kef} nisu prikazani
-	zato što prilikom testiranja implementacija nije podržavala unošenje
-	obojenih grafova.
+	\emph{had-sw}, \emph{kef} i \emph{pp}. Rezultati za klasu \emph{had-sw}
+	nisu prikazani zato što za većinu primera program nije prekinuo izvršavanje
+	pre granice od 100 sekundi. Rezultati za klase obojenih grafova \emph{kef}
+	i \emph{pp} nisu prikazani zato što prilikom testiranja implementacija nije
+	podržavala unošenje obojenih grafova.
 
+	\pagebreak
+
+	\begin{figure}[!h]
+		\center
+		\begin{tikzpicture}
+			\begin{axis}[
+					hide axis,
+					xmin=0,
+					xmax=1,
+					ymin=0,
+					ymax=1,
+					grid style=dashed,
+					cycle list name=mylist,
+					legend columns=5
+				]
+				\addlegendimage{cyan!80!black,mark=square*}
+				\addlegendentry{\small morphi}
+				\addlegendimage{red!90!black,mark=square*}
+				\addlegendentry{\small morphi/inv}
+				\addlegendimage{blue,mark=*}
+				\addlegendentry{\small nauty}
+				\addlegendimage{orange,mark=*}
+				\addlegendentry{\small nauty/inv}
+				\addlegendimage{green!80!black,mark=diamond*}
+				\addlegendentry{\small Traces}
+			\end{axis}
+		\end{tikzpicture}
+	\end{figure}
+	\begin{figure}[!h]
+	\center
     \begin{tikzpicture}
 		\begin{axis}[
 				title={\emph{ag}},
@@ -2929,41 +3171,55 @@ join=round, line width=22pt]
 				xmajorgrids=true,
 				ymajorgrids=true,
 				grid style=dashed,
-				legend pos=south east,
+				cycle list name=mylist
 			]
 
-			\addplot[color=blue, mark=square*]
+			\addplot
 				table{data/ag.csv};
 
-			\addplot[color=red, mark=*]
+			\addplot
 				table{data/ag-d.csv};
 
-			\legend{n, d};
+			\addplot
+				table{data/nauty/nauty-ag-As.csv};
+
+			%\addplot
+				%table{data/nauty/nauty-ag-As-d.csv};
+			\addplot table{};
+
+			\addplot
+				table{data/nauty/nauty-ag-At.csv};
+
 		\end{axis}
 	\end{tikzpicture}
     \begin{tikzpicture}
 		\begin{axis}[
-				title={\emph{had}},
+				title={\emph{pg}},
 				ymode=log,
 				xmajorgrids=true,
 				ymajorgrids=true,
 				grid style=dashed,
-				legend pos=south east,
+				cycle list name=mylist
 			]
 
-			\addplot[color=blue, only marks, mark=square*]
-				table{data/had.csv};
+			\addplot
+				table{data/pg.csv};
 
-			\addplot[color=red, only marks, mark=*]
-				table{data/had-d.csv};
+			\addplot
+				table{data/pg-d.csv};
 
-			\addplot[color=white, only marks, mark=x]
-				table{data/had-bad.csv};
+			\addplot
+				table{data/nauty/nauty-pg-As.csv};
 
-			\legend{n, d};
+			%\addplot
+				%table{data/nauty/nauty-pg-As-d.csv};
+			\addplot table{};
+
+			\addplot
+				table{data/nauty/nauty-pg-At.csv};
+
 		\end{axis}
 	\end{tikzpicture}
-
 
     \begin{tikzpicture}
 		\begin{axis}[
@@ -2972,16 +3228,25 @@ join=round, line width=22pt]
 				xmajorgrids=true,
 				ymajorgrids=true,
 				grid style=dashed,
-				legend pos=south east,
+				cycle list name=mylist
 			]
 
-			\addplot[color=blue, mark=square*]
+			\addplot
 				table{data/latin.csv};
 
-			\addplot[color=red, mark=*]
+			\addplot
 				table{data/latin-d.csv};
 
-			\legend{n, d};
+			\addplot
+				table{data/nauty/nauty-latin-As.csv};
+
+			%\addplot
+				%table{data/nauty/nauty-latin-As-d.csv};
+			\addplot table{};
+
+			\addplot
+				table{data/nauty/nauty-latin-At.csv};
+
 		\end{axis}
 	\end{tikzpicture}
     \begin{tikzpicture}
@@ -2991,19 +3256,25 @@ join=round, line width=22pt]
 				xmajorgrids=true,
 				ymajorgrids=true,
 				grid style=dashed,
-				legend pos=south east,
+				cycle list name=mylist
 			]
 
-			\addplot[color=blue, mark=square*]
+			\addplot
 				table{data/latin-sw.csv};
 
-			\addplot[color=red, only marks, mark=*]
+			\addplot
 				table{data/latin-sw-d.csv};
 
-			\addplot[color=white, only marks, mark=x]
-				table{data/latin-sw-d-bad.csv};
+			\addplot
+				table{data/nauty/nauty-latin-sw-As.csv};
 
-			\legend{n, d};
+			%\addplot
+				%table{data/nauty/nauty-latin-sw-As-d.csv};
+			\addplot table{};
+
+			\addplot
+				table{data/nauty/nauty-latin-sw-At.csv};
+
 		\end{axis}
 	\end{tikzpicture}
 
@@ -3014,16 +3285,25 @@ join=round, line width=22pt]
 				xmajorgrids=true,
 				ymajorgrids=true,
 				grid style=dashed,
-				legend pos=south east,
+				cycle list name=mylist
 			]
 
-			\addplot[color=blue, mark=square*]
+			\addplot
 				table{data/k.csv};
 
-			\addplot[color=red, mark=*]
+			\addplot
 				table{data/k-d.csv};
 
-			\legend{n, d};
+			\addplot
+				table{data/nauty/nauty-k-An.csv};
+
+			%\addplot
+				%table{data/nauty/nauty-k-An-d.csv};
+			\addplot table{};
+
+			\addplot
+				table{data/nauty/nauty-k-At.csv};
+
 		\end{axis}
 	\end{tikzpicture}
     \begin{tikzpicture}
@@ -3033,58 +3313,59 @@ join=round, line width=22pt]
 				xmajorgrids=true,
 				ymajorgrids=true,
 				grid style=dashed,
-				legend pos=south east,
+				cycle list name=mylist
 			]
 
-			\addplot[color=blue, mark=square*]
+			\addplot
 				table{data/paley.csv};
 
-			\addplot[color=red, mark=*]
+			\addplot
 				table{data/paley-d.csv};
 
-			\legend{n, d};
+			\addplot
+				table{data/nauty/nauty-paley-An.csv};
+
+			%\addplot
+				%table{data/nauty/nauty-paley-An-d.csv};
+			\addplot table{};
+
+			\addplot
+				table{data/nauty/nauty-paley-At.csv};
+
 		\end{axis}
 	\end{tikzpicture}
+	\end{figure}
 
-    \begin{tikzpicture}
-		\begin{axis}[
-				title={\emph{pg}},
-				ymode=log,
-				xmajorgrids=true,
-				ymajorgrids=true,
-				grid style=dashed,
-				legend pos=south east,
-			]
+	\pagebreak
 
-			\addplot[color=blue, mark=square*]
-				table{data/pg.csv};
-
-			\addplot[color=red, mark=*]
-				table{data/pg-d.csv};
-
-			\legend{n, d};
-		\end{axis}
-	\end{tikzpicture}
-    \begin{tikzpicture}
-		\begin{axis}[
-				title={\emph{pp}},
-				ymode=log,
-				xmajorgrids=true,
-				ymajorgrids=true,
-				grid style=dashed,
-				legend pos=south east,
-			]
-
-			\addplot[color=blue, only marks, mark=square*]
-				table{data/pp.csv};
-
-			\addplot[color=red, only marks, mark=*]
-				table{data/pp-d.csv};
-
-			\legend{n, d};
-		\end{axis}
-	\end{tikzpicture}
-
+	\begin{figure}[!h]
+		\center
+		\begin{tikzpicture}
+			\begin{axis}[
+					hide axis,
+					xmin=0,
+					xmax=1,
+					ymin=0,
+					ymax=1,
+					grid style=dashed,
+					cycle list name=mylist,
+					legend columns=5
+				]
+				\addlegendimage{cyan!80!black,mark=square*}
+				\addlegendentry{\small morphi}
+				\addlegendimage{red!90!black,mark=square*}
+				\addlegendentry{\small morphi/inv}
+				\addlegendimage{blue,mark=*}
+				\addlegendentry{\small nauty}
+				\addlegendimage{orange,mark=*}
+				\addlegendentry{\small nauty/inv}
+				\addlegendimage{green!80!black,mark=diamond*}
+				\addlegendentry{\small Traces}
+			\end{axis}
+		\end{tikzpicture}
+	\end{figure}
+	\begin{figure}[!h]
+	\center
     \begin{tikzpicture}
 		\begin{axis}[
 				title={\emph{sts}},
@@ -3092,19 +3373,31 @@ join=round, line width=22pt]
 				xmajorgrids=true,
 				ymajorgrids=true,
 				grid style=dashed,
-				legend pos=south east,
+				cycle list name=mylist
 			]
 
-			\addplot[color=blue, only marks, mark=square*]
+			\addplot[color=cyan!80!black,mark=asterisk]
 				table{data/sts.csv};
 
-			\addplot[color=red, only marks, mark=*]
+			\addplot[color=red!90!black,mark=asterisk]
 				table{data/sts-d.csv};
 
-			\addplot[color=white, only marks, mark=x]
-				table{data/sts-bad.csv};
+			\addplot
+				table{data/nauty/nauty-sts-As.csv};
 
-			\legend{n, d};
+			%\addplot
+				%table{data/nauty/nauty-sts-As-d.csv};
+			\addplot table{};
+
+			\addplot
+				table{data/nauty/nauty-sts-At.csv};
+
+			\addplot[color=cyan!80!black,only marks,mark=square*]
+				table{data/sts-good.csv};
+
+			\addplot[color=red!90!black,only marks,mark=square*]
+				table{data/sts-d-good.csv};
+
 		\end{axis}
 	\end{tikzpicture}
     \begin{tikzpicture}
@@ -3114,19 +3407,73 @@ join=round, line width=22pt]
 				xmajorgrids=true,
 				ymajorgrids=true,
 				grid style=dashed,
-				legend pos=south east,
+				cycle list name=mylist
 			]
 
-			\addplot[color=blue, mark=square*]
+			\addplot
 				table{data/sts-sw.csv};
 
-			\addplot[color=red, mark=*]
+			\addplot
 				table{data/sts-sw-d.csv};
 
-			\legend{n, d};
+			\addplot
+				table{data/nauty/nauty-sts-sw-As.csv};
+
+			%\addplot
+				%table{data/nauty/nauty-sts-sw-As-d.csv};
+			\addplot table{};
+
+			\addplot
+				table{data/nauty/nauty-sts-sw-At.csv};
+
 		\end{axis}
 	\end{tikzpicture}
-	
+
+    \begin{tikzpicture}
+		\begin{axis}[
+				width=10cm,
+				title={\emph{had}},
+				ymode=log,
+				xmajorgrids=true,
+				ymajorgrids=true,
+				grid style=dashed,
+				cycle list name=mylist
+			]
+
+			\addplot[color=cyan!80!black,mark=asterisk]
+				table{data/had.csv};
+
+			\addplot[color=red!90!black,mark=asterisk]
+				table{data/had-d.csv};
+
+			\addplot[color=blue,mark=asterisk]
+				table{data/nauty/nauty-had-As.csv};
+
+			%\addplot
+				%table{data/nauty/nauty-had-As-d.csv};
+			\addplot table{};
+
+			\addplot[color=green,mark=asterisk]
+				table{data/nauty/nauty-had-At.csv};
+
+			\addplot[color=cyan!80!black,only marks,mark=square*]
+				table{data/had-good.csv};
+
+			\addplot[color=red!90!black,only marks,mark=square*]
+				table{data/had-d-good.csv};
+
+			\addplot[color=blue,only marks,mark=*]
+				table{data/nauty/nauty-had-As-good.csv};
+
+			%\addplot[color=orange,only marks,mark=diamond]
+				%table{data/nauty/nauty-had-As-d-bad.csv};
+
+			\addplot[color=green,only marks,mark=diamond*]
+				table{data/nauty/nauty-had-At-good.csv};
+
+		\end{axis}
+	\end{tikzpicture}
+	\end{figure}
 
 
 % ------------------------------------------------------------------------------

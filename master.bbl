@@ -43,6 +43,10 @@ Brendan~D. McKay and Adolfo Piperno.
 \newblock {Practical Graph Isomorphism, II}.
 \newblock {\em Journal of Symbolic Computation}, 60:94--112, 2014.
 
+\bibitem{nug}
+Brendan~D. McKay and Adolfo Piperno.
+\newblock {nauty and Traces User's Guide (Version 2.7)}, 2019.
+
 \bibitem{Miyazaki}
 Takunari Miyazaki.
 \newblock {The complexity of McKay's canonical labeling algorithm}.
