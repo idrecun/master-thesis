@@ -151,9 +151,9 @@ green!80!black,mark=diamond*\\%
  Dva grafa su izomorfna ukoliko su jednaki do na promenu imenovanja čvorova.
  Problem ispitivanja izomorfizma grafova \textbf{GI} je problem određivanja
  postojanja takvog preimenovanja. Trenutno nije poznat algoritam polinomijalne
- složenosti koji rešava ovaj problem u opštem slučaju \cite{Babai}. Ipak, sa
- praktičnog stanovišta bi se moglo kazati da je problem rešen. Najuspešniji
- rešavači za \textbf{GI} (nauty \cite{McKay1,McKay}, Traces
+ vremenske složenosti koji rešava ovaj problem u opštem slučaju \cite{Babai}.
+ Ipak, sa praktičnog stanovišta bi se moglo kazati da je problem rešen.
+ Najuspešniji rešavači za \textbf{GI} (nauty \cite{McKay1,McKay}, Traces
  \cite{Piperno,McKay}, bliss \cite{Bliss}, conauto \cite{Conauto}, saucy
  \cite{Saucy}) sposobni su da reše velike instance teških klasa grafova u
  realnom vremenu. Pritom, sastavljanje teških klasa grafova za ove rešavače
@@ -173,7 +173,7 @@ green!80!black,mark=diamond*\\%
  kada je neophodno efikasno ispitivanje izomorfizma u radu sa većim brojem
  grafova, na primer ukoliko je potrebno odrediti sve parove izomorfnih grafova
  u nekoj kolekciji grafova.  Uprkos tome što algoritmi za određivanje kanonske
- forme ne poseduju mogućnost ranijeg zaustavljanja pretrage, neki od
+ forme grafa ne poseduju mogućnost ranijeg zaustavljanja pretrage, neki od
  najuspešnijih modernih alata za rešavanje \textbf{GI} zasnovani su upravo na
  tom pristupu. 
 
@@ -192,7 +192,7 @@ green!80!black,mark=diamond*\\%
  razumevanje konstrukcije opšteg algoritma za određivanje kanonske forme grafa.
  Uvedeni su pojmovi \emph{bojenja} i \emph{obojenog grafa}, nakon čega je
  prikazana konstrukcija stabla pretrage koja leži u osnovi algoritma. Nad
- stablom pogodno je definisana invarijanta koja omogućava određivanje grupe
+ stablom je pogodno definisana invarijanta koja omogućava određivanje grupe
  automorfizama grafa i kanonske forme. Na kraju su prikazani i mehanizmi
  odsecanja pretrage koji omogućavaju praktično izvršavanje algoritma u razumnom
  vremenu.
@@ -207,8 +207,8 @@ green!80!black,mark=diamond*\\%
    Zajedno sa operacijom kompozicije preslikavanja skup $S_n$ je grupa koju
    zovemo \emph{simetrična grupa stepena $n$}. Identičnu permutaciju označavamo
    sa $id$, a inverz permutacije $g$ sa $g^{-1}$. Permutaciju $g$ možemo
-   zapisati kao preslikavanje, npr.  $g : \begin{pmatrix} 1 & 2 & 3 & 4\\ 3
-   & 4 & 1 & 2 \end{pmatrix}$ ili kao kompoziciju ciklusa $(1\ 3)(2\ 4)$.
+   zapisati kao preslikavanje, npr.  $g : \begin{pmatrix} 1 & 2 & 3 & 4 & 5\\ 3
+   & 4 & 1 & 5 & 2 \end{pmatrix}$ ili kao kompoziciju ciklusa $(1\ 3)(2\ 4\ 5)$.
 
    \emph{Particija} konačnog skupa $A$ je skup nepraznih podskupova od $A$
    takav da se svaki element skupa $A$ nalazi u tačno jednom od tih podskupova.
@@ -310,7 +310,7 @@ green!80!black,mark=diamond*\\%
 
    Označimo sa $\sim_\pi$ binarnu relaciju na skupu $A$ definisanu sa $a
    \sim_\pi b \iff \pi(a) = \pi(b)$. U pitanju je jedinstvena particija čije
-   klase odgovaraju upravo ćelijama bojenja $\pi$. Nazivamo je \emph{particija
+   klase odgovaraju upravo ćelijama bojenja $\pi$ i nazivamo je \emph{particija
    bojenja} $\pi$. Primetimo da nije moguće poistovetiti bojenje i particiju
    zato što za proizvoljnu particiju bojenje čije ćelije odgovaraju klasama
    particije nije jedinstveno - postoji ih onoliko koliko je različitih
@@ -334,7 +334,7 @@ green!80!black,mark=diamond*\\%
 	   Bojenje $\pi_2 = [2 \mid 3 \mid 4\ 6 \mid 5 \mid 1]$ nije finije od
 	   $\pi$ iako važi da je svaka njegova ćelija podskup neke ćelije bojenja
 	   $\pi$. To je moguće videti iz toga što se bojenje $\pi$ može dobiti
-	   spajanjem susednih ćelija bojenja $\pi_1$, ali ne spajanjem susednih
+	   spajanjem susednih ćelija bojenja $\pi_1$, ali ne i spajanjem susednih
 	   ćelija bojenja $\pi_2$.
    \end{example}
 
@@ -353,9 +353,11 @@ green!80!black,mark=diamond*\\%
    \end{example}
 
    \emph{Graf} $G = (V, E)$ je uređeni par konačnog \emph{skupa čvorova} $V$ i
-   \emph{skupa grana} $E \subseteq {V \choose 2}$. U nastavku pretpostavljamo da
-   je $V = \{1, 2, \dots, n\}$ za neki prirodan broj $n > 0$. Označimo skup svih
-   grafova sa $n$ čvorova sa $\mathcal{G}_n$ (nadalje $\mathcal{G}$).
+   \emph{skupa grana} $E \subseteq V \times V$ pri čemu za sve $u, v \in V$
+   važi $(v, v) \notin E$ i ako je $(u, v) \in E$ onda je $(v, u) \in E$. U
+   nastavku pretpostavljamo da je $V = \{1, 2, \dots, n\}$ za neki prirodan
+   broj $n > 0$. Označimo skup svih grafova sa $n$ čvorova sa $\mathcal{G}_n$
+   (nadalje $\mathcal{G}$).
 
    \emph{Matrica povezanosti grafa} je preslikavanje $\psi : \mathcal{G} \times
    V \times V \to \{0, 1\}$ takvo da važi $\psi(G, u, v) = 1 \iff (u, v) \in
@@ -441,6 +443,78 @@ green!80!black,mark=diamond*\\%
    (\pi^g)^{-1}(c)$. To je zato što $(\pi^g)^{-1}(c) = \{v \mid \pi^g(v) = c\}
    = \{w^g \mid \pi^g(w^g) = c\} = \{w^g \mid \pi(w) = c\} = \pi^{-1}(c)^g$. 
 
+   \begin{example}
+	   Na slici \ref{img:action} prikazani su obojeni grafovi $(G, \pi)$ i $(G^g,
+	   \pi^g)$ za $g : \begin{pmatrix} 1 & 2 & 3\\ 3 & 1 & 2\end{pmatrix}$.
+   \end{example}
+   \begin{figure}[htp]
+	   \centering
+	   \begin{tikzpicture}
+		   \begin{scope}
+			   \node (2) at (0, 0)[pointred, label=180:2] {};
+			   \node (1) at (0.5, 0.86)[pointblue, label=90:1] {};
+			   \node (3) at (1, 0)[pointblue, label=0:3] {};
+			   \node (p) at (0.5, -0.8) {
+				   $\pi = [1 \ 3 \mid 2]$
+			   };
+		   \end{scope}
+		   \begin{scope}
+			   \path [-] (1) edge (2);
+			   \path [-] (1) edge (3);
+		   \end{scope}
+	   \end{tikzpicture}
+	   \begin{tikzpicture}
+		   \node (0) at (0, 0) {};
+		   \node (a) at (0, 2.5) {$\ \ \begin{matrix}1 & 2 & 3\end{matrix}$};
+		   \node (m) at (0, 1.5) {
+			   $\begin{matrix}
+				   1\\ 2\\ 3
+			   	\end{matrix}
+			   	\begin{bmatrix}
+				   0 & 1 & 1\\
+				   1 & 0 & 0\\
+				   1 & 0 & 0
+			   	\end{bmatrix}$
+		   };
+	   \end{tikzpicture}
+	   \hspace{10pt}
+	   \begin{tikzpicture}
+		   \node (1) at (0, -1) {};
+		   \node (0) at (0, 0) {$\longrightarrow$};
+		   \node (g) at (0, 0.5) {$g$};
+	   \end{tikzpicture}
+	   \hspace{10pt}
+	   \begin{tikzpicture}
+		   \begin{scope}
+			   \node (2) at (0, 0)[pointred, label=180:1] {};
+			   \node (1) at (0.5, 0.86)[pointblue, label=90:3] {};
+			   \node (3) at (1, 0)[pointblue, label=0:2] {};
+			   \node (p) at (0.5, -0.8) {
+				   $\pi^g = [3 \ 2 \mid 1]$
+			   };
+		   \end{scope}
+		   \begin{scope}
+			   \path [-] (1) edge (2);
+			   \path [-] (1) edge (3);
+		   \end{scope}
+	   \end{tikzpicture}
+	   \begin{tikzpicture}
+		   \node (0) at (0, 0) {};
+		   \node (a) at (0, 2.5) {$\ \ \begin{matrix}1 & 2 & 3\end{matrix}$};
+		   \node (m) at (0, 1.5) {
+			   $\begin{matrix}
+				   1\\ 2\\ 3
+			   	\end{matrix}
+			   	\begin{bmatrix}
+				   0 & 0 & 1\\
+				   0 & 0 & 1\\
+				   1 & 1 & 0
+			   	\end{bmatrix}$
+		   };
+	   \end{tikzpicture}
+	   \caption{Obojeni grafovi $(G, \pi)$ i $(G^g, \pi^g)$.}
+	   \label{img:action}
+   \end{figure}
 
    \subsection{Izomorfizam}
 
@@ -562,8 +636,150 @@ green!80!black,mark=diamond*\\%
 	   Neka je definisano uređenje na skupu obojenih grafova leksikografskim
 	   poređenjem odgovarajućih nizova $(bin(G), \pi(1), \dots, \pi(n))$. Tada
 	   je preslikavanje definisano sa $\mathcal{M}(G, \pi) = \max_{g \in S_n}
-	   (G^g, \pi^g)$ kanonska forma.
+	   (G^g, \pi^g)$ kanonska forma. Na slici \ref{img:maxcanon} prikazane su
+	   sve permutacije jednog obojenog grafa i istaknut je maksimum u prethodno
+	   opisanom smislu.
    \end{example}
+   \begin{figure}[htp]
+	   \centering
+	   \begin{tikzpicture}
+		   \begin{scope}
+			   \node (g) at (1.5, 1.8) {$g = id$};
+			   \node (3) at (0, 0)[pointred, label=180:3] {};
+			   \node (2) at (0.5, 0.86)[pointblue, label=90:2] {};
+			   \node (1) at (1, 0)[pointblue, label=0:1] {};
+			   \node (m) at (2.7, 0.6) {
+				   $\begin{bmatrix}
+					   0 & 1 & 0\\
+					   1 & 0 & 1\\
+					   0 & 1 & 0
+				   \end{bmatrix}$
+			   };
+			   \node (v) at (1.5, -0.6) {
+				   $(101, 1, 1, 2)$
+			   };
+		   \end{scope}
+		   \begin{scope}
+			   \path [-] (2) edge (1);
+			   \path [-] (2) edge (3);
+		   \end{scope}
+	   \end{tikzpicture}
+	   \begin{tikzpicture}
+		   \begin{scope}
+			   \node (g) at (1.5, 1.8) {$g = (1 \ 2)$};
+			   \node (3) at (0, 0)[pointred, label=180:3] {};
+			   \node (1) at (0.5, 0.86)[pointblue, label=90:1] {};
+			   \node (2) at (1, 0)[pointblue, label=0:2] {};
+			   \node (m) at (2.7, 0.6) {
+				   $\begin{bmatrix}
+					   0 & 1 & 1\\
+					   1 & 0 & 0\\
+					   1 & 0 & 0
+				   \end{bmatrix}$
+			   };
+			   \node (v) at (1.5, -0.6) {
+				   $(110, 1, 1, 2)$
+			   };
+		   \end{scope}
+		   \begin{scope}
+			   \path [-] (1) edge (2);
+			   \path [-] (1) edge (3);
+		   \end{scope}
+	   \end{tikzpicture}
+	   \begin{tikzpicture}
+		   \begin{scope}
+			   \node (g) at (1.5, 1.8) {$g = (1 \ 3)$};
+			   \node (1) at (0, 0)[pointred, label=180:1] {};
+			   \node (2) at (0.5, 0.86)[pointblue, label=90:2] {};
+			   \node (3) at (1, 0)[pointblue, label=0:3] {};
+			   \node (m) at (2.7, 0.6) {
+				   $\begin{bmatrix}
+					   0 & 1 & 0\\
+					   1 & 0 & 1\\
+					   0 & 1 & 0
+				   \end{bmatrix}$
+			   };
+			   \node (v) at (1.5, -0.6) {
+				   $(101, 2, 1, 1)$
+			   };
+		   \end{scope}
+		   \begin{scope}
+			   \path [-] (2) edge (1);
+			   \path [-] (2) edge (3);
+		   \end{scope}
+	   \end{tikzpicture}
+
+	   \vspace{10pt}
+
+	   \begin{tikzpicture}
+		   \begin{scope}
+			   \node (g) at (1.5, 1.8) {$g = (2 \ 3)$};
+			   \node (2) at (0, 0)[pointred, label=180:2] {};
+			   \node (3) at (0.5, 0.86)[pointblue, label=90:3] {};
+			   \node (1) at (1, 0)[pointblue, label=0:1] {};
+			   \node (m) at (2.7, 0.6) {
+				   $\begin{bmatrix}
+					   0 & 0 & 1\\
+					   0 & 0 & 1\\
+					   1 & 1 & 0
+				   \end{bmatrix}$
+			   };
+			   \node (v) at (1.5, -0.6) {
+				   $(011, 1, 2, 1)$
+			   };
+		   \end{scope}
+		   \begin{scope}
+			   \path [-] (3) edge (1);
+			   \path [-] (3) edge (2);
+		   \end{scope}
+	   \end{tikzpicture}
+	   \begin{tikzpicture}
+		   \begin{scope}
+			   \node (g) at (1.5, 1.8) {$g = (1 \ 2 \ 3)$};
+			   \node (1) at (0, 0)[pointred, label=180:1] {};
+			   \node (3) at (0.5, 0.86)[pointblue, label=90:3] {};
+			   \node (2) at (1, 0)[pointblue, label=0:2] {};
+			   \node (m) at (2.7, 0.6) {
+				   $\begin{bmatrix}
+					   0 & 0 & 1\\
+					   0 & 0 & 1\\
+					   1 & 1 & 0
+				   \end{bmatrix}$
+			   };
+			   \node (v) at (1.5, -0.6) {
+				   $(011, 2, 1, 1)$
+			   };
+		   \end{scope}
+		   \begin{scope}
+			   \path [-] (3) edge (1);
+			   \path [-] (3) edge (2);
+		   \end{scope}
+	   \end{tikzpicture}
+	   \begin{tikzpicture}
+		   \begin{scope}
+			   \node (g) at (1.5, 1.8) {$g = (1 \ 3 \ 2)$};
+			   \node (2) at (0, 0)[pointred, label=180:2] {};
+			   \node (1) at (0.5, 0.86)[pointblue, label=90:1] {};
+			   \node (3) at (1, 0)[pointblue, label=0:3] {};
+			   \node (m) at (2.7, 0.6) {
+				   $\begin{bmatrix}
+					   0 & 1 & 1\\
+					   1 & 0 & 0\\
+					   1 & 0 & 0
+				   \end{bmatrix}$
+			   };
+			   \node (v)[draw=black] at (1.5, -0.6) {
+				   $(110, 1, 2, 1)$
+			   };
+		   \end{scope}
+		   \begin{scope}
+			   \path [-] (1) edge (2);
+			   \path [-] (1) edge (3);
+		   \end{scope}
+	   \end{tikzpicture}
+	   \caption{Sve permutacije jednog obojenog grafa.}
+	   \label{img:maxcanon}
+   \end{figure}
 
 
  \section{Stablo pretrage}
@@ -577,7 +793,7 @@ green!80!black,mark=diamond*\\%
 
   Čvorovi stabla pretrage  predstavljeni su nizovima elemenata skupa $V$, pri
   čemu korenu stabla odgovara prazan niz. U nastavku definišemo funkcije na
-  osnovu kojih ćemo definisati pravila grananja u stablu.
+  osnovu kojih ćemo opisati pravila grananja u stablu.
 
   \begin{definition}
    \emph{Funkcija profinjavanja} je bilo koje preslikavanje $R : \mathcal{G}
@@ -611,10 +827,11 @@ green!80!black,mark=diamond*\\%
 
   Kako je graf fiksan, ove funkcije možemo smatrati funkcijama čvorova stabla.
   Funkcija profinjavanja obezbeđuje postojanje bojenja pridruženog svakom čvoru
-  stabla (koje postaje finije kako se spuštamo niz stablo). Funkcija odabira
-  ciljne ćelije nam omogućava da odaberemo skup čvorova grafa koji nam služi za
-  konstrukciju dece tog čvora u stablu. Treći uslov u obe definicije govori da
-  su u pitanju transformacije invarijantne na imenovanje čvorova.
+  stabla $\nu$, koje zbog uslova (R2) razdvaja sve čvorove grafa niza $\nu$ u
+  zasebne ćelije. Funkcija odabira ciljne ćelije nam omogućava da odaberemo
+  skup čvorova grafa koji nam služi za konstrukciju dece tog čvora u stablu.
+  Treći uslov u obe definicije govori da su u pitanju transformacije
+  invarijantne na imenovanje čvorova.
 
   \begin{definition}
       \emph{Stablo pretrage} $\mathcal{T}(G, \pi)$ određeno je sledećim uslovima:
@@ -774,12 +991,13 @@ green!80!black,mark=diamond*\\%
      		 to je $\nu^g \| w^g$ dete čvora $\nu^g$ u stablu $\mathcal{T}(G^g,
      		 \pi^g)$.
       \end{itemize}
-      Time smo dokazali da je stablo $\mathcal{T}(G, \pi)^g$ podstablo od
-      $\mathcal{T}(G^g, \pi^g)$ ($\mathcal{T}(G, \pi)^g \subseteq
-      \mathcal{T}(G^g, \pi^g)$). Prema prethodno dokazanom važi
-      $\mathcal{T}(G^g, \pi^g)^{g^{-1}} \subseteq \mathcal{T}(G, \pi)$, pa
-      primenom $g$ na obe strane konačno dobijamo $\mathcal{T}(G^g, \pi^g)
-      \subseteq \mathcal{T}(G, \pi)^g$.
+	  Time smo dokazali da je stablo $\mathcal{T}(G, \pi)^g$ podstablo od
+	  $\mathcal{T}(G^g, \pi^g)$ ($\mathcal{T}(G, \pi)^g \subseteq
+	  \mathcal{T}(G^g, \pi^g)$). Prema prethodno dokazanom važi
+	  $\mathcal{T}(G^g, \pi^g)^{g^{-1}} \subseteq \mathcal{T}((G^g)^{g^{-1}},
+	  (\pi^g)^{g^{-1}}) = \mathcal{T}(G, \pi)$, pa primenom $g$ na obe strane
+	  konačno dobijamo $\mathcal{T}(G^g, \pi^g) \subseteq \mathcal{T}(G,
+	  \pi)^g$.
   \end{proof}
 
   \begin{corrolary}
@@ -820,7 +1038,7 @@ green!80!black,mark=diamond*\\%
 	  \begin{itemize}
 		  \item[(\phi1)] Ako su $\nu_1, \nu_2 \in \mathcal{T}(G, \pi)$ takvi
 			  da je $|\nu_1|=|\nu_2|$ i $\phi(G, \pi, \nu_1) < \phi(G,
-			  \phi_0, \nu_2)$, onda za sve $\omega_1 \in \mathcal{T}(G, \pi,
+			  \pi, \nu_2)$, onda za sve $\omega_1 \in \mathcal{T}(G, \pi,
 			  \nu_1)$ i $\omega_2 \in \mathcal{T}(G, \pi, \nu_2)$ važi
 			  $\phi(G, \pi, \omega_1) < \phi(G, \pi, \omega_2)$
 		  \item[(\phi2)] Ako su $\nu_1, \nu_2 \in \mathcal{T}(G, \pi)$ takvi
@@ -834,6 +1052,12 @@ green!80!black,mark=diamond*\\%
 	  Listovi $\nu_1$ i $\nu_2$ su \emph{ekvivalentni} ako i samo ako $\phi(G,
 	  \pi, \nu_1) = \phi(G, \pi, \nu_2)$.
   \end{definition}
+
+  Neformalno, prvi uslov obezbeđuje da ako je vrednost invarijante u čvoru
+  $\nu_1$ manja od vrednosti invarijante u čvoru $\nu_2$ istog nivoa, tada to
+  važi i za sve parove čvorova njihovih podstabala. Drugi uslov garantuje da su
+  grafovi dobijeni transformacijom polaznog grafa primenom bojenja u
+  ekvivalentnim listovima jednaki.
 
   \begin{example}
 	  Definišimo $\phi(G, \pi, \nu)$ koristeći pomoćnu funkciju $f$ kao niz
@@ -955,7 +1179,7 @@ green!80!black,mark=diamond*\\%
 	  \begin{enumerate}
 		  \item $id \leq \pi^\alpha$
 
-			  Neka su $x$ i $y$ proizvoljni. Važi $\pi^\alpha(x) <
+			  Neka su $x$ i $y$ proizvoljne vrednosti. Važi $\pi^\alpha(x) <
 			  \pi^\alpha(y) \iff \pi(\alpha^{-1}(x)) < \pi(\alpha^{-1}(y))$, pa
 			  kako je $\alpha \leq \pi$ sledi $\alpha(\alpha^{-1}(x)) <
 			  \alpha(\alpha^{-1}(y))$ odnosno $x < y$. Kontrapozicijom dobijamo
@@ -1023,19 +1247,22 @@ green!80!black,mark=diamond*\\%
 	  \pi)$.
   \end{proof}
 
-	Prethodna teorema pokazuje da je otkrivanjem svih čvorova ekvivalentnih
-	jednom čvoru moguće odrediti grupu automorfizama datog grafa. Naravno,
+	Prethodna teorema pokazuje da je otkrivanjem svih listova ekvivalentnih
+	jednom listu moguće odrediti grupu automorfizama datog grafa. Naravno,
 	ovakav način određivanja grupe automorfizama nije veoma efikasan pošto se
 	grupa generiše član po član. Ovo se može poboljšati odsecanjem pretrage o
 	čemu će biti reči u narednom odeljku.
 	
 	\begin{example}
-		Posmatrajmo prvi list stabla sa slike \ref{img:invariant}. Na osnovu
-		prethodne teoreme je moguće odrediti skup svih automorfizama grafa.
-		Kako je taj list ekvivalentan samom sebi, $id \in Aut(G, \pi)$.  Kako
-		je ekvivalentan poslednjem listu stabla, $(1\ 3) \in Aut(G, \pi)$. Ne
-		postoje drugi automorfizmi jer ne postoje drugi listovi ekvivalentni
-		prvom listu stabla, pa je $Aut(G, \pi) = \{id, (1\ 3)\}$.
+		Posmatrajmo prvi list $\zeta$ stabla sa slike \ref{img:invariant}. Na
+		osnovu prethodne teoreme je moguće odrediti skup svih automorfizama
+		grafa.  Kako je list $\zeta$ ekvivalentan samom sebi, $id \in
+		Aut(G, \pi)$.  Kako je ekvivalentan poslednjem listu $\nu$ stabla,
+		$\pi_\nu^{-1}\pi_\zeta = \begin{pmatrix}1 & 2 & 3\\3 & 2 &
+			1\end{pmatrix}^{-1}\begin{pmatrix}1 & 2 & 3\\1 & 2 &
+		3\end{pmatrix}=(1\ 3) \in Aut(G, \pi)$. Ne postoje drugi automorfizmi
+		jer ne postoje drugi listovi ekvivalentni prvom listu stabla, pa je
+		$Aut(G, \pi) = \{id, (1\ 3)\}$.
 	\end{example}
 
   \begin{definition}
@@ -1076,7 +1303,7 @@ green!80!black,mark=diamond*\\%
 		teoreme je moguće odrediti kanonsku formu grafa. U pitanju je graf koji
 		se dobija bilo kojom od permutacija $g_1 = [2 \mid 1 \mid 3]$ tj. $g_1 : \begin{pmatrix} 1 & 2 & 3 \\
 		2 & 1 & 3\end{pmatrix}$ ili $g_2 = [2 \mid 3 \mid 1]$ tj. $g_2 : \begin{pmatrix} 1 & 2 & 3 \\ 3 &
-		1 & 2 \end{pmatrix}$ jer su to permutacije sa najvećom invarijantnom u
+		1 & 2 \end{pmatrix}$ jer su to permutacije sa najvećom invarijantom u
 		stablu.
 	\end{example}
 
@@ -1154,7 +1381,7 @@ green!80!black,mark=diamond*\\%
 		  \item Na osnovu dokazanih svojstava operacija $P_A$ i $P_C$ iz stabla
 			  se ne uklanja leksikografski najmanji list $\nu$ ekvivalentan
 			  listu $\nu^*$.
-		  \item Ako je $g \in Aut(G, \pi)$, onda na osnovu dokazanih svojstva
+		  \item Ako je $g \in Aut(G, \pi)$, onda na osnovu dokazanih svojstava
 			  operacija $P_B$ i $P_C$ važi da iz stabla nije uklonjen
 			  leksikografski najmanji list oblika $\nu_0^{hg}$ za neko $h \in \langle
 			  g_1, \dots, g_k \rangle$, izborom $\omega =
@@ -1240,10 +1467,12 @@ green!80!black,mark=diamond*\\%
 
    Bojenje $\pi \in \Pi_n$ predstavljeno je permutacijom $p$ i nizom $cells$.
    Permutacija $p$ predstavlja niz koji se dobija nadovezivanjem ćelija
-   $\pi^{-1}(1), \dots, \pi^{-1}(k)$ redom, pri čemu su elementi jedne ćelije
-   uređeni rastuće. Na primer, bojenje $\pi = [2\ 6 \mid 4\ 3\ 5 \mid 1]$
-   predstavljeno je permutacijom $p : \begin{pmatrix} 1 & 2 & 3 & 4 & 5 & 6\\ 2
-   & 6 & 3 & 4 & 5 & 1 \end{pmatrix}$.
+   $\pi^{-1}(1), \dots, \pi^{-1}(k)$ redom, gde je $k$ broj boja i pri čemu su
+   elementi jedne ćelije uređeni rastuće. Na primer, bojenje $\pi = [2\ 6 \mid
+   4\ 3\ 5 \mid 1]$ predstavljeno je permutacijom $p : \begin{pmatrix} 1 & 2 &
+   3 & 4 & 5 & 6\\ 2 & 6 & 3 & 4 & 5 & 1 \end{pmatrix}$ koja se dobija kada se
+   poređaju rastuće elementi druge ćelije. Primetimo da u slučaju diskretnog
+   bojenja $\pi$ važi $p = \pi^{-1}$.
 
    Niz $cells$ dužine $n$ upotpunjava permutaciju $p$ podacima o granicama
    ćelija bojenja $\pi$. Ako pozicija $u$ predstavlja početak nove ćelije, tada
@@ -1251,10 +1480,9 @@ green!80!black,mark=diamond*\\%
    permutacije $p$, a u suprotnom je $cells_u = -1$. Na istom primeru, počeci
    novih ćelija nalaze se na pozicijama 1, 3 i 6, pa je $cells_1 = 3$, $cells_3
    = 6$ i $cells_6 = 7$, dok su vrednosti na ostalim pozicijama -1, odnosno
-   $cells = (3, -1, 6, -1, -1, 7)$.
-
-   Primetimo da u slučaju diskretnog bojenja $\pi$ važi $p = \pi^{-1}$.
-
+   $cells = (3, -1, 6, -1, -1, 7)$ jer prva ćelija obuhvata elemente na
+   pozicijama $[1,3)$, druga $[3,6)$, a treća $[6,7)$.
+   
    Jedna od ključnih operacija nad bojenjem je profinjavanje jedne ćelije. Neka
    je $\pi^{-1}(c)$ jedna ćelija bojenja $\pi$ i neka je svakom čvoru $v$ te
    ćelije dodeljena proizvoljna vrednost $t_v$. Profinjavanje ćelije
@@ -1264,7 +1492,15 @@ green!80!black,mark=diamond*\\%
 
   \begin{algorithm}[H]
 	  \caption{Profinjavanje ćelije}
-	  \begin{algorithmic}[]
+	  \textbf{Ulaz}
+		  Obojen graf $(G, \pi)$,
+		  boja ćelije koju treba profiniti $c$,\\
+		  proizvoljan niz vrednosti $t$\\
+	  \textbf{Izlaz}
+	  	  Profinjeno bojenje $\pi'$,
+		  niz ćelija dobijenih profinjavanjem $C_1, \dots, C_k$,\\
+		  indeks prve ćelije među $C_1, \dots, C_k$ sa najvećim brojem elemenata $s$
+	  \begin{algorithmic}[1]
 		  \Procedure{Refine\_cell}{$G, \pi, c, t$}
 		  \State{$\pi' \gets \pi$}
 		  \State{$k \gets 1$}
@@ -1274,7 +1510,7 @@ green!80!black,mark=diamond*\\%
 			\State{$k \gets k + 1$}
 	      \EndFor
 		  \State{$\pi'(v) \gets \pi(v) + k - 1$ za sve $v$ takve da $\pi(v) > c$ }
-		  \State{$s \gets $ indeks prvog najvećeg skupa među $C_{i, 1 \leq i \leq k}$}
+		  \State{$s \gets $ indeks prvog skupa među $C_{i, 1 \leq i \leq k}$ sa najvećim brojem elemenata}
 		  \State\Return{$\pi', C_1, \dots, C_k, s$}
 		  \EndProcedure
 	  \end{algorithmic}
@@ -1314,8 +1550,8 @@ green!80!black,mark=diamond*\\%
  šansu da sadrže mali broj orbita (ili čak jednu) \cite{McKay} i da je samim
  tim očekivani faktor grananja manji.
 
- Druga mogućnost, koja se ispostavila kao bolja u većini slučajeva \cite{McKay1}
- je odabir prve višečlane ćelije bez obzira na njenu veličinu. U daljem radu
+ Druga mogućnost, koja se ispostavila kao bolja u većini slučajeva je odabir
+ prve višečlane ćelije bez obzira na njenu veličinu \cite{McKay}. U daljem radu
  pretpostavljamo postojanje procedure \texttt{Target\_cell($\pi$)} koja
  implementira ovu strategiju.
 
@@ -1337,6 +1573,11 @@ green!80!black,mark=diamond*\\%
 	  $$
 	  naziva se \emph{funkcija individualizacije}.
   \end{definition}
+
+  Uloga funkcije individualizacije je da od zadatog bojenja formira novo,
+  finije bojenje koje se od polaznog razlikuje samo u tome što je odabrani čvor
+  izdvojen u zasebnu ćeliju. Ovo će obezbediti ispunjenost uslova (R2) funkcije
+  profinjavanja.
 
   \begin{example}
 	  Neka je $\pi = [1\ 3 \mid 2\ 4\ 5]$. Tada je $I(\pi, 4) = [1\ 3 \mid 4
@@ -1536,11 +1777,13 @@ green!80!black,mark=diamond*\\%
 
   \begin{example}
 	  Na slici \ref{img:coarsesteq} prikazana su dva grafa obojena svojim
-	  najgrubljim ekvitabilnim bojenjem. Ekvitabilno bojenje levog grafa
-	  razdvaja čvorove grafa tačno po orbitama u grupi automorfizama grafa. To
-	  naravno ne mora uvek biti slučaj, što se može videti iz primera desnog
-	  grafa čije je najgrublje ekvitabilno bojenje jednobojno uprkos tome što
-	  postoji više orbita.
+	  najgrubljim ekvitabilnim bojenjem. Ćelije ekvitabilnog bojenja levog
+	  grafa su upravo orbite čvorova u grupi automorfizama grafa što znači da
+	  ne postoji bolje (finije) bojenje koje je moguće konstruisati bilo kojom
+	  transformacijom invarijantnom na imenovanje čvorova. To naravno ne mora
+	  uvek biti slučaj, što se može videti iz primera desnog grafa čije je
+	  najgrublje ekvitabilno bojenje jednobojno uprkos tome što postoji više
+	  orbita.
   \end{example}
 
    \begin{figure}[htp]
@@ -1619,6 +1862,8 @@ green!80!black,mark=diamond*\\%
   rezultat izvršavanja algoritma određivanja jednog takvog bojenja.
 
   \begin{algorithm}[H]
+	  \textbf{Ulaz} Obojen graf $(G, \pi)$, čvor stabla $\nu$\\
+	  \textbf{Izlaz} Najgrublje ekvitabilno bojenje finije od $\pi$
 	  \caption{Profinjavanje bojenja}
 	  \begin{algorithmic}[1]
 		  \Procedure{Refine}{$G, \pi, \nu$}
@@ -1670,7 +1915,7 @@ green!80!black,mark=diamond*\\%
 		  \item[] \textbf{Induktivni korak} Neka je $\xi \leq \sim_{\pi_j}$ za sve $ j \leq i$.
 			  Tada je svaka ćelija $C$ svakog bojenja $\pi_j,\ j \leq i$ unija nekih
 			  klasa particije $\xi$, pa to važi i za ćeliju $W$ odabranu u
-			  liniji 8.  Neka su $x$ i $y$ proizvoljni elementi iste klase
+			  liniji 8 algoritma.  Neka su $x$ i $y$ proizvoljni elementi iste klase
 			  particije $\xi$. Tada je $\widetilde{\psi}(G, x, W) = \widetilde{\psi}(G, y, W)$, pa oni ne
 			  mogu biti razdvojeni nakon izvršavanja koraka spoljne petlje.
 			  Prema tome je $\xi \leq \sim_{\pi_{i+1}}$.
@@ -1688,11 +1933,12 @@ green!80!black,mark=diamond*\\%
 
 	  Pokažimo da je $\gamma$ ekvitabilno. Dokaz izvodimo iz dva dela. Prvo,
 	  pokažimo da važi sledeće tvrđenje. Ako je ćelija $C$ prilikom izvršavanja
-	  algoritma dodata u $\alpha$ u liniji 4, 6, 13 ili 15 (u oznaci $C \in
-	  \mathcal{A}$), tada se ona može predstaviti kao disjunktna unija nekih ćelija
-	  $W_1, \dots, W_m \in \mathcal{W}$ gde $W$ predstavlja skup svih ćelija
-	  uklonjenih iz $\alpha$ linijom 8 algoritma.  Dokaz izvodimo indukcijom po
-	  strukturi stabla, odozdo naviše.
+	  algoritma dodata u $\alpha$ u liniji 4, 6, 13 ili 15 algoritma (u oznaci
+	  $C \in \mathcal{A}$), tada se ona može predstaviti kao disjunktna unija
+	  $C = W_1 \sqcup \dots \sqcup W_m$ nekih ćelija $W_1, \dots, W_m \in
+	  \mathcal{W}$ gde $\mathcal{W}$ predstavlja skup svih ćelija uklonjenih iz
+	  $\alpha$ linijom 8 algoritma.  Dokaz izvodimo indukcijom po strukturi
+	  stabla, odozdo naviše.
 
 	  \begin{itemize}
 		  \item[] \textbf{Baza indukcije} Ukoliko je $C \in \mathcal{W}$,
@@ -1740,9 +1986,9 @@ green!80!black,mark=diamond*\\%
   \end{proof}
 
   \begin{theorem}
-	  Neka je $\nu$ list stabla $\mathcal{T}(G, \pi)$. Tada je ukupna vremenska
-	  složenost određivanja svih $R(G, \pi, [\nu]_i)$ u klasi $O(n^2 \log n)$,
-	  pri čemu je $n$ broj čvorova grafa.
+	  Neka je $\nu$ list stabla $\mathcal{T}(G, \pi)$. Tada je postupak
+	  određivanja $R(G, \pi, [\nu]_i)$ za sve $0 \leq i \leq |\nu|$ ukupne
+	  vremenske složenosti $O(n^2 \log n)$, pri čemu je $n$ broj čvorova grafa.
   \end{theorem}
 
   \begin{proof}
@@ -1951,7 +2197,14 @@ green!80!black,mark=diamond*\\%
 	  Na slici \ref{img:refinedtree} prikazano je stablo pretrage jednobojnog
 	  grafa koje koristi definisanu funkciju profinjavanja. Prikazan je obojen
 	  graf nakon svakog profinjavanja i zaokruženi su čvorovi korišćeni
-	  prilikom individualizacije.
+	  prilikom individualizacije. U korenu stabla se profinjavanjem dobija
+	  ekvitabilno bojenje sa dve boje, razdvajanjem čvorova stepena dva i tri.
+	  U narednom nivou stabla se vrši individualizacija jednog od čvorova
+	  stepena dva pri čemu se profinjavanjem čvorovi stepena tri dele u dve
+	  ćelije po tome da li su povezani sa individualizovanim čvorom ili ne. U
+	  poslednjem nivou se vrši individualizacija jednog od čvorova stepena tri
+	  koji nije sused prethodno individualizovanom čvoru i profinjavanjem se
+	  dolazi do diskretnog bojenja.
   \end{example}
 
 
@@ -2007,9 +2260,11 @@ green!80!black,mark=diamond*\\%
 
   \begin{example}
 	  Na slici \ref{img:quotient} prikazan je graf sa ekvitabilnim bojenjem i
-	  odgovarajući količnički graf. Vrednosti $d_Q$ upisane su u čvorove
-	  količničkog grafa. Vrednosti $\psi_Q$ napisane su pored grana, dok grane
-	  kojima je $\psi_Q$ jednako nuli nisu vidljive.
+	  odgovarajući količnički graf. Vrednosti $d_Q(c)$ odgovaraju broju čvorova
+	  grafa boje $c$ i upisane su u čvorove količničkog grafa.  Vrednosti
+	  $\psi_Q(c_1, c_2)$ odgovaraju broju čvorova boje $c_2$ grafa sa kojim je
+	  povezan svaki čvor boje $c_1$ i napisane su pored odgovarajućih usmerenih
+	  grana, dok grane kojima je ta vrednost nula nisu prikazane.
   \end{example}
 
    \begin{figure}[htp]
@@ -2212,7 +2467,7 @@ green!80!black,mark=diamond*\\%
   Primetimo da je vremenska složenost određivanja invarijante u čvoru $\nu \|
   w$ u klasi $O((|\pi_2| - |\pi_1|)n)$ gde je $\pi_2 = R(G, \pi, \nu \| w)$,
   $\pi_1 = R(G, \pi, \nu)$ i $n$ broj čvorova grafa. Ovo se jednostavno vidi iz
-  toga što broj ćelija $\pi_2$ koje nisu ćelije $\pi_1$ upravo $|\pi_2| -
+  toga što je broj ćelija $\pi_2$ koje nisu ćelije $\pi_1$ upravo $|\pi_2| -
   |\pi_1|$ i iz toga što je za određivanje svakog niza $f_i$ dovoljno $O(n)$
   koraka. To znači da ukupna složenost određivanja svih invarijanti od korena
   do jednog od listova stabla pripada klasi $O(n^2)$.
@@ -2250,10 +2505,97 @@ green!80!black,mark=diamond*\\%
   podatke. Skupovi $stab_S(v)$ se jednostavno ažuriraju dodavanjem $g$ tamo gde
   je potrebno. Kako bi se ažuriranje predstavnika orbita moglo efikasno
   izvršiti, pamti se pomoćna particija $\Omega$ čvorova po orbitama. Prilikom
-  dodavanja se nova particija određuje kao tranzitivno zatvorenje unije
-  particije $\Omega$ i particije ciklusa (orbita) automorfizma $g$. Ovo je moguće
-  realizovati pretragom u širinu sa složenošću $O(n)$ ako je $n$ broj
-  čvorova grafa.
+  dodavanja se nova particija određuje kao supremum particije $\Omega$ i
+  particije ciklusa (orbita) automorfizma $g$.  Proizvoljnu particiju moguće je
+  preslikati u odgovarajući graf formiranjem prostog ciklusa nad elementima
+  svake klase particije. Određivanje supremuma dve particije moguće realizovati
+  pretragom unije tako formiranih grafova i formiranjem particije od komponenti
+  povezanosti dobijenog grafa. Primetimo da je broj grana ovako formiranog
+  grafa linearno ograničen u odnosu na broj čvorova $n$, pa je određivanje
+  supremuma dve particije moguće izvršiti u vremenskoj složenosti $O(n)$.
+
+  \begin{example}
+	  Neka je $S = \{(1\ 2), (1\ 3), (5\ 6)\}$ jedan skup automorfizama nekog
+	  grafa sa 6 čvorova. Tada je $stab_S(1) = \{(5\ 6)\}$, $stab_S(2) = \{(1\
+	  3), (5\ 6)\}$, $stab_S(3) =\{(1\ 2), (5\ 6)\}$, $stab_S(4) = \{(1\ 2),
+	  (1\ 3), (5\ 6)\}$, $stab_S(5) = stab_S(6) = \{(1\ 2), (1\ 3)\}$ i $\Omega
+	  = \{\{1, 2, 3\}, \{4\}, \{5, 6\}\}$. Dodavanjem automorfizma $(1\ 2)(3\
+	  4)$ dobija se $S' = \{(1\ 2), (1\ 3), (5\ 6), (1\ 2)(3\ 4)\}$ i 
+	  $stab_{S'}(5) = stab_{S'}(6) = \{(1\ 2), (1\ 3), (1\ 2)(3\ 4)\}$, dok
+	  ostale vrednosti $stab_S$ ostaju nepromenjene. Particija $\Omega'$ dobija
+	  se kao supremum particije $\Omega$ i $\Omega^{(1\ 2)(3\ 4)} = \{\{1, 2\},
+	  \{3, 4\}, \{5\}, \{6\}\}$, odnosno $\Omega' = \Omega \lor \Omega^{(1\
+	  2)(3\ 4)} = \{\{1, 2, 3, 4\}, \{5, 6\}\}$.  Na slici \ref{img:orbits}
+	  prikazana su dva grafa formirana na osnovu particija $\Omega^{(1\ 2)(3\
+	  4)}$ i $\Omega$, kao i njihova unija.
+  \end{example}
+  
+
+   \begin{figure}[htp]
+	   \centering
+	   \begin{tikzpicture}
+		   \begin{scope}
+			   \node (0) at (1, 0)[point, label={[label distance=2pt]0:5}] {};
+			   \node (1) at (0.5, 0.86)[point, label=60:4] {};
+			   \node (2) at (-0.5, 0.86)[point, label=120:3] {};
+			   \node (3) at (-1, 0)[point, label={[label distance=2pt]180:2}] {};
+			   \node (4) at (-0.5, -0.86)[point, label=240:1] {};
+			   \node (5) at (0.5, -0.86)[point, label=300:6] {};
+		   \end{scope}
+		   \begin{scope}
+			   \draw[edge, cover] (1.center) -- (2.center);
+			   \draw[edge, cover] (3.center) -- (4.center);
+			   \draw[edge, cover] (0.center) -- (0.center);
+			   \draw[edge, cover] (5.center) -- (5.center);
+			   \draw[edge] (1) -- (2);
+			   \draw[edge] (3) -- (4);
+		   \end{scope}
+	   \end{tikzpicture}
+	   \hspace{20pt}
+	   \begin{tikzpicture}
+		   \begin{scope}
+			   \node (0) at (1, 0)[point, label={[label distance=2pt]0:5}] {};
+			   \node (1) at (0.5, 0.86)[point, label=60:4] {};
+			   \node (2) at (-0.5, 0.86)[point, label=120:3] {};
+			   \node (3) at (-1, 0)[point, label={[label distance=2pt]180:2}] {};
+			   \node (4) at (-0.5, -0.86)[point, label=240:1] {};
+			   \node (5) at (0.5, -0.86)[point, label=300:6] {};
+		   \end{scope}
+		   \begin{scope}
+			   \draw[edge, cover] (1.center) -- (1.center);
+			   \draw[edge, cover] (2.center) -- (3.center) -- (4.center) -- (2.center);
+			   \draw[edge, cover] (0.center) -- (5.center);
+			   \draw[edge] (2) -- (3);
+			   \draw[edge] (0) -- (5);
+			   \draw[edge] (3) -- (4);
+			   \draw[edge] (4) -- (2);
+		   \end{scope}
+	   \end{tikzpicture}
+	   \hspace{20pt}
+	   \begin{tikzpicture}
+		   \begin{scope}
+			   \node (a0) at (1, 0)[point, label={[label distance=2pt]0:5}] {};
+			   \node (a1) at (0.5, 0.86)[point, label=60:4] {};
+			   \node (a2) at (-0.5, 0.86)[point, label=120:3] {};
+			   \node (a3) at (-1, 0)[point, label={[label distance=2pt]180:2}] {};
+			   \node (a4) at (-0.5, -0.86)[point, label=240:1] {};
+			   \node (a5) at (0.5, -0.86)[point, label=300:6] {};
+		   \end{scope}
+		   \begin{scope}
+			   \draw[edge, cover] (a1.center) -- (a2.center) -- (a3.center) --
+			   (a4.center) -- (a1.center) -- (a3.center) -- (a2.center) -- (a4.center);
+			   \draw[edge, cover] (a0.center) -- (a5.center);
+			   \draw[edge] (1) -- (2);
+			   \draw[edge] (3) -- (4);
+			   \draw[edge] (2) -- (3);
+			   \draw[edge] (0) -- (5);
+			   \draw[edge] (4) -- (2);
+		   \end{scope}
+	   \end{tikzpicture}
+	   \caption{Grafovi koji odgovaraju particijama $\Omega^{(1\ 2)(3\ 4)}$,
+	   $\Omega$ i $\Omega' = \Omega^{(1\ 2)(3\ 4)} \lor \Omega$.}
+	   \label{img:orbits}
+   \end{figure}
 
  \section{Pretraga}
 
@@ -2262,6 +2604,7 @@ green!80!black,mark=diamond*\\%
 
   \begin{algorithm}[H]
 	  \caption{Generisanje stabla pretrage}
+	  \textbf{Ulaz} Obojen graf $(G, \pi_0)$
 	  \begin{algorithmic}[1]
 		  \Procedure{Search}{$G, \pi_0, \pi, \nu$}
 		  \State {$\pi \gets $ Refine($G, \pi, \nu$)}
@@ -2270,6 +2613,8 @@ green!80!black,mark=diamond*\\%
 			\State {Search($G, \pi_0, I(\pi, v), \nu \| v$)}
 		  \EndFor
 		  \EndProcedure
+
+		  \State {Search($G, \pi_0, \pi_0, ()$)}
 	  \end{algorithmic}
   \end{algorithm}
 
@@ -2283,8 +2628,11 @@ green!80!black,mark=diamond*\\%
 
   \begin{algorithm}[H]
 	  \caption{Određivanje kanonske forme}
+	  \textbf{Ulaz} Obojen graf $(G, \pi_0)$\\
+	  \textbf{Izlaz} Permutacija $\pi_\rho$
 	  \begin{algorithmic}[1]
 		  \Procedure{Search}{$G, \pi_0, \pi, \nu$}
+		  \State {\textbf{global} $\rho$}
 		  \State {$\pi \gets $ Refine($G, \pi, \nu$)}
 		  \If {$|\rho| \geq |\nu| \land \phi(G, \pi_0, \nu) < \phi(G, \pi_0, [\rho]_{|\nu|})$}
 		  	\State \Return
@@ -2299,6 +2647,8 @@ green!80!black,mark=diamond*\\%
 			\EndIf
 		  \EndIf
 		  \EndProcedure
+		  \State {$\rho \gets ()$}
+		  \State {Search($G, \pi_0, \pi_0, ()$)}
 	  \end{algorithmic}
   \end{algorithm}
 
@@ -2325,8 +2675,11 @@ green!80!black,mark=diamond*\\%
 
   \begin{algorithm}[H]
 	  \caption{Određivanje generatora grupe automorfizama}
+	  \textbf{Ulaz} Obojen graf $(G, \pi_0)$\\
+	  \textbf{Izlaz} Skup generatora $S$
 	  \begin{algorithmic}[1]
 		  \Procedure{Search}{$G, \pi_0, \pi, \nu$}
+		  \State {\textbf{global} $S, \zeta$}
 		  \State {$\pi \gets $ Refine($G, \pi, \nu$)}
 		  \If {$\zeta \neq () \land (|\zeta| < |\nu| \lor \phi(G, \pi_0, \nu) \neq \phi(G, \pi_0, [\zeta]_{|\nu|}))$}
 			\State \Return {$|\nu|$}
@@ -2355,6 +2708,8 @@ green!80!black,mark=diamond*\\%
 		  \EndIf
 		  \State \Return{$|\nu|$}
 		  \EndProcedure
+		  \State {$S, \zeta \gets \emptyset, ()$}
+		  \State {Search($G, \pi_0, \pi_0, ()$)}
 	  \end{algorithmic}
   \end{algorithm}
 
@@ -2365,8 +2720,11 @@ green!80!black,mark=diamond*\\%
 
   \begin{algorithm}[H]
 	  \caption{Određivanje kanonske forme i grupe automorfizama}
+	  \textbf{Ulaz} Obojen graf $(G, \pi_0)$\\
+	  \textbf{Izlaz} Permutacija $\pi_\rho$ i skup generatora $S$
 	  \begin{algorithmic}[1]
 		  \Procedure{Search}{$G, \pi_0, \pi, \nu$}
+		  \State {\textbf{global} $S, \zeta, \rho$}
 		  \State {$\pi \gets $ Refine($G, \pi, \nu$)}
 		  \State {$max\_path \gets |\rho| < |\nu| \lor \phi(G, \pi_0, \nu) \geq \phi(G, \pi_0, [\rho]_{|\nu|})$}
 		  \State {$aut\_path \gets |\zeta| \geq |\nu| \land \phi(G, \pi_0, \nu) = \phi(G, \pi_0, [\zeta]_{|\nu|})$}
@@ -2408,13 +2766,17 @@ green!80!black,mark=diamond*\\%
 		  \EndIf
 		  \State \Return{$|\nu|$}
 		  \EndProcedure
+		  \State {$S, \zeta, \rho \gets \emptyset, (), ()$}
+		  %\State {$\zeta \gets ()$}
+		  %\State {$\rho \gets ()$}
+		  \State {Search($G, \pi_0, \pi_0, ()$)}
 	  \end{algorithmic}
   \end{algorithm}
 
   Za otkrivanje automorfizama moguće je čuvati i više od pomenuta dva lista
   $\rho$ i $\zeta$. U tom slučaju je moguće ranije u pretrazi otkriti veći deo
-  grupe automorfizama, ali u tom slučaju sama provera ekvivalentnosti listova
-  prilikom otkrivanja automorfizma postaje sporija.
+  grupe automorfizama, ali tada sama provera ekvivalentnosti listova prilikom
+  otkrivanja automorfizma postaje sporija.
 
   Moguće su i drugačije strategije obilaska stabla. Program Traces vrši
   pretragu stabla u širinu što omogućava odsecanje svih čvorova stabla nekog
@@ -2456,11 +2818,15 @@ green!80!black,mark=diamond*\\%
   \begin{example}
 	  \label{ex:graphinv}
 	  Posmatrajmo (nepovezan) graf sa slike \ref{img:graphinv}. Standardna
-	  procedura profinjavanja koja koristi matricu povezanosti će kao rezultat
-	  vratiti bojenje jednako početnom. Procedura profinjavanja koja koristi
-	  invarijantu grafa $d(G, u, v)$ koja predstavlja dužinu najkraćeg puta
-	  između čvorova $u$ i $v$ (ili $\infty$ ako put ne postoji) će odrediti
-	  bojenje čije su ćelije tačno orbite čvorova u grupi automorfizama.
+	  procedura profinjavanja određuje najgrublje bojenje finije od početnog i
+	  ekvitabilno u odnosu matricu povezanosti kao invarijantu grafa. Ona će
+	  kao rezultat vratiti bojenje grafa jednako početnom zato što je početno
+	  bojenje grafa ekvitabilno u odnosu na tu invarijantu - svaki čvor grafa
+	  je povezan sa tačno dva čvora iste boje.  Procedura profinjavanja koja
+	  koristi invarijantu grafa $d(G, u, v)$ koja predstavlja dužinu najkraćeg
+	  puta između čvorova $u$ i $v$ (ili $\infty$ ako put ne postoji) će
+	  odrediti bojenje čije su ćelije tačno orbite čvorova u grupi
+	  automorfizama.
   \end{example}
 
    \begin{figure}[htp]
@@ -2578,7 +2944,7 @@ green!80!black,mark=diamond*\\%
 	implementacija nije podržavala izvršavanje na više procesorskih jezgara.
 
 	Testirane su dve varijante algoritma. U prvoj je za invarijantu grafa uzeta
-	matrica povezanosti, dok je u drugoj korišćena invarijanta najkarćeg puta
+	matrica povezanosti, dok je u drugoj korišćena invarijanta najkraćeg puta
 	iz primera \ref{ex:graphinv}. Poređenja radi su prikazani rezultati vremena
 	izvršavanja programa \emph{nauty} (na mestima gde je značajno i sa
 	upotrebom invarijante najkraćeg puta opisane u \cite{nug}) i \emph{Traces}
@@ -2604,6 +2970,21 @@ green!80!black,mark=diamond*\\%
 		\item \emph{ranreg} - Regularni grafovi
 		\item \emph{rnd-3-reg} - 3-regularni grafovi (iz \emph{bliss} kolekcije)
 	\end{itemize}
+
+	U klasama slučajnih grafova bez strukture \emph{ran2}, \emph{ran10} i
+	\emph{ransq} složenost pretprocesiranja invarijante grafa najkraćeg puta
+	dominira. Pojačanje procedure profinjavanja je za ove primere zanemarljivo
+	- na skoro svim primerima se i bez upotrebe dodatne invarijante grafa
+	generiše samo jedan čvor stabla pretrage. Upotreba invarijante je
+	nepotrebna i u slučaju nasumično generisanih stabala \emph{rantree}.
+	Složenost algoritma na primerima ove klase proizilazi pretežno iz pretrage.
+
+	Slučaj klasa regularnih grafova \emph{ranreg} i \emph{rnd-3-reg} je
+	drugačiji. Osnovni algoritam se na njima pokazao izuzetno neefikasnim.
+	Upotrebom invarijante najkraćeg puta se ova neefikasnost zaobilazi time što
+	pojačanje procedure profinjavanja dovodi do generisanja stabla pretrage
+	koje sadrži jedan čvor. Rezultat ovoga je da vreme izvršavanja nije
+	značajno sporije od vremena izvršavanja programa \emph{nauty}.
 
 	\begin{figure}[!h]
 	\center
@@ -2807,8 +3188,17 @@ green!80!black,mark=diamond*\\%
     
   \section{Grafovi donje granice nekih algoritama}
 
-	Klasa \emph{cfi} iz \emph{bliss} kolekcije je klasa grafova opisanih kao
-	težak primer za \emph{k}-dimenzioni WL-metod \cite{CFI}.
+	Jedno uopštenje klasifikacije čvorova procedurom profinjavanja je
+	\emph{k}-dimenzioni WL-metod koji služi za klasifikaciju uređenih $k$-torki
+	čvorova grafa i koji se može koristiti za ispitivanje izomorfizma dva
+	grafa. Klasa \emph{cfi} iz \emph{bliss} kolekcije je klasa grafova opisanih
+	kao težak primer za \emph{k}-dimenzioni WL-metod po tome da je neophodno
+	odabrati $k = \Omega(n)$ kako bi korektnost ispitivanja izomorfizma para
+	grafova sa $n$ čvorova bila zagarantovana \cite{CFI}.  Rezultati pokazuju
+	da je upotrebom invarijante najkraćeg puta moguće ostvariti vreme
+	izvršavanje koje je u većini slučajeva za nijansu brže od \emph{nauty}-a
+	bez upotrebe invarijante, ali idalje sporije od drugih varijanti programa
+	\emph{nauty} i \emph{Traces}.
 
 	\begin{figure}[!h]
 	\center
@@ -2844,7 +3234,17 @@ green!80!black,mark=diamond*\\%
 
 	Klase \emph{mz}, \emph{cmz}, \emph{mz-aug}, \emph{mz-aug2} su zasnovane na
 	klasi \emph{Mijazakijevih grafova} opisanih kao teški primeri za Mekejev
-	algoritam \cite{Miyazaki} koji je centralna tema ovog rada.
+	algoritam \cite{Miyazaki} koji je centralna tema ovog rada.  Osnovni
+	algoritam implementiran u okviru \emph{morphi}-a se na primerima ovih klasa
+	ponaša slično \emph{nauty}-u, izuzev u klasi \emph{mz-aug} gde je složenost
+	algoritma znatno veća. Na ovim primerima do izražaja dolazi ojačanje
+	procedure profinjavanja usled upotrebe invarijante najkraćeg puta, posebno
+	u klasama \emph{cmz} i \emph{mz-aug2} gde obe varijante \emph{nauty}-a
+	pokazuju eksponencijalno ponašanje koje \emph{morphi} izbegava. Ovo nije
+	neočekivano pošto su Mijazakijevi grafovi težak primer za upravo onaj
+	algoritam koji \emph{nauty} i osnovna verzija \emph{morphi}-a
+	implementiraju i pošto dodatna invarijanta menja taj algoritam na ključnom
+	mestu.
 
 	\begin{figure}[!h]
 	\center
@@ -2964,7 +3364,12 @@ green!80!black,mark=diamond*\\%
 	Grafovi klase \emph{grid} su grafovi koordinatnih mreža u dve i tri
 	dimenzije. Grafovi klase \emph{grid-sw} su isti ti grafovi sa razmenjenim
 	parovima nekih grana. \emph{triang} predstavlja klasu trougaonih grafova.
-	Još mreža nalazi se u klasi \emph{lattice}.
+	Još mreža nalazi se u klasi \emph{lattice}. Rezultati pokazuju da nema
+	značajne razlike između dve varijante \emph{morphi}-a. \emph{nauty} i
+	\emph{Traces} su na primerima ove klase znatno brži. Jedan od mogućih
+	razloga za to je što \emph{morphi} u trenutku testiranja nije podržavao
+	odvojenu strukturu podataka za rad sa proređenim grafovima, koja je za ove
+	klase korišćena u \emph{nauty}-u.
 
 	\begin{figure}[!h]
 	\center
@@ -3133,6 +3538,13 @@ green!80!black,mark=diamond*\\%
 	pre granice od 100 sekundi. Rezultati za klase obojenih grafova \emph{kef}
 	i \emph{pp} nisu prikazani zato što prilikom testiranja implementacija nije
 	podržavala unošenje obojenih grafova.
+
+	Upotreba invarijante najkraćeg puta ima različite posledice na vreme
+	izvršavanja. Na primerima klase \emph{pg} je usporenje najosetnije, dok se
+	najznačajnije ubrzanje postiže za primere klase \emph{ag}. Programi
+	\emph{nauty} i \emph{Traces} na velikom broju klasa postižu očekivano bolje
+	rezultate i ostavljaju prostor za poboljšanje implementacije
+	\emph{morphi}-a.
 
 	\pagebreak
 
