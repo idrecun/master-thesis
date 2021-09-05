@@ -1481,8 +1481,8 @@ green!60!black,mark=diamond*\\%
    je $cells(u)$ takvo da ta ćelija obuhvata tačno pozicije $[u, cells(u))$
    permutacije $p$, a u suprotnom je $cells(u) = -1$. Na istom primeru, počeci
    novih ćelija nalaze se na pozicijama 1, 3 i 6, pa je $cells(1) = 3$, $cells(3)
-   = 6$ i $cells(6) = 7$, dok su vrednosti na ostalim pozicijama -1, odnosno
-   $cells = (3, -1, 6, -1, -1, 7)$ jer prva ćelija obuhvata elemente na
+   = 6$ i $cells(6) = 7$, dok su vrednosti na ostalim pozicijama $-1$, odnosno
+   $cells : \begin{pmatrix} 1 & 2 & 3 & 4 & 5 & 6\\3 & -1 & 6 & -1 & -1 & 7 \end{pmatrix}$ jer prva ćelija obuhvata elemente na
    pozicijama $[1,3)$, druga $[3,6)$, a treća $[6,7)$.
    
    Jedna od ključnih operacija nad bojenjem je profinjavanje jedne ćelije. Neka
@@ -1495,9 +1495,9 @@ green!60!black,mark=diamond*\\%
   \begin{algorithm}[H]
 	  \caption{Profinjavanje ćelije}
 	  \textbf{Ulaz}
-		  Obojen graf $(G, \pi)$ pri čemu je $\pi$ predstavljeno nizovima
+		  Obojen graf $(G, \pi)$ pri čemu je $\pi$ predstavljeno pomoću
 		  $p_\pi$ i $cells_\pi$,\\ ćelija koju treba profiniti $C$,
-		  proizvoljan niz vrednosti $t$\\
+		  niz proizvoljnih vrednosti $t$\\
 	  \textbf{Izlaz}
 	  	  Profinjeno bojenje $\pi'$,
 		  niz ćelija dobijenih profinjavanjem $C_1, \dots, C_k$,\\
@@ -1526,6 +1526,16 @@ green!60!black,mark=diamond*\\%
   Opisana reprezentacija bojenja je korisna zato što omogućava da se ovaj
   algoritam implementira tako da mu složenost bude $O(|C| \log |C|)$, pri čemu
   dominira složenost sortiranja čvorova na osnovu vrednosti $t(v)$.
+
+   \begin{example}
+	   Neka je $\pi = [2\ 8 \mid 1\ 3\ 4\ 5\ 7 \mid 6]$ i potrebno je profiniti
+	   ćeliju $C = \{1, 3, 4, 5, 7\}$ u odnosu na vrednosti $t :
+	   \begin{pmatrix}1 & 3 & 4 & 5 & 7\\ 2 & 4 & 1 & 2 & 4\end{pmatrix}$.
+	   Rezultujuće bojenje je $\pi' = [2\ 8 \mid 4 \mid 1\ 5 \mid 3\ 7 \mid
+	   6]$.  Nove ćelije su $C_1 = \{4\}$, $C_2 = \{1, 5\}$ i $C_3 = \{3, 7\}$
+	   i važi $s = 2$ kako ćelije $C_2$ i $C_3$ imaju najveći broj
+	   elemenata, a $C_2$ je prva među njima.
+   \end{example}
 
   \subsection{Graf}
 
@@ -1560,6 +1570,8 @@ green!60!black,mark=diamond*\\%
  prve višečlane ćelije bez obzira na njenu veličinu \cite{McKay}. U daljem radu
  pretpostavljamo postojanje procedure \texttt{Target\_cell($\pi$)} koja
  implementira ovu strategiju.
+
+ \pagebreak
 
  \section{Funkcija profinjavanja}
 
@@ -2364,6 +2376,7 @@ green!60!black,mark=diamond*\\%
 		  &= \widetilde{\psi}(G, u, \pi^{-1}(c_2)) \\
 		  &= \psi_{Q(G, \pi)}(c_1, c_2) &(\pi^g)^{-1}(c_1) = \pi^{-1}(c_1)^g
 	  \end{align}
+	  Dakle, preslikavanje $Q$ je funkcija invarijantna na imenovanje čvorova.
   \end{proof}
 
   \begin{corrolary}
@@ -2477,6 +2490,8 @@ green!60!black,mark=diamond*\\%
   |\pi_1|$ i iz toga što je za određivanje svakog niza $f_i$ dovoljno $O(n)$
   koraka. To znači da ukupna složenost određivanja svih invarijanti od korena
   do jednog od listova stabla pripada klasi $O(n^2)$.
+
+  \pagebreak
 
  \section{Automorfizmi}
 
