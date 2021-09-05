@@ -20,7 +20,7 @@
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta}
 \usepackage{pgfplots}
-\pgfplotsset{width=7cm, compat=1.9, every tick label/.append style={font=\scriptsize}}
+\pgfplotsset{width=7.8cm, compat=1.9, every tick label/.append style={font=\scriptsize}}
 \usepgfplotslibrary{external}
 \tikzexternalize
 
@@ -40,7 +40,7 @@
 % Tikz stilovi
 \tikzstyle{point}=[circle, fill,thick]
 \tikzstyle{pointred}=[circle, fill=red!50,thick]
-\tikzstyle{pointgreen}=[circle, fill=green!50,thick]
+\tikzstyle{pointgreen}=[circle, fill=green!50!gray,thick]
 \tikzstyle{pointblue}=[circle, fill=blue!50,thick]
 \tikzstyle{arrow}=[draw=black, >={Latex[length=2mm]}]
 \tikzstyle{cover}=[draw, opacity=.2, line cap=round, line
@@ -51,7 +51,7 @@ cyan!80!black,mark=square*\\%
 red!90!black,mark=square*\\%
 blue,mark=*\\%
 orange,mark=*\\%
-green!80!black,mark=diamond*\\%
+green!60!black,mark=diamond*\\%
 }
 
 % Definisane komande
@@ -415,11 +415,11 @@ green!80!black,mark=diamond*\\%
 
    \subsection{Generatori i dejstvo grupe}
 
-   Neka je $G$ grupa i $H$ podskup od $G$. Tada sa $\langle H \rangle$
-   označavamo minimalnu podgrupu grupe $G$ koja sadrži sve elemente skupa $H$ i
-   kažemo da je ona \emph{generisana elementima skupa $H$}. Ukoliko je $H =
-   \{g_1, \dots, g_n\}$ za neki prirodan broj $n$, koristimo i oznaku $\langle
-   g_1, \dots, g_n \rangle$.
+   Neka je $(G, \cdot)$ grupa i $H$ podskup skupa $G$. Tada sa $\langle H
+   \rangle$ označavamo minimalnu podgrupu grupe $(G, \cdot)$ koja sadrži sve
+   elemente skupa $H$ i kažemo da je ona \emph{generisana elementima skupa
+   $H$}. Ukoliko je $H = \{g_1, \dots, g_n\}$ za neki prirodan broj $n$,
+   koristimo i oznaku $\langle g_1, \dots, g_n \rangle$.
 
    Neka je nad grupom $G$ i skupom $S$ definisano dejstvo. Dejstvo elementa
    grupe $g \in G$ na element skupa $s \in S$ označavamo sa $gs$ ili $s^g$, pri
@@ -875,15 +875,15 @@ green!80!black,mark=diamond*\\%
 	   \begin{tikzpicture}
 		   \begin{scope}
 			   \node (0) at (0, 1.5) {$[{\color{red}1\ 2\ 3}]$};
-			   \node (1) at (-4, -1) {$[{\color{red}1} \mid {\color{green}2\ 3}]$};
-			   \node (2) at (0, -1) {$[{\color{red}2} \mid {\color{green}1\ 3}]$};
-			   \node (3) at (4, -1) {$[{\color{red}3} \mid {\color{green}1\ 2}]$};
-			   \node (12) at (-5, -2) {$[{\color{red}1} \mid {\color{green}2} \mid {\color{blue}3}]$};
-			   \node (13) at (-3, -2) {$[{\color{red}1} \mid {\color{green}3} \mid {\color{blue}2}]$};
-			   \node (21) at (-1, -2) {$[{\color{red}2} \mid {\color{green}1} \mid {\color{blue}3}]$};
-			   \node (23) at (1, -2) {$[{\color{red}2} \mid {\color{green}3} \mid {\color{blue}1}]$};
-			   \node (31) at (3, -2) {$[{\color{red}3} \mid {\color{green}1} \mid {\color{blue}2}]$};
-			   \node (32) at (5, -2) {$[{\color{red}3} \mid {\color{green}2} \mid {\color{blue}1}]$};
+			   \node (1) at (-4, -1) {$[{\color{red}1} \mid {\color{green!50!gray}2\ 3}]$};
+			   \node (2) at (0, -1) {$[{\color{red}2} \mid {\color{green!50!gray}1\ 3}]$};
+			   \node (3) at (4, -1) {$[{\color{red}3} \mid {\color{green!50!gray}1\ 2}]$};
+			   \node (12) at (-5, -2) {$[{\color{red}1} \mid {\color{green!50!gray}2} \mid {\color{blue}3}]$};
+			   \node (13) at (-3, -2) {$[{\color{red}1} \mid {\color{green!50!gray}3} \mid {\color{blue}2}]$};
+			   \node (21) at (-1, -2) {$[{\color{red}2} \mid {\color{green!50!gray}1} \mid {\color{blue}3}]$};
+			   \node (23) at (1, -2) {$[{\color{red}2} \mid {\color{green!50!gray}3} \mid {\color{blue}1}]$};
+			   \node (31) at (3, -2) {$[{\color{red}3} \mid {\color{green!50!gray}1} \mid {\color{blue}2}]$};
+			   \node (32) at (5, -2) {$[{\color{red}3} \mid {\color{green!50!gray}2} \mid {\color{blue}1}]$};
 
 			   \node (a1) at (-5.5, -3.86)[pointred] {};
 			   \node (a2) at (-5, -3)[pointgreen] {};
@@ -1078,15 +1078,15 @@ green!80!black,mark=diamond*\\%
 	   \begin{tikzpicture}
 		   \begin{scope}
 			   \node (0) at (0, 0) [label=0:{(4)}] {$[{\color{red}1\ 2\ 3}]$};
-			   \node (1) at (-4, -1) [label=0:{(4,3)}] {$[{\color{red}1} \mid {\color{green}2\ 3}]$};
-			   \node (2) at (0, -1) [label=0:{(4,4)}] {$[{\color{red}2} \mid {\color{green}1\ 3}]$};
-			   \node (3) at (4, -1) [label=0:{(4,3)}] {$[{\color{red}3} \mid {\color{green}1\ 2}]$};
-			   \node (12) at (-5, -2) [label=270:{\footnotesize $(4,3,2,\begin{matrix}010\\101\\010\end{matrix})$}] {$[{\color{red}1} \mid {\color{green}2} \mid {\color{blue}3}]$};
-			   \node (13) at (-3, -2) [label=270:{\footnotesize $(4,3,2,\begin{matrix}001\\001\\110\end{matrix})$}] {$[{\color{red}1} \mid {\color{green}3} \mid {\color{blue}2}]$};
-			   \node (21) at (-1, -2) [label=270:{\footnotesize $(4,4,2,\begin{matrix}011\\100\\100\end{matrix})$}] {$[{\color{red}2} \mid {\color{green}1} \mid {\color{blue}3}]$};
-			   \node (23) at (1, -2) [label=270:{\footnotesize $(4,4,2,\begin{matrix}011\\100\\100\end{matrix})$}] {$[{\color{red}2} \mid {\color{green}3} \mid {\color{blue}1}]$};
-			   \node (31) at (3, -2) [label=270:{\footnotesize $(4,3,2,\begin{matrix}001\\001\\110\end{matrix})$}] {$[{\color{red}3} \mid {\color{green}1} \mid {\color{blue}2}]$};
-			   \node (32) at (5, -2) [label=270:{\footnotesize $(4,3,2,\begin{matrix}010\\101\\010\end{matrix})$}] {$[{\color{red}3} \mid {\color{green}2} \mid {\color{blue}1}]$};
+			   \node (1) at (-4, -1) [label=0:{(4,3)}] {$[{\color{red}1} \mid {\color{green!50!gray}2\ 3}]$};
+			   \node (2) at (0, -1) [label=0:{(4,4)}] {$[{\color{red}2} \mid {\color{green!50!gray}1\ 3}]$};
+			   \node (3) at (4, -1) [label=0:{(4,3)}] {$[{\color{red}3} \mid {\color{green!50!gray}1\ 2}]$};
+			   \node (12) at (-5, -2) [label=270:{\footnotesize $(4,3,2,\begin{matrix}010\\101\\010\end{matrix})$}] {$[{\color{red}1} \mid {\color{green!50!gray}2} \mid {\color{blue}3}]$};
+			   \node (13) at (-3, -2) [label=270:{\footnotesize $(4,3,2,\begin{matrix}001\\001\\110\end{matrix})$}] {$[{\color{red}1} \mid {\color{green!50!gray}3} \mid {\color{blue}2}]$};
+			   \node (21) at (-1, -2) [label=270:{\footnotesize $(4,4,2,\begin{matrix}011\\100\\100\end{matrix})$}] {$[{\color{red}2} \mid {\color{green!50!gray}1} \mid {\color{blue}3}]$};
+			   \node (23) at (1, -2) [label=270:{\footnotesize $(4,4,2,\begin{matrix}011\\100\\100\end{matrix})$}] {$[{\color{red}2} \mid {\color{green!50!gray}3} \mid {\color{blue}1}]$};
+			   \node (31) at (3, -2) [label=270:{\footnotesize $(4,3,2,\begin{matrix}001\\001\\110\end{matrix})$}] {$[{\color{red}3} \mid {\color{green!50!gray}1} \mid {\color{blue}2}]$};
+			   \node (32) at (5, -2) [label=270:{\footnotesize $(4,3,2,\begin{matrix}010\\101\\010\end{matrix})$}] {$[{\color{red}3} \mid {\color{green!50!gray}2} \mid {\color{blue}1}]$};
 
 			   \node (a1) at (-5.5, -5)[pointred] {};
 			   \node (a2) at (-5, -4.14)[pointgreen] {};
@@ -1392,6 +1392,8 @@ green!80!black,mark=diamond*\\%
 	  \end{enumerate}
   \end{proof}
 
+  \pagebreak
+
   \begin{example}
 	  Prilikom obilaska stabla sa slike \ref{img:invariant} moguće je izvršiti
 	  odsecanje nekih delova stabla na osnovu automorfizma $(1\ 3)$ (ukoliko je
@@ -1405,12 +1407,12 @@ green!80!black,mark=diamond*\\%
 	   \begin{tikzpicture}
 		   \begin{scope}
 			   \node (0) at (0, 0)  {$[{\color{red}1\ 2\ 3}]$};
-			   \node (1) at (-4, -1) [rectangle, draw=violet!70, thick] {$[{\color{red}1} \mid {\color{green}2\ 3}]$};
-			   \node (2) at (0, -1)  {$[{\color{red}2} \mid {\color{green}1\ 3}]$};
+			   \node (1) at (-4, -1) [rectangle, draw=violet!70, thick] {$[{\color{red}1} \mid {\color{green!50!gray}2\ 3}]$};
+			   \node (2) at (0, -1)  {$[{\color{red}2} \mid {\color{green!50!gray}1\ 3}]$};
 			   \node (3) at (4, -1) [] {$P_C({\color{violet}(1)}, (1\ 3))$};
-			   \node (12) at (-5, -2)  {$[{\color{red}1} \mid {\color{green}2} \mid {\color{blue}3}]$};
-			   \node (13) at (-3, -2)  {$[{\color{red}1} \mid {\color{green}3} \mid {\color{blue}2}]$};
-			   \node (21) at (-1, -2) [rectangle,draw=orange!70,thick] {$[{\color{red}2} \mid {\color{green}1} \mid {\color{blue}3}]$};
+			   \node (12) at (-5, -2)  {$[{\color{red}1} \mid {\color{green!50!gray}2} \mid {\color{blue}3}]$};
+			   \node (13) at (-3, -2)  {$[{\color{red}1} \mid {\color{green!50!gray}3} \mid {\color{blue}2}]$};
+			   \node (21) at (-1, -2) [rectangle,draw=orange!70,thick] {$[{\color{red}2} \mid {\color{green!50!gray}1} \mid {\color{blue}3}]$};
 			   \node (23) at (1, -2) [] {$\ \ \ \ \ \ \ \ P_C({\color{orange}(2,1)}, (1\ 3))$};
 
 			   \node (a1) at (-5.5, -3.86)[pointred] {};
@@ -1476,40 +1478,45 @@ green!80!black,mark=diamond*\\%
 
    Niz $cells$ dužine $n$ upotpunjava permutaciju $p$ podacima o granicama
    ćelija bojenja $\pi$. Ako pozicija $u$ predstavlja početak nove ćelije, tada
-   je $cells_u$ takvo da ta ćelija obuhvata tačno pozicije $[u, cells_u)$
-   permutacije $p$, a u suprotnom je $cells_u = -1$. Na istom primeru, počeci
-   novih ćelija nalaze se na pozicijama 1, 3 i 6, pa je $cells_1 = 3$, $cells_3
-   = 6$ i $cells_6 = 7$, dok su vrednosti na ostalim pozicijama -1, odnosno
+   je $cells(u)$ takvo da ta ćelija obuhvata tačno pozicije $[u, cells(u))$
+   permutacije $p$, a u suprotnom je $cells(u) = -1$. Na istom primeru, počeci
+   novih ćelija nalaze se na pozicijama 1, 3 i 6, pa je $cells(1) = 3$, $cells(3)
+   = 6$ i $cells(6) = 7$, dok su vrednosti na ostalim pozicijama -1, odnosno
    $cells = (3, -1, 6, -1, -1, 7)$ jer prva ćelija obuhvata elemente na
    pozicijama $[1,3)$, druga $[3,6)$, a treća $[6,7)$.
    
    Jedna od ključnih operacija nad bojenjem je profinjavanje jedne ćelije. Neka
    je $\pi^{-1}(c)$ jedna ćelija bojenja $\pi$ i neka je svakom čvoru $v$ te
-   ćelije dodeljena proizvoljna vrednost $t_v$. Profinjavanje ćelije
+   ćelije dodeljena proizvoljna vrednost $t(v)$. Profinjavanje ćelije
    podrazumeva formiranje bojenja $\pi' \leq \pi$ takvog da za $u$ i $v$ iz
-   $\pi^{-1}(c)$ važi $\pi'(u) < \pi'(v) \iff t_u < t_v$, dok za sve ostale
+   $\pi^{-1}(c)$ važi $\pi'(u) < \pi'(v) \iff t(u) < t(v)$, dok za sve ostale
    parove $u$ i $v$ važi $\pi'(u) = \pi'(v) \iff \pi(u) = \pi(v)$.
 
   \begin{algorithm}[H]
 	  \caption{Profinjavanje ćelije}
 	  \textbf{Ulaz}
-		  Obojen graf $(G, \pi)$,
-		  boja ćelije koju treba profiniti $c$,\\
+		  Obojen graf $(G, \pi)$ pri čemu je $\pi$ predstavljeno nizovima
+		  $p_\pi$ i $cells_\pi$,\\ ćelija koju treba profiniti $C$,
 		  proizvoljan niz vrednosti $t$\\
 	  \textbf{Izlaz}
 	  	  Profinjeno bojenje $\pi'$,
 		  niz ćelija dobijenih profinjavanjem $C_1, \dots, C_k$,\\
 		  indeks prve ćelije među $C_1, \dots, C_k$ sa najvećim brojem elemenata $s$
 	  \begin{algorithmic}[1]
-		  \Procedure{Refine\_cell}{$G, \pi, c, t$}
+		  \Procedure{Refine\_cell}{$G, \pi, C, t$}
 		  \State{$\pi' \gets \pi$}
 		  \State{$k \gets 1$}
-		  \For{$t' \in $ sorted($\{t_v \mid v \in \pi^{-1}(c)\}$)}
-			\State{$C_k \gets \{v \in \pi^{-1}(c) \mid t_v = t'\}$}
-			\State{$\pi'(v) \gets c + k - 1$ za sve $v \in C_k$}
+		  \State{$i \gets \min p_{\pi'}^{-1}(C)$}
+		  \For{$t' \in $ sorted($\{t(v) \mid v \in C\}$)}
+			\State{$C_k \gets \{v \in C \mid t(v) = t'\}$}
+		  	\State{$j \gets i$}
+			\For{$v \in $ sorted($C_k$)}
+			  \State{$p_{\pi'}(i) \gets v$}
+			  \State{$i \gets i + 1$}
+			\EndFor
+			\State{$cells_{\pi'}(j) \gets i$}
 			\State{$k \gets k + 1$}
-	      \EndFor
-		  \State{$\pi'(v) \gets \pi(v) + k - 1$ za sve $v$ takve da $\pi(v) > c$ }
+		  \EndFor
 		  \State{$s \gets $ indeks prvog skupa među $C_{i, 1 \leq i \leq k}$ sa najvećim brojem elemenata}
 		  \State\Return{$\pi', C_1, \dots, C_k, s$}
 		  \EndProcedure
@@ -1517,9 +1524,8 @@ green!80!black,mark=diamond*\\%
   \end{algorithm}
 
   Opisana reprezentacija bojenja je korisna zato što omogućava da se ovaj
-  algoritam implementira tako da mu složenost bude $O(|C| \log |C|)$ gde je $C
-  = \pi^{-1}(c)$, pri čemu dominira složenost sortiranja čvorova na osnovu
-  vrednosti $t_v$.
+  algoritam implementira tako da mu složenost bude $O(|C| \log |C|)$, pri čemu
+  dominira složenost sortiranja čvorova na osnovu vrednosti $t(v)$.
 
   \subsection{Graf}
 
@@ -1876,7 +1882,7 @@ green!80!black,mark=diamond*\\%
 		  \While{$\alpha \neq \emptyset$}
 			\State {$W \gets $ pop($\alpha$)}
 			\For{$C \in \pi$}
-			  \State {$\pi, C_1, \dots, C_k, s \gets $ Refine\_cell($G, \pi, \pi(C), t_v = \widetilde{\psi}(G, v, W)$)}
+			  \State {$\pi, C_1, \dots, C_k, s \gets $ Refine\_cell($G, \pi, C, t(v) = \widetilde{\psi}(G, v, W)$)}
 			  \If{$C \in \alpha$}
 				\State {remove($\alpha$, $C$)}
 				\State {push($\alpha$, $C_i$) za sve $1 \leq i \leq k$}
@@ -1995,7 +2001,7 @@ green!80!black,mark=diamond*\\%
 	  Pretpostavimo da su operacije \texttt{push}, \texttt{pop} i
 	  \texttt{remove} složenosti $O(1)$. Za fiksno $W$ i $C$ broj koraka jedne
 	  iteracije unutrašnje petlje je $|C||W| + |C| \log |C| + k \leq |C||W| +
-	  |C| (1 + \log |C|)$ za određivanje vrednosti $t_v$ za svaki čvor ćelije
+	  |C| (1 + \log |C|)$ za određivanje vrednosti $t(v)$ za svaki čvor ćelije
 	  $C$, izvršavanje profinjavanja ćelije $C$ i dodavanje svih potrebnih
 	  $C_i$ u $\alpha$. Dakle, za fiksno $W$ je broj koraka unutrašnje petlje
 	  manji ili jednak $\sum_{C \in \pi}(|C||W| + |C| (1 + \log |C|)) \leq
@@ -2313,7 +2319,7 @@ green!80!black,mark=diamond*\\%
 		   \begin{scope}
 			   \node (0) at (0, 0)[circle, fill=red!30] {3};
 			   \node (1) at (3, 0)[circle, fill=blue!30] {3};
-			   \node (2) at (1.5, 2.56)[circle, fill=green!30] {6};
+			   \node (2) at (1.5, 2.56)[circle, fill=green!50!gray!60] {6};
 			   \node (3) at (0, -1) {};
 		   \end{scope}
 		   \begin{scope}[label distance=-2mm]
@@ -2708,7 +2714,7 @@ green!80!black,mark=diamond*\\%
 		  \EndIf
 		  \State \Return{$|\nu|$}
 		  \EndProcedure
-		  \State {$S, \zeta \gets \emptyset, ()$}
+		  \State {$S \gets \emptyset, \zeta \gets ()$}
 		  \State {Search($G, \pi_0, \pi_0, ()$)}
 	  \end{algorithmic}
   \end{algorithm}
@@ -2766,9 +2772,7 @@ green!80!black,mark=diamond*\\%
 		  \EndIf
 		  \State \Return{$|\nu|$}
 		  \EndProcedure
-		  \State {$S, \zeta, \rho \gets \emptyset, (), ()$}
-		  %\State {$\zeta \gets ()$}
-		  %\State {$\rho \gets ()$}
+		  \State {$S \gets \emptyset, \zeta \gets (), \rho \gets ()$}
 		  \State {Search($G, \pi_0, \pi_0, ()$)}
 	  \end{algorithmic}
   \end{algorithm}
@@ -2901,14 +2905,14 @@ green!80!black,mark=diamond*\\%
 			   \path [-] (11) edge (7);
 		   \end{scope}
 		   \draw [thick, color=red] (-1.5, 0.5) circle (1.2);
-		   \draw [thick, color=green] (1.5, 0.5) circle (1.2);
+		   \draw [thick, color=green!50!gray] (1.5, 0.5) circle (1.2);
 		   \draw [thick, color=blue] (0, -2) circle (1.4);
 	   \end{tikzpicture}
 	   \caption{Levo je prikazana particija usled standardne procedure
 	   profinjavanja. Količnički graf sadrži jedan čvor $c$ i važi $\psi_Q(c, c)
 	   = 2$. Desno je prikazana particija usled profinjavanja sa invarijantom
 	   najkraćeg puta. Količnički graf sadrži tri čvora {\color{red}$a$},
-	   {\color{green}$b$} i {\color{blue}$c$} i važi $\psi_Q( a, a) = \{0, 1,
+	   {\color{green!50!gray}$b$} i {\color{blue}$c$} i važi $\psi_Q( a, a) = \{0, 1,
 	   1\}$, $\psi_Q(b, b) = \{0, 1, 1, 2\}$ i $\psi_Q(c, c) = \{0, 1, 1, 2, 2\}$,
 	   dok su $\psi_Q(x, y)$ za različite $x$ i $y$ multiskupovi sa različitim
 	   brojem beskonačnosti.}
@@ -2981,13 +2985,13 @@ green!80!black,mark=diamond*\\%
 
 	Slučaj klasa regularnih grafova \emph{ranreg} i \emph{rnd-3-reg} je
 	drugačiji. Osnovni algoritam se na njima pokazao izuzetno neefikasnim.
-	Upotrebom invarijante najkraćeg puta se ova neefikasnost zaobilazi time što
+	Upotrebom invarijante najkraćeg puta se ova neefikasnost zaobilazi zbog toga što
 	pojačanje procedure profinjavanja dovodi do generisanja stabla pretrage
 	koje sadrži jedan čvor. Rezultat ovoga je da vreme izvršavanja nije
 	značajno sporije od vremena izvršavanja programa \emph{nauty}.
 
 	\begin{figure}[!h]
-	\center
+		\center
     \begin{tikzpicture}
 		\begin{axis}[
 				title={\emph{rantree}},
@@ -3101,36 +3105,7 @@ green!80!black,mark=diamond*\\%
 
 		\end{axis}
 	\end{tikzpicture}
-	\end{figure}
 
-	\begin{figure}[!h]
-		\center
-		\begin{tikzpicture}
-			\begin{axis}[
-					hide axis,
-					xmin=0,
-					xmax=1,
-					ymin=0,
-					ymax=1,
-					grid style=dashed,
-					cycle list name=mylist,
-					legend columns=5
-				]
-				\addlegendimage{cyan!80!black,mark=square*}
-				\addlegendentry{\small morphi}
-				\addlegendimage{red!90!black,mark=square*}
-				\addlegendentry{\small morphi/inv}
-				\addlegendimage{blue,mark=*}
-				\addlegendentry{\small nauty}
-				\addlegendimage{orange,mark=*}
-				\addlegendentry{\small nauty/inv}
-				\addlegendimage{green!80!black,mark=diamond*}
-				\addlegendentry{\small Traces}
-			\end{axis}
-		\end{tikzpicture}
-	\end{figure}
-	\begin{figure}[!h]
-	\center
     \begin{tikzpicture}
 		\begin{axis}[
 				title={\emph{ranreg}},
@@ -3184,12 +3159,40 @@ green!80!black,mark=diamond*\\%
 
 		\end{axis}
 	\end{tikzpicture}
+
+	\vspace{10pt}
+
+	\begin{tikzpicture}
+		\begin{axis}[
+				hide axis,
+				xmin=0,
+				xmax=1,
+				ymin=0,
+				ymax=1,
+				grid style=dashed,
+				cycle list name=mylist,
+				legend columns=5
+			]
+			\addlegendimage{cyan!80!black,mark=square*}
+			\addlegendentry{\small morphi}
+			\addlegendimage{red!90!black,mark=square*}
+			\addlegendentry{\small morphi/inv}
+			\addlegendimage{blue,mark=*}
+			\addlegendentry{\small nauty}
+			\addlegendimage{orange,mark=*}
+			\addlegendentry{\small nauty/inv}
+			\addlegendimage{green!60!black,mark=diamond*}
+			\addlegendentry{\small Traces}
+		\end{axis}
+	\end{tikzpicture}
 	\end{figure}
+
+	\clearpage
     
   \section{Grafovi donje granice nekih algoritama}
 
 	Jedno uopštenje klasifikacije čvorova procedurom profinjavanja je
-	\emph{k}-dimenzioni WL-metod koji služi za klasifikaciju uređenih $k$-torki
+	\emph{k-dimenzioni WL-metod} koji služi za klasifikaciju uređenih $k$-torki
 	čvorova grafa i koji se može koristiti za ispitivanje izomorfizma dva
 	grafa. Klasa \emph{cfi} iz \emph{bliss} kolekcije je klasa grafova opisanih
 	kao težak primer za \emph{k}-dimenzioni WL-metod po tome da je neophodno
@@ -3230,6 +3233,32 @@ green!80!black,mark=diamond*\\%
 
 		\end{axis}
 	\end{tikzpicture}
+
+	\vspace{10pt}
+
+	\begin{tikzpicture}
+		\begin{axis}[
+				hide axis,
+				xmin=0,
+				xmax=1,
+				ymin=0,
+				ymax=1,
+				grid style=dashed,
+				cycle list name=mylist,
+				legend columns=5
+			]
+			\addlegendimage{cyan!80!black,mark=square*}
+			\addlegendentry{\small morphi}
+			\addlegendimage{red!90!black,mark=square*}
+			\addlegendentry{\small morphi/inv}
+			\addlegendimage{blue,mark=*}
+			\addlegendentry{\small nauty}
+			\addlegendimage{orange,mark=*}
+			\addlegendentry{\small nauty/inv}
+			\addlegendimage{green!60!black,mark=diamond*}
+			\addlegendentry{\small Traces}
+		\end{axis}
+	\end{tikzpicture}
 	\end{figure}
 
 	Klase \emph{mz}, \emph{cmz}, \emph{mz-aug}, \emph{mz-aug2} su zasnovane na
@@ -3237,7 +3266,7 @@ green!80!black,mark=diamond*\\%
 	algoritam \cite{Miyazaki} koji je centralna tema ovog rada.  Osnovni
 	algoritam implementiran u okviru \emph{morphi}-a se na primerima ovih klasa
 	ponaša slično \emph{nauty}-u, izuzev u klasi \emph{mz-aug} gde je složenost
-	algoritma znatno veća. Na ovim primerima do izražaja dolazi ojačanje
+	algoritma znatno veća. Na ovim primerima do izražaja dolazi pojačanje
 	procedure profinjavanja usled upotrebe invarijante najkraćeg puta, posebno
 	u klasama \emph{cmz} i \emph{mz-aug2} gde obe varijante \emph{nauty}-a
 	pokazuju eksponencijalno ponašanje koje \emph{morphi} izbegava. Ovo nije
@@ -3357,7 +3386,35 @@ green!80!black,mark=diamond*\\%
 
 		\end{axis}
 	\end{tikzpicture}
+
+	\vspace{10pt}
+
+	\begin{tikzpicture}
+		\begin{axis}[
+				hide axis,
+				xmin=0,
+				xmax=1,
+				ymin=0,
+				ymax=1,
+				grid style=dashed,
+				cycle list name=mylist,
+				legend columns=5
+			]
+			\addlegendimage{cyan!80!black,mark=square*}
+			\addlegendentry{\small morphi}
+			\addlegendimage{red!90!black,mark=square*}
+			\addlegendentry{\small morphi/inv}
+			\addlegendimage{blue,mark=*}
+			\addlegendentry{\small nauty}
+			\addlegendimage{orange,mark=*}
+			\addlegendentry{\small nauty/inv}
+			\addlegendimage{green!60!black,mark=diamond*}
+			\addlegendentry{\small Traces}
+		\end{axis}
+	\end{tikzpicture}
 	\end{figure}
+
+	\clearpage
 
   \section{Mreže}
 
@@ -3365,7 +3422,7 @@ green!80!black,mark=diamond*\\%
 	dimenzije. Grafovi klase \emph{grid-sw} su isti ti grafovi sa razmenjenim
 	parovima nekih grana. \emph{triang} predstavlja klasu trougaonih grafova.
 	Još mreža nalazi se u klasi \emph{lattice}. Rezultati pokazuju da nema
-	značajne razlike između dve varijante \emph{morphi}-a. \emph{nauty} i
+	značajne razlike između dve varijante \emph{morphi}-a. Programi \emph{nauty} i
 	\emph{Traces} su na primerima ove klase znatno brži. Jedan od mogućih
 	razloga za to je što \emph{morphi} u trenutku testiranja nije podržavao
 	odvojenu strukturu podataka za rad sa proređenim grafovima, koja je za ove
@@ -3429,36 +3486,7 @@ green!80!black,mark=diamond*\\%
 
 		\end{axis}
 	\end{tikzpicture}
-	\end{figure}
 
-	\begin{figure}[!h]
-		\center
-		\begin{tikzpicture}
-			\begin{axis}[
-					hide axis,
-					xmin=0,
-					xmax=1,
-					ymin=0,
-					ymax=1,
-					grid style=dashed,
-					cycle list name=mylist,
-					legend columns=5
-				]
-				\addlegendimage{cyan!80!black,mark=square*}
-				\addlegendentry{\small morphi}
-				\addlegendimage{red!90!black,mark=square*}
-				\addlegendentry{\small morphi/inv}
-				\addlegendimage{blue,mark=*}
-				\addlegendentry{\small nauty}
-				\addlegendimage{orange,mark=*}
-				\addlegendentry{\small nauty/inv}
-				\addlegendimage{green!80!black,mark=diamond*}
-				\addlegendentry{\small Traces}
-			\end{axis}
-		\end{tikzpicture}
-	\end{figure}
-	\begin{figure}[!h]
-	\center
     \begin{tikzpicture}
 		\begin{axis}[
 				title={\emph{lattice}},
@@ -3515,6 +3543,32 @@ green!80!black,mark=diamond*\\%
 
 		\end{axis}
 	\end{tikzpicture}
+
+	\vspace{10pt}
+
+	\begin{tikzpicture}
+		\begin{axis}[
+				hide axis,
+				xmin=0,
+				xmax=1,
+				ymin=0,
+				ymax=1,
+				grid style=dashed,
+				cycle list name=mylist,
+				legend columns=5
+			]
+			\addlegendimage{cyan!80!black,mark=square*}
+			\addlegendentry{\small morphi}
+			\addlegendimage{red!90!black,mark=square*}
+			\addlegendentry{\small morphi/inv}
+			\addlegendimage{blue,mark=*}
+			\addlegendentry{\small nauty}
+			%\addlegendimage{orange,mark=*}
+			%\addlegendentry{\small nauty/inv}
+			\addlegendimage{green!60!black,mark=diamond*}
+			\addlegendentry{\small Traces}
+		\end{axis}
+	\end{tikzpicture}
 	\end{figure}
 
   \section{Grafovi nekih kombinatornih objekata}
@@ -3548,32 +3602,6 @@ green!80!black,mark=diamond*\\%
 
 	\pagebreak
 
-	\begin{figure}[!h]
-		\center
-		\begin{tikzpicture}
-			\begin{axis}[
-					hide axis,
-					xmin=0,
-					xmax=1,
-					ymin=0,
-					ymax=1,
-					grid style=dashed,
-					cycle list name=mylist,
-					legend columns=5
-				]
-				\addlegendimage{cyan!80!black,mark=square*}
-				\addlegendentry{\small morphi}
-				\addlegendimage{red!90!black,mark=square*}
-				\addlegendentry{\small morphi/inv}
-				\addlegendimage{blue,mark=*}
-				\addlegendentry{\small nauty}
-				\addlegendimage{orange,mark=*}
-				\addlegendentry{\small nauty/inv}
-				\addlegendimage{green!80!black,mark=diamond*}
-				\addlegendentry{\small Traces}
-			\end{axis}
-		\end{tikzpicture}
-	\end{figure}
 	\begin{figure}[!h]
 	\center
     \begin{tikzpicture}
@@ -3746,36 +3774,34 @@ green!80!black,mark=diamond*\\%
 
 		\end{axis}
 	\end{tikzpicture}
+
+	\vspace{10pt}
+
+	\begin{tikzpicture}
+		\begin{axis}[
+				hide axis,
+				xmin=0,
+				xmax=1,
+				ymin=0,
+				ymax=1,
+				grid style=dashed,
+				cycle list name=mylist,
+				legend columns=5
+			]
+			\addlegendimage{cyan!80!black,mark=square*}
+			\addlegendentry{\small morphi}
+			\addlegendimage{red!90!black,mark=square*}
+			\addlegendentry{\small morphi/inv}
+			\addlegendimage{blue,mark=*}
+			\addlegendentry{\small nauty}
+			%\addlegendimage{orange,mark=*}
+			%\addlegendentry{\small nauty/inv}
+			\addlegendimage{green!60!black,mark=diamond*}
+			\addlegendentry{\small Traces}
+		\end{axis}
+	\end{tikzpicture}
 	\end{figure}
 
-	\pagebreak
-
-	\begin{figure}[!h]
-		\center
-		\begin{tikzpicture}
-			\begin{axis}[
-					hide axis,
-					xmin=0,
-					xmax=1,
-					ymin=0,
-					ymax=1,
-					grid style=dashed,
-					cycle list name=mylist,
-					legend columns=5
-				]
-				\addlegendimage{cyan!80!black,mark=square*}
-				\addlegendentry{\small morphi}
-				\addlegendimage{red!90!black,mark=square*}
-				\addlegendentry{\small morphi/inv}
-				\addlegendimage{blue,mark=*}
-				\addlegendentry{\small nauty}
-				\addlegendimage{orange,mark=*}
-				\addlegendentry{\small nauty/inv}
-				\addlegendimage{green!80!black,mark=diamond*}
-				\addlegendentry{\small Traces}
-			\end{axis}
-		\end{tikzpicture}
-	\end{figure}
 	\begin{figure}[!h]
 	\center
     \begin{tikzpicture}
@@ -3843,7 +3869,7 @@ green!80!black,mark=diamond*\\%
 
     \begin{tikzpicture}
 		\begin{axis}[
-				width=10cm,
+				width=15cm,
 				title={\emph{had}},
 				ymode=log,
 				xmajorgrids=true,
@@ -3865,7 +3891,7 @@ green!80!black,mark=diamond*\\%
 				%table{data/nauty/nauty-had-As-d.csv};
 			\addplot table{};
 
-			\addplot[color=green,mark=asterisk]
+			\addplot[color=green!60!black]
 				table{data/nauty/nauty-had-At.csv};
 
 			\addplot[color=cyan!80!black,only marks,mark=square*]
@@ -3880,9 +3906,35 @@ green!80!black,mark=diamond*\\%
 			%\addplot[color=orange,only marks,mark=diamond]
 				%table{data/nauty/nauty-had-As-d-bad.csv};
 
-			\addplot[color=green,only marks,mark=diamond*]
+			\addplot[color=green!60!black,only marks,mark=diamond*]
 				table{data/nauty/nauty-had-At-good.csv};
 
+		\end{axis}
+	\end{tikzpicture}
+
+	\vspace{10pt}
+
+	\begin{tikzpicture}
+		\begin{axis}[
+				hide axis,
+				xmin=0,
+				xmax=1,
+				ymin=0,
+				ymax=1,
+				grid style=dashed,
+				cycle list name=mylist,
+				legend columns=5
+			]
+			\addlegendimage{cyan!80!black,mark=square*}
+			\addlegendentry{\small morphi}
+			\addlegendimage{red!90!black,mark=square*}
+			\addlegendentry{\small morphi/inv}
+			\addlegendimage{blue,mark=*}
+			\addlegendentry{\small nauty}
+			%\addlegendimage{orange,mark=*}
+			%\addlegendentry{\small nauty/inv}
+			\addlegendimage{green!60!black,mark=diamond*}
+			\addlegendentry{\small Traces}
 		\end{axis}
 	\end{tikzpicture}
 	\end{figure}
