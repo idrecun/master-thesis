@@ -1,14 +1,70 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
-\bibitem{GuSh:243}
-Yuri Gurevich and Saharon Shelah.
-\newblock {Expected computation time for Hamiltonian path problem}.
-\newblock {\em SIAM Journal on Computing}, 16:486--502, 1987.
+\bibitem{Babai}
+L{\'{a}}szl{\'{o}} Babai.
+\newblock {Graph Isomorphism in Quasipolynomial Time}.
+\newblock {\em CoRR}, abs/1512.03547, 2015.
 
-\bibitem{PetrovicMikic2015}
-Petar Petrovi{\'c} and Mika Miki{\'c}.
-\newblock Nau{\v c}ni rad.
-\newblock In Miloje Milojevi{\'c}, editor, {\em Konferencija iz matematike i
-  ra{\v c}unarstva}, 2015.
+\bibitem{CFI}
+Jin-Yi Cai, Martin Fürer, and Neil Immerman.
+\newblock An optimal lower bound on the number of variables for graph
+  identification.
+\newblock {\em Combinatorica}, 12:389--410, 1992.
+
+\bibitem{Saucy}
+Paolo Codenotti, Hadi Katebi, Karem Sakallah, and Igor Markov.
+\newblock {Conflict Analysis and Branching Heuristics in the Search for Graph
+  Automorphisms}.
+\newblock pages 907--914, 11 2013.
+
+\bibitem{Bliss}
+Tommi Junttila and Petteri Kaski.
+\newblock Engineering an efficient canonical labeling tool for large and sparse
+  graphs.
+\newblock In David Applegate, Gerth~St{\o}lting Brodal, Daniel Panario, and
+  Robert Sedgewick, editors, {\em Proceedings of the Ninth Workshop on
+  Algorithm Engineering and Experiments and the Fourth Workshop on Analytic
+  Algorithms and Combinatorics}, pages 135--149. SIAM, 2007.
+
+\bibitem{Conauto}
+Jos{\'{e}}~Luis L{\'{o}}pez{-}Presa, Antonio~Fern{\'{a}}ndez Anta, and
+  Luis~N{\'{u}}{\~{n}}ez Chiroque.
+\newblock {Conauto-2.0: Fast Isomorphism Testing and Automorphism Group
+  Computation}.
+\newblock {\em CoRR}, abs/1108.1060, 2011.
+
+\bibitem{McKay1}
+Brendan~D. McKay.
+\newblock {Practical Graph Isomorphism}.
+\newblock {\em Congressus Numerantium}, 30:45--87, 1981.
+
+\bibitem{McKay}
+Brendan~D. McKay and Adolfo Piperno.
+\newblock {Practical Graph Isomorphism, II}.
+\newblock {\em Journal of Symbolic Computation}, 60:94--112, 2014.
+
+\bibitem{nug}
+Brendan~D. McKay and Adolfo Piperno.
+\newblock {nauty and Traces User's Guide (Version 2.7)}, 2019.
+
+\bibitem{Miyazaki}
+Takunari Miyazaki.
+\newblock {The complexity of McKay's canonical labeling algorithm}.
+\newblock In {\em Groups and Computation}, 1995.
+
+\bibitem{Benchmark}
+Daniel Neuen and Pascal Schweitzer.
+\newblock {Benchmark Graphs for Practical Graph Isomorphism}.
+\newblock {\em CoRR}, abs/1705.03686, 2017.
+
+\bibitem{Piperno}
+Adolfo Piperno.
+\newblock {Search Space Contraction in Canonical Labeling of Graphs}.
+\newblock {\em CoRR}, abs/0804.4881, 2008.
+
+\bibitem{Seress}
+Ákos Seress.
+\newblock {\em Permutation Group Algorithms}.
+\newblock Cambridge Tracts in Mathematics. Cambridge University Press, 2003.
 
 \end{thebibliography}
