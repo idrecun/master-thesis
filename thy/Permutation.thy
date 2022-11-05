@@ -25,6 +25,12 @@ lemma perm_list_set [simp]:
   shows "set (perm_list p) = {0..<perm_dom p}"
   by transfer simp
 
+
+lemma length_perm_list[simp]:
+  shows "length (perm_list p) = perm_dom p"
+  by transfer simp
+
+
 text \<open>Permutation as a function that acts on {0..<n}\<close>
 
 definition perm_fun' :: "nat list \<Rightarrow> nat \<Rightarrow> nat" where
@@ -109,6 +115,12 @@ lemma inv_perm_fun_perm_fun:
   using assms
   unfolding is_perm_fun_def bij_betw_def
   by (smt (z3) assms atLeastLessThan_iff f_the_inv_into_f image_cong image_iff inj_on_cong inj_on_the_inv_into inv_perm_fun the_inv_into_onto)
+
+lemma perm_list_nth:
+  assumes "i < perm_dom p"
+  shows "perm_list p ! i = perm_fun p i"
+  using assms
+  by transfer (simp add: perm_fun'_def)
 
 text \<open>Each bijective function gives rise to a permutation\<close>
 
@@ -486,5 +498,43 @@ lemma perm_fun_list_perm_inv [simp]:
   shows "perm_fun_list (perm_inv p) (perm_fun_list p xs) = xs"
   using assms
   by (metis perm_comp_perm_inv1 perm_dom_perm_inv perm_fun_list_perm_comp perm_fun_list_perm_id)
+
+
+definition perm_reorder where
+  "perm_reorder p xs = map (\<lambda> i. (xs ! perm_fun (perm_inv p) i)) [0..<length xs]"
+
+lemma length_perm_reorder [simp]:
+  "length (perm_reorder p xs) = length xs"
+  by (simp add: perm_reorder_def)
+
+
+lemma perm_reorder:
+  assumes "length xs = perm_dom p"
+  shows "perm_reorder p xs = map ((!) xs) (perm_list (perm_inv p))"
+proof (subst list_eq_iff_nth_eq, safe)
+  show "length (perm_reorder p xs) = length (map ((!) xs) (perm_list (perm_inv p)))"
+    by (simp add: perm_reorder_def assms)
+next
+  fix i
+  assume *: "i < length (perm_reorder p xs)"
+  have "map ((!) xs) (perm_list (perm_inv p)) ! i = xs ! (perm_list (perm_inv p) ! i)"
+  proof (rule nth_map)
+    show "i < length (perm_list (perm_inv p))"
+      using * assms
+      by simp
+  qed
+    
+  then show "perm_reorder p xs ! i = map ((!) xs) (perm_list (perm_inv p)) ! i"
+    using * assms
+    unfolding perm_reorder_def
+    by (simp add: perm_list_nth)
+qed
+
+lemma perm_reorder_nth [simp]:
+  assumes "i < length xs"
+  shows "perm_reorder p xs ! i = xs ! perm_fun (perm_inv p) i"
+  using assms
+  unfolding perm_reorder_def
+  by simp
 
 end

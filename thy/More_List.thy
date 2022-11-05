@@ -393,7 +393,7 @@ lemma sorted_hd:
   assumes "x \<in> set xs" "sorted xs"
   shows "hd xs \<le> x"
   using assms
-  by (metis empty_iff eq_iff hd_Cons_tl insert_iff list.set(1) list.set(2) sorted.simps(2))
+  by (metis dual_order.eq_iff empty_set equals0D list.exhaust_sel set_ConsD sorted_simps(2))
 
 lemma sorted_last_Max:
   assumes "sorted xs" "set xs \<noteq> {}"
@@ -413,7 +413,7 @@ lemma sorted_map_mono:
   assumes "sorted xs" "\<forall> x \<in> set xs. \<forall> y \<in> set xs. x \<le> y \<longrightarrow> f x \<le> f y" 
   shows "sorted (map f xs)"
   using assms
-  by (metis (no_types, lifting) sorted_map sorted_sorted_wrt sorted_wrt_mono_rel)
+  by (metis (no_types, lifting) sorted_map sorted_wrt_mono_rel)
 
 lemma sorted_map_rev:
   assumes "sorted xs"
