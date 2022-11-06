@@ -17,16 +17,33 @@ text \<open>Cell of a coloring is the set of all vertices colored by the given c
 definition cell :: "nat \<Rightarrow> color_fun \<Rightarrow> nat \<Rightarrow> nat set" where
   "cell n \<pi> c = {v. v < n \<and> \<pi> v = c}"
 
-text \<open>The list of all cells of a given coloring (some might be empty)\<close>
+text \<open>The list of all cells of a given coloring\<close>
 definition cells :: "nat \<Rightarrow> color_fun \<Rightarrow> (nat set) list" where
-  "cells n \<pi> = map (\<lambda> c. cell n \<pi> c) (all_colors n \<pi>)" 
+  "cells n \<pi> = map (\<lambda> c. cell n \<pi> c) (remdups (sort (all_colors n \<pi>)))" 
+
+lemma num_colors:
+  shows "num_colors n \<pi> = length (remdups (sort (all_colors n \<pi>)))"
+  unfolding num_colors_def
+  by (simp add: length_remdups_card_conv) 
+
+lemma length_cells: 
+  shows "length (cells n \<pi>) = num_colors n \<pi>"
+  by (simp add: cells_def num_colors)
 
 lemma cells_disjunct:
-  assumes "a \<in> c1" "a \<in> c2" "c1 \<in> set (cells n \<pi>)" "c2 \<in> set (cells n \<pi>)"
-  shows "c1 = c2"
+  assumes "i < num_colors n \<pi>" "j < num_colors n \<pi>" "i \<noteq> j"
+  shows "cells n \<pi> ! i \<inter> cells n \<pi> ! j = {}"
   using assms
-  unfolding cells_def
-  by (auto simp add: cell_def)
+  using cells_def cell_def nth_eq_iff_index_eq num_colors
+  by fastforce 
+
+lemma cells_non_empty:
+  assumes "c \<in> set (cells n \<pi>)"
+  shows "c \<noteq> {}"
+  using assms
+  unfolding cells_def all_colors_def cell_def
+  by auto
+  
 
 text \<open>Nodes 0 to n-1 are colored using all colors from 0 to k-1 for some k\<close>
 definition all_k_colors :: "nat \<Rightarrow> color_fun \<Rightarrow> bool" where
@@ -38,6 +55,11 @@ lemma all_k_colors_ex_color:
   using assms
   unfolding all_k_colors_def all_colors_def
   by (metis (mono_tags, lifting) atLeast0LessThan image_iff lessThan_iff set_map set_upt)
+
+lemma all_k_colors_cell_nonempty:
+  assumes "all_k_colors n \<pi>" "c < num_colors n \<pi>"
+  shows "cell n \<pi> c \<noteq> {}"
+  by (simp add: all_k_colors_ex_color assms(1) assms(2) cell_def)
 
 text \<open>Check if the color \<pi>' refines the coloring \<pi> - each cells of \<pi>' is a subset of a cell of \<pi>\<close>
 definition finer :: "nat \<Rightarrow> color_fun \<Rightarrow> color_fun \<Rightarrow> bool" where
@@ -114,7 +136,7 @@ lemma finer_singleton:
 proof-
   obtain c where c: "c \<in> set (all_colors n \<pi>1)" "\<pi>1 v = c" "cell n \<pi>1 c = {v}"
     using assms
-    by (smt (z3) cell_def cells_def in_set_conv_nth length_map mem_Collect_eq nth_map singletonI)
+    by (smt (verit, best) add_cancel_right_left all_colors_def cell_def cells_def diff_zero imageE insertCI length_map length_upt list.set_map mem_Collect_eq nth_map nth_mem nth_upt)
   let ?c = "\<pi>2 v"
   have "cell n \<pi>2 ?c = {v}"
   proof-
@@ -134,8 +156,10 @@ proof-
       using c(3) cell_def by fastforce
   qed
   then show ?thesis
-    by (metis all_colors_def assms(2) cells_def image_eqI lessThan_atLeast0 lessThan_iff set_map set_upt)
-qed    
+    using `v < n` 
+    unfolding cells_def all_colors_def
+    by auto
+qed 
 
 
 text \<open>A coloring is discrete if each vertex is colored by a different color {0..<n}\<close>
@@ -517,7 +541,12 @@ lemma color_list_color_fun [simp]:
 
 lemma cells_coloring_color_list [simp]:
   shows "cells n (color_fun_n n (color_list n \<pi>)) = cells n \<pi>"
-  by (auto simp add: cells_def all_colors_def cell_def)
+proof-
+  have "remdups (sort (map (color_fun_n n (color_list n \<pi>)) [0..<n])) = remdups (sort (map \<pi> [0..<n]))"
+     by (metis color_list_color_fun_n color_list_def diff_zero length_map length_upt)
+  then show ?thesis
+     by (auto simp add: cells_def all_colors_def cell_def)
+qed  
 
 lemma color_list_perm_coloring_perm_id [simp]:
   assumes "length colors = n"
@@ -525,5 +554,178 @@ lemma color_list_perm_coloring_perm_id [simp]:
   using assms
   by (metis color_list_color_fun_n color_list_eq perm_coloring_perm_id)
 
+subsection \<open>Cells to coloring\<close>
 
+definition tabulate :: "('a \<times> 'b) set \<Rightarrow> 'a \<Rightarrow> 'b" where
+  "tabulate A x = (THE y. (x, y) \<in> A)"
+
+lemma tabulate:
+  assumes "\<exists>! y. (x, y) \<in> A" "(x, y) \<in> A"
+  shows "tabulate A x = y"
+  using assms
+  by (metis tabulate_def the_equality)
+
+lemma tabulate_codomain:
+  assumes "\<exists>! y. (x, y) \<in> A"
+  shows "(x, tabulate A x) \<in> A"
+  using assms
+  by (metis tabulate)
+
+lemma tabulate_value:
+  assumes "y = tabulate A x" "\<exists>! y. (x, y) \<in> A"
+  shows "(x, y) \<in> A"
+  using assms
+  by (metis tabulate)
+
+abbreviation cells_to_coloring_pairs :: "nat set list \<Rightarrow> (nat \<times> nat) set" where
+  "cells_to_coloring_pairs cs \<equiv> (\<Union> (set (map2 (\<lambda>xs c. (\<lambda>x. (x, c)) ` xs) cs [0..<length cs])))"
+
+definition cells_to_coloring :: "nat set list \<Rightarrow> color_fun" where
+  "cells_to_coloring cs = tabulate (cells_to_coloring_pairs cs)"
+
+
+definition cells_ok where
+  "cells_ok n cs \<longleftrightarrow> 
+    (\<forall> i j. i < length cs \<and> j < length cs \<and> i \<noteq> j  \<longrightarrow> cs ! i \<inter> cs ! j = {}) \<and>
+    (\<forall> c \<in> set cs. c \<noteq> {}) \<and> 
+    (\<Union> (set cs) = {0..<n})"
+
+lemma cells_ok:
+  shows "cells_ok n (cells n \<pi>)"
+  unfolding cells_ok_def
+proof safe
+  fix i j x
+  assume "i < length (cells n \<pi>)" "j < length (cells n \<pi>)" "i \<noteq> j"
+         "x \<in> (cells n \<pi>) ! i" "x \<in> (cells n \<pi>) ! j"
+  then show "x \<in> {}"
+    using cells_disjunct
+    by (simp add: cell_def cells_def nth_eq_iff_index_eq)
+next
+  assume "{} \<in> set (cells n \<pi>)"
+  then show False
+    using cells_non_empty by blast
+next
+  fix v Cell
+  assume "v \<in> Cell" "Cell \<in> set (cells n \<pi>)"
+  then show "v \<in> {0..<n}"
+     unfolding cells_def all_colors_def cell_def
+     by auto
+next
+  fix v
+  assume "v \<in> {0..<n}"
+  then have "v \<in> cell n \<pi> (\<pi> v)"
+    unfolding cell_def
+    by simp
+  then show "v \<in> \<Union> (set (cells n \<pi>))"
+    using `v \<in> {0..<n}`
+    unfolding cells_def all_colors_def
+    by auto
+qed
+
+lemma cells_to_coloring: 
+  assumes "cells_ok n cs" "x \<in> cs ! i" "i < length cs"
+  shows "cells_to_coloring cs x = i"
+  unfolding cells_to_coloring_def
+proof (rule tabulate)
+  let ?A = "cells_to_coloring_pairs cs"
+
+  have "(cs ! i, i) \<in> set (zip cs [0..<length cs])"
+    by (metis add_cancel_right_left assms(3) in_set_zip length_map map_nth nth_upt prod.sel(1) prod.sel(2))     
+  then show "(x, i) \<in> ?A"
+    using `x \<in> cs ! i`
+    by auto
+
+  show "\<exists>!y. (x, y) \<in> ?A"
+  proof
+    show "(x, i) \<in> ?A"
+      by fact
+  next
+    fix j
+    assume "(x, j) \<in> ?A"
+    then have "x \<in> cs ! j" "j < length cs"
+      by (auto simp add: set_zip)
+    then show "j = i"
+      using assms
+      unfolding cells_ok_def
+      by auto
+  qed
+qed
+
+lemma all_colors_cells_to_coloring:
+  assumes "cells_ok n cs"
+  shows "set (all_colors n (cells_to_coloring cs)) = {0..<length cs}"
+proof safe
+  let ?A = "cells_to_coloring_pairs cs"
+  fix col
+  assume "col \<in> set (all_colors n (cells_to_coloring cs))"
+  then obtain x where "x < n" and *: "col = tabulate ?A x"
+    unfolding all_colors_def cells_to_coloring_def
+    by auto
+  have "(x, col) \<in> ?A"
+  proof (rule tabulate_value)
+    show "col = tabulate ?A x" by fact
+    obtain i where "i < length cs" "x \<in> cs ! i"
+      by (metis Union_iff \<open>x < n\<close> assms cells_ok_def atLeastLessThan_iff in_set_conv_nth zero_le)
+    show "\<exists>!y. (x, y) \<in> ?A"
+    proof
+      have "(cs ! i, i) \<in> set (zip cs [0..<length cs])"
+        by (metis \<open>i < length cs\<close> add_cancel_right_left in_set_zip length_map map_nth nth_upt prod.sel(1) prod.sel(2))
+      then show "(x, i) \<in> ?A"
+        using \<open>x \<in> cs ! i\<close>
+        by auto
+    next
+      fix j
+      assume "(x, j) \<in> ?A"
+      then have "j < length cs" "x \<in> cs ! j"
+        by (auto simp add: set_zip)
+      then show "j = i"
+        using `x \<in> cs ! i` `i < length cs` assms
+        by (auto simp add: cells_ok_def)
+    qed
+  qed
+  then show "col \<in> {0..<length cs}"
+    by (auto simp add: set_zip)
+next
+  let ?A = "cells_to_coloring_pairs cs"
+  fix col
+  assume "col \<in> {0..<length cs}"
+  then obtain x where "x \<in> cs ! col" 
+    using assms unfolding cells_ok_def by fastforce
+  moreover have "(cs ! col, col) \<in> set (zip cs [0..<length cs])"
+  by (metis \<open>col \<in> {0..<length cs}\<close> add_cancel_right_left atLeastLessThan_iff in_set_zip length_map map_nth nth_upt prod.sel(1) prod.sel(2))
+  ultimately have "(x, col) \<in> ?A" "x < n"
+    using assms `col \<in> {0..<length cs}`
+    unfolding cells_ok_def
+    by auto
+  have "tabulate ?A x = col"
+  proof (rule tabulate)
+    show "(x, col) \<in> ?A" by fact
+    show "\<exists>!y. (x, y) \<in> ?A"
+    proof
+      show "(x, col) \<in> ?A" by fact
+      fix y
+      assume "(x, y) \<in> cells_to_coloring_pairs cs"
+      then have "y < length cs" "x \<in> cs ! y"
+        by (auto simp add: set_zip)
+      then show "y = col"
+        using assms \<open>col \<in> {0..<length cs}\<close> `x \<in> cs ! col`
+        unfolding cells_ok_def
+        by auto
+    qed
+  qed
+  then show "col \<in> set (all_colors n (cells_to_coloring cs))"
+    using `x < n`
+    unfolding all_colors_def cells_to_coloring_def
+    by auto
+qed
+
+lemma all_k_colors_cells_to_coloring:
+  assumes "cells_ok n cs"
+  shows "all_k_colors n (cells_to_coloring cs)"
+  unfolding all_k_colors_def
+  unfolding num_colors_def
+  using all_colors_cells_to_coloring[OF assms]
+  by simp
+
+    
 end

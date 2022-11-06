@@ -20,6 +20,12 @@ definition n_vertex :: "colored_graph \<Rightarrow> bool"  where
                     in (\<forall> (v1, v2) \<in> edges G. v1 < n \<and> v2 < n) \<and>
                        length (colors G) = n)"
 
+typedef colored_graph_t = "{G :: colored_graph. n_vertex G}"
+  by (rule_tac x="\<lparr>num_vertices = 0, edges = {}, colors = []\<rparr>" in exI, simp add: n_vertex_def)
+
+
+
+
 text \<open>Check if v is a valid vertex of the graph G\<close>
 abbreviation vertex :: "colored_graph \<Rightarrow> vertex \<Rightarrow> bool" where
   "vertex G v \<equiv> v < num_vertices G"
@@ -447,8 +453,9 @@ proof-
       by auto
     have "{v'} = fset (\<T> G V)"
       using cells_disjunct
-      using \<open>fset (\<T> G V) \<in> set (cells (num_vertices G) (\<R> G V))\<close> \<open>{v'} \<in> set (cells (num_vertices G) (\<R> G V))\<close> assms(3)
-      by blast
+      using \<open>fset (\<T> G V) \<in> set (cells (num_vertices G) (\<R> G V))\<close> 
+            \<open>{v'} \<in> set (cells (num_vertices G) (\<R> G V))\<close> assms(3)
+      by (smt (verit, ccfv_SIG) cells_ok cells_ok_def disjoint_insert(2) in_set_conv_nth)
     then show False
       using `fcard (\<T> G V) > 1`
       by (metis One_nat_def card.empty card.insert empty_iff fcard.rep_eq finite.intros(1) neq_iff)
@@ -1811,7 +1818,7 @@ proof-
     by auto
   then show ?thesis
     unfolding cells_def
-    by (metis assms image_eqI image_set individualize_retains_color)
+    using assms individualize_retains_color by auto
 qed
 
 lemma individualize_singleton_preserve:
