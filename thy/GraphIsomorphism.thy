@@ -2260,7 +2260,9 @@ proof safe
     fix x'
     assume "x' \<in> perm_fun_set p ?cy"
     have "f x' = f x"
-      using \<open>perm_fun (perm_inv p) x < perm_dom p\<close> \<open>x < perm_dom p\<close> \<open>x' \<in> perm_fun_set p {y' \<in> A. f y' = f (perm_fun (perm_inv p) x)}\<close> assms(1) assms(2) perm_fun_set_def by fastforce
+      using \<open>perm_fun (perm_inv p) x < perm_dom p\<close> \<open>x < perm_dom p\<close>
+            \<open>x' \<in> perm_fun_set p ?cy\<close> assms(1) assms(2) perm_fun_set_def 
+            by fastforce
     moreover have "x' \<in> perm_fun_set p A"
       using \<open>x' \<in> perm_fun_set p ?cy\<close> perm_fun_set_def by auto
     ultimately show "x' \<in> c"
@@ -2446,6 +2448,5 @@ next
       by simp
   qed
 qed
-
 
 end
