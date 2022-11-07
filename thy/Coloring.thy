@@ -219,6 +219,8 @@ qed
 lemma cell_subset_finer:
   assumes "n > 0" "\<forall> C' \<in> set (cells n \<pi>'). \<exists> C \<in> set (cells n \<pi>). C' \<subseteq> C"
           "all_k_colors n \<pi>" "all_k_colors n \<pi>'"
+          "\<forall> p1 p2 c1 c2. cell n \<pi>' c1 \<subseteq> cell n \<pi> p1 \<and>
+                          cell n \<pi>' c2 \<subseteq> cell n \<pi> p2 \<and> c1 < c2 \<longrightarrow> p1 \<le> p2"
   shows "finer n \<pi>' \<pi>"
 sorry
 
@@ -327,6 +329,35 @@ lemma perm_coloring_perm_comp:
   using assms
   by (simp add: perm_coloring_def)
 
+lemma cell_perm_coloring [simp]: 
+  assumes "perm_dom p = n"
+  shows "cell n (perm_coloring p \<pi>) c = perm_fun_set p (cell n \<pi> c)" (is "?lhs = ?rhs")
+proof safe
+  fix x
+  assume "x \<in> ?lhs"
+  then show "x \<in> ?rhs"
+    using assms
+    by (smt (verit, best) cell_def comp_apply image_iff mem_Collect_eq perm_coloring_def perm_comp_perm_inv2 perm_dom_perm_inv perm_fun_perm_inv2 perm_fun_perm_inv_range perm_fun_set_def perm_inv_solve)
+next
+  fix x
+  assume "x \<in> ?rhs"
+  then show "x \<in> ?lhs"
+    using assms
+    by (smt (verit, del_insts) cell_def comp_apply image_iff mem_Collect_eq perm_coloring_def perm_dom_perm_inv perm_fun_perm_inv1 perm_fun_perm_inv_range perm_fun_set_def)
+qed
+
+lemma cells_perm_coloring [simp]:
+  assumes "perm_dom p = n"
+  shows "cells n (perm_coloring p \<pi>) = map (perm_fun_set p) (cells n \<pi>)"
+proof-
+  have "remdups (sort (all_colors n (perm_coloring p \<pi>))) = 
+        remdups (sort (all_colors n \<pi>))"
+    by (smt (verit, ccfv_SIG) all_colors_def assms distinct_remdups list.map_comp list.set_map perm_coloring_def perm_dom_perm_inv perm_fun_list_def perm_inv_perm_list perm_list_set set_remdups set_sort set_upt sorted_distinct_set_unique sorted_remdups sorted_sort)
+  then show ?thesis
+    using assms
+    unfolding cells_def
+    using cell_perm_coloring by force
+qed
 
 text\<open>------------------------------------------------------\<close>
 subsection \<open>Cells to coloring\<close>
@@ -786,6 +817,11 @@ representation in a form of a list\<close>
 
 definition color_list :: "nat \<Rightarrow> color_fun \<Rightarrow> color_list" where
   "color_list n \<pi> = map \<pi> [0..<n]"
+
+lemma length_color_list [simp]: 
+  shows "length (color_list n \<pi>) = n"
+unfolding color_list_def 
+by simp
 
 lemma color_list [simp]: 
   assumes "v < n"

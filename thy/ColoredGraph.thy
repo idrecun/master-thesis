@@ -310,4 +310,16 @@ proof-
     by blast
 qed
 
+lemma cells_perm_graph:
+  assumes "perm_dom p = num_vertices G" "n_vertex G"
+  shows "cells (num_vertices (perm_graph p G)) (coloring (perm_graph p G)) =
+         map (perm_fun_set p) (cells (num_vertices G) (coloring G))"
+proof-
+  have "cells (num_vertices (perm_graph p G)) (coloring (perm_graph p G)) =
+        cells (num_vertices G) (perm_coloring p (coloring G))"
+    by (metis assms(1) cells_coloring_color_list perm_graph_coloring perm_graph_num_vertices)
+  then show ?thesis
+    by (simp add: assms(1))
+qed
+
 end

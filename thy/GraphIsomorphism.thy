@@ -1584,7 +1584,7 @@ lemma individualize_singleton_preserve:
 locale refinement_function' =
   fixes \<F> :: "colored_graph  \<Rightarrow> color_fun"
   assumes \<F>_finer: 
-    "\<And> G. finer (num_vertices G) (\<F> G) (coloring G)"
+    "\<And> G. n_vertex G \<Longrightarrow> finer (num_vertices G) (\<F> G) (coloring G)"
   assumes \<F>_perm:
     "\<And> p G v pc c. 
        \<lbrakk>perm_dom p = num_vertices G;  
@@ -1606,9 +1606,9 @@ lemma \<R>'_Snoc [simp]:
 
 
 lemma \<F>_singleton:
-  assumes "{v} \<in> set (cells (num_vertices G) (coloring G))" "vertex G v"
+  assumes "n_vertex G" "{v} \<in> set (cells (num_vertices G) (coloring G))" "vertex G v"
   shows "{v} \<in> set (cells (num_vertices G) (\<F> G))"
-  by (meson \<F>_finer assms(1) assms(2) finer_singleton)
+  by (meson \<F>_finer assms finer_singleton)
 
 end
 
@@ -1686,7 +1686,7 @@ next
     proof (cases "v = v'")
       case True      
       then show ?thesis
-        using \<F>_singleton[of v "recolor G (individualize (\<R>' G V) v')"] \<open>vertex G v'\<close>
+        using \<F>_singleton[of "recolor G (individualize (\<R>' G V) v')" v] \<open>vertex G v'\<close>
         using individualize_singleton
         using \<open>vertex G v'\<close> \<open>n_vertex G\<close>
         using cells_coloring_recolor by auto
@@ -1695,7 +1695,7 @@ next
       then show ?thesis
         using snoc \<open>vertex G v\<close>
         using individualize_singleton_preserve
-        using \<F>_singleton[of v "recolor G (individualize (\<R>' G V) v')"] \<open>vertex G v'\<close>
+        using \<F>_singleton[of "recolor G (individualize (\<R>' G V) v')" v] \<open>vertex G v'\<close>
         using cells_coloring_recolor by auto
     qed
   qed
@@ -1959,16 +1959,17 @@ qed
 locale Split =
   fixes split :: "colored_graph \<Rightarrow> color \<Rightarrow> color_list"
   assumes split_length:
-    "\<And> G c. c < num_colors G \<Longrightarrow>
+    "\<And> G c. \<lbrakk> n_vertex G; c < num_colors G \<rbrakk> \<Longrightarrow>
         length (split G c) = length (colors G)"
   assumes split_finer: 
-    "\<And> G c. c < num_colors G \<Longrightarrow>
+    "\<And> G c. \<lbrakk> n_vertex G; c < num_colors G \<rbrakk> \<Longrightarrow>
         finer (num_vertices G) (color_fun (split G c)) (coloring G)"
   assumes split_all_k_colors: 
-   "\<And> G c. \<lbrakk>c < num_colors G; all_k_colors (num_vertices G) (coloring G)\<rbrakk> \<Longrightarrow> 
+   "\<And> G c. \<lbrakk> n_vertex G; c < num_colors G; 
+             all_k_colors (num_vertices G) (coloring G) \<rbrakk> \<Longrightarrow> 
         all_k_colors (num_vertices G) (color_fun (split G c))"
   assumes split_perm:
-   "\<And> G c. c < num_colors G \<Longrightarrow> 
+   "\<And> G c. \<lbrakk> n_vertex G; c < num_colors G \<rbrakk> \<Longrightarrow> 
         split (perm_graph p G) c = perm_reorder p (split G c)"
 begin
 
@@ -1976,10 +1977,18 @@ definition split_graph :: "colored_graph \<Rightarrow> color \<Rightarrow> color
   "split_graph G c = (let \<pi> = split G c in G \<lparr> colors := \<pi> \<rparr>)"
 
 lemma split_graph_finer [simp]:
-  assumes "c < num_colors G"
+  assumes "n_vertex G" "c < num_colors G"
   shows "finer (num_vertices G) (coloring (split_graph G c)) (coloring G)"
+  using assms split_finer
   unfolding split_graph_def Let_def
-  by (simp add: assms split_finer)
+  by simp
+
+lemma split_graph_n_vertex [simp]:
+  assumes "n_vertex G" "c < num_colors G"
+  shows "n_vertex (split_graph G c)"
+  using assms split_length[of G c]
+  unfolding n_vertex_def Let_def split_graph_def
+  by auto
 
 function refine :: "colored_graph \<Rightarrow> colored_graph" where
  "refine G = (
@@ -2008,7 +2017,8 @@ end
 sublocale Split \<subseteq> refinement_function' "(\<lambda> G. coloring (refine G))"
 proof
   fix G
-  show "finer (num_vertices G) (coloring (refine G)) (coloring G)"
+  assume "n_vertex G"
+  then show "finer (num_vertices G) (coloring (refine G)) (coloring G)"
   proof (induction G rule: refine.induct)
     case (1 G)
     show ?case
@@ -2030,12 +2040,15 @@ proof
       then have "?i < num_colors G" "split G ?i \<prec> colors G"
         by auto
 
-      have "finer (num_vertices G) (coloring (refine (split_graph G ?i))) (coloring (split_graph G ?i))"
+      have "n_vertex (split_graph G ?i)"
+        using "1.prems" split_graph_n_vertex Split_axioms \<open>?i < num_colors G\<close>
+        by blast
+      then have "finer (num_vertices G) (coloring (refine (split_graph G ?i))) (coloring (split_graph G ?i))"
         using False
-        using 1[of "colors G" "num_vertices G" ?Ws ?i "split_graph G ?i"]
+        using 1(1)[of "colors G" "num_vertices G" ?Ws ?i "split_graph G ?i"] 
         by (auto simp add: Let_def)
       then show ?thesis
-        using split_graph_finer[OF \<open>?i < num_colors G\<close>]
+        using split_graph_finer[OF `n_vertex G` \<open>?i < num_colors G\<close>]
         using False
         using refine.simps[of G] 
         using finer_trans
@@ -2103,21 +2116,21 @@ next
           by auto
       qed          
       then show "split (perm_graph p G') i \<prec> colors (perm_graph p G')"
-        using \<open>i \<in> {0..<?k}\<close> split_perm[of i G' p] "1.prems"
+        using \<open>i \<in> {0..<?k}\<close> split_perm[of G' i p] "1.prems"
         using perm_graph_colors[of p G']
         by auto
     next
       fix i
       assume "i \<in> {0..<?k}" "split (perm_graph p G') i \<prec> colors (perm_graph p G')"
       then have *: "perm_reorder p (split G' i) \<prec> perm_reorder p (colors G')"
-        using \<open>i \<in> {0..<?k}\<close> split_perm[of i G' p] "1.prems"
+        using \<open>i \<in> {0..<?k}\<close> split_perm[of G' i p] "1.prems"
         using perm_graph_colors[of p G']
         by auto
       have "length (colors G') = num_vertices G'"
         using "1.prems"(2)
         by (meson n_vertex_def)
       then show "split G' i \<prec> colors G'"
-        using finer_list_reorder[OF *, of "perm_inv p"] "1.prems"(1) split_length[of i G'] \<open>i \<in> {0..<?k}\<close>
+        using `n_vertex G'` finer_list_reorder[OF *, of "perm_inv p"] "1.prems"(1) split_length[of G' i] \<open>i \<in> {0..<?k}\<close>
         by simp
     qed
     
@@ -2154,7 +2167,7 @@ next
       have "split (perm_graph p G') ?i = color_list (num_vertices G') (perm_coloring p (color_fun (split G' ?i)))" (is "?lhs = ?rhs")
       proof (subst list_eq_iff_nth_eq, safe)
         show "length ?lhs = length ?rhs"
-          using \<open>?i < ?k\<close> split_length[of ?i "perm_graph p G'"]
+          using \<open>?i < ?k\<close> split_length[of "perm_graph p G'"]
           by (metis (no_types, lifting) "1.prems"(1) "1.prems"(2) \<open>ColoredGraph.num_colors (perm_graph p G') = ColoredGraph.num_colors G'\<close> color_list_def length_map map_nth n_vertex_def perm_graph_n_vertex perm_graph_num_vertices) 
       next
         fix i
@@ -2163,9 +2176,11 @@ next
           by (metis (no_types, lifting) "1.prems"(1) "1.prems"(2) \<open>ColoredGraph.num_colors (perm_graph p G') = ColoredGraph.num_colors G'\<close> \<open>?i < ColoredGraph.num_colors G'\<close> \<open>i < length (split (perm_graph p G') ?i)\<close> \<open>num_vertices (perm_graph p G') = num_vertices G'\<close> color_list n_vertex_def perm_graph_n_vertex split_length)   
         moreover
         have "perm_reorder p (split G' ?i) ! i = (split G' ?i) ! perm_fun (perm_inv p) i"
-          using \<open>?i < ?k\<close> split_length[of ?i "perm_graph p G'"]
+          using \<open>?i < ?k\<close> split_length[of "perm_graph p G'"]
           using `i < length ?lhs` perm_reorder_nth[of i "split G' ?i" p]
+          using perm_graph_n_vertex[of p G'] "1.prems"(2)
           by (simp add: split_perm)
+
         ultimately
         show "?lhs ! i = ?rhs ! i"
           by (smt (verit, ccfv_threshold) "1.prems"(1) "1.prems"(2) \<open>?i < num_colors G'\<close> \<open>i < length (split (perm_graph p G') ?i)\<close> color_list color_list_color_fun length_perm_reorder n_vertex_def perm_coloring_perm_fun perm_fun_perm_inv1 perm_fun_perm_inv_range split_length split_perm)
@@ -2187,8 +2202,8 @@ next
       next
         show "n_vertex (split_graph G' ?i)"
           using `n_vertex G'`
+          using \<open>?i < ?k\<close> split_length[of G']
           unfolding n_vertex_def Let_def split_graph_def
-          using \<open>?i < ?k\<close> split_length 
           by auto
       next
         show "vertex (split_graph G' ?i) v"
@@ -2198,7 +2213,7 @@ next
         show "all_k_colors (num_vertices (split_graph G' ?i)) (coloring (split_graph G' ?i))"
           using `all_k_colors (num_vertices G') (coloring G')` split_all_k_colors `?i < ?k`
           unfolding split_graph_def Let_def
-          by auto
+          by (simp add: "1.prems"(2)) 
       qed simp
     qed
   qed
@@ -2213,18 +2228,224 @@ definition node_deg_set :: "colored_graph \<Rightarrow> vertex \<Rightarrow> ver
 definition split_by_prop :: "'a set => ('a => 'b) => 'a set set" where
   "split_by_prop A f = { {y \<in> A. f y = x} | x. x \<in> f ` A}" 
 
-locale Order = 
-   fixes order :: "vertex set set \<Rightarrow> vertex set list"
+lemma split_by_prop_perm:
+  assumes "\<forall> v < perm_dom p. f (perm_fun p v) = g v" "\<forall> x \<in> A. x < perm_dom p"
+  shows "split_by_prop (perm_fun_set p A) f = 
+        (perm_fun_set p) ` (split_by_prop A g)" (is "?lhs = ?rhs")
+proof safe
+  have *: "\<forall> x \<in> (perm_fun_set p A). x < perm_dom p"
+    using assms(2)
+    by (metis imageE perm_comp_perm_inv2 perm_dom_perm_inv perm_fun_perm_inv_range perm_fun_set_def perm_inv_solve)
+  fix c
+  assume "c \<in> ?lhs"
+  then obtain x where "x \<in> perm_fun_set p A" "x < perm_dom p" "c = {x' \<in> perm_fun_set p A. f x' = f x}"
+    using *
+    unfolding split_by_prop_def
+    by auto
+  let ?y = "perm_fun (perm_inv p) x"
+  have "?y < perm_dom p"
+    using `x < perm_dom p`
+    by (simp add: perm_fun_perm_inv_range)
+  have "?y \<in> A"
+    using `x \<in> perm_fun_set p A`
+    using assms(2) perm_fun_set_def
+    by fastforce
+  let ?cy = "{y' \<in> A. g y' = g ?y}"
+  have "?cy \<in> split_by_prop A g"
+    using `?y \<in> A`
+    unfolding split_by_prop_def
+    by auto
+  moreover have "perm_fun_set p ?cy = c"
+  proof safe
+    fix x'
+    assume "x' \<in> perm_fun_set p ?cy"
+    have "f x' = f x"
+      using \<open>perm_fun (perm_inv p) x < perm_dom p\<close> \<open>x < perm_dom p\<close> \<open>x' \<in> perm_fun_set p {y' \<in> A. f y' = f (perm_fun (perm_inv p) x)}\<close> assms(1) assms(2) perm_fun_set_def by fastforce
+    moreover have "x' \<in> perm_fun_set p A"
+      using \<open>x' \<in> perm_fun_set p ?cy\<close> perm_fun_set_def by auto
+    ultimately show "x' \<in> c"
+      using `c = {x' \<in> perm_fun_set p A. f x' = f x}`
+      by auto
+  next
+    fix x'
+    assume "x' \<in> c"
+    then have "x' \<in> perm_fun_set p A" "f x' = f x"
+      using `c = {x' \<in> perm_fun_set p A. f x' = f x}`
+      by auto
+    let ?y' = "perm_fun (perm_inv p) x'"
+    have "perm_fun p ?y' = x'"
+      by (simp add: "*" \<open>x' \<in> perm_fun_set p A\<close>)
+    moreover have "?y' \<in> ?cy"
+      using \<open>f x' = f x\<close> \<open>perm_fun (perm_inv p) x < perm_dom p\<close> \<open>x < perm_dom p\<close> \<open>x' \<in> perm_fun_set p A\<close> assms(1) assms(2) perm_fun_set_def by fastforce
+    ultimately show "x' \<in> perm_fun_set p ?cy"
+      by (simp add: perm_fun_set_def rev_image_eqI)
+  qed
+  ultimately show "c \<in> ?rhs"
+    by auto
+next
+  fix c
+  assume "c \<in> split_by_prop A g"
+  show "perm_fun_set p c \<in> split_by_prop (perm_fun_set p A) f"
+    sorry
+qed
+  
+  
+locale OrderCells = 
+   fixes order_cells :: "colored_graph \<Rightarrow> vertex set \<Rightarrow> vertex set set \<Rightarrow> vertex set list"
+   fixes split_by :: "colored_graph \<Rightarrow> vertex set \<Rightarrow> vertex  \<Rightarrow> 'a"
+   assumes order_cells_set: 
+      "\<And> G by_cell cs. set (order_cells G by_cell cs) = cs"
+   assumes order_cells_perm:
+      "\<And> G p by_cell cs. order_cells (perm_graph p G) (perm_fun_set p by_cell) ((perm_fun_set p) ` cs) =
+            map (\<lambda> c. perm_fun_set p c) (order_cells G by_cell cs)"
+   assumes split_by_perm:
+      "\<And> G p by_cell v. split_by (perm_graph p G) (perm_fun_set p by_cell) (perm_fun p v) = 
+            split_by G by_cell v"
 begin
-  definition split_class :: "colored_graph \<Rightarrow> vertex set \<Rightarrow> vertex set \<Rightarrow> vertex set list" where
-    "split_class G c class = order (split_by_prop class (\<lambda> v. node_deg_set G v c))"
+  definition split_cell :: "colored_graph \<Rightarrow> vertex set \<Rightarrow> vertex set \<Rightarrow> vertex set list" where
+    "split_cell G by_cell splitting_cell = 
+       order_cells G by_cell (split_by_prop splitting_cell (\<lambda> v. split_by G by_cell v))"
+
   definition split :: "colored_graph \<Rightarrow> color => color_list" where
     "split G c = (
       let cs = cells (num_vertices G) (coloring G);
-          new_cs = concat (map (split_class G (cs ! c)) cs)
+          new_cs = concat (map (split_cell G (cs ! c)) cs)
        in color_list (num_vertices G) (cells_to_coloring new_cs)
     )"
+
+lemma split_cell_perm:
+  assumes "\<forall>x\<in>splitting_cell. x < perm_dom p"
+  shows "split_cell (perm_graph p G) (perm_fun_set p by_cell) (perm_fun_set p splitting_cell) = 
+         map (perm_fun_set p) (split_cell G by_cell splitting_cell)"
+proof-
+  let ?f = "split_by (perm_graph p G) (perm_fun_set p by_cell)"
+  let ?g = "split_by G by_cell"
+  let ?pG = "perm_graph p G"
+  let ?pC = "split_by_prop (perm_fun_set p splitting_cell) ?f"
+  have *:"?pC = perm_fun_set p ` split_by_prop splitting_cell ?g"
+  proof (subst split_by_prop_perm)
+    show " \<forall>v<perm_dom p. ?f (perm_fun p v) = ?g v"
+      using split_by_perm
+      by auto
+  next
+    show "\<forall>x\<in>splitting_cell. x < perm_dom p"
+    by fact
+  qed simp
+  then show ?thesis
+    using order_cells_perm
+    unfolding split_cell_def
+    by simp
+qed
 end
+
+lemma cells_to_coloring_perm: 
+  "cells_to_coloring (map (perm_fun_set p) cs) = perm_coloring p (cells_to_coloring cs)"
+  unfolding cells_to_coloring_def
+  sorry
+
+lemma color_list_perm_coloring [simp]: 
+  assumes "perm_dom p = n"
+  shows "color_list n (perm_coloring p \<pi>) = perm_reorder p (color_list n \<pi>)"
+  by (smt (verit, best) assms color_list_def length_color_list list.map_comp map_eq_conv map_nth perm_coloring_def perm_dom_perm_inv perm_fun_list_def perm_inv_perm_list perm_list_set perm_reorder set_upt)
+
+sublocale OrderCells \<subseteq> Split split
+proof
+fix G c
+assume "n_vertex G" "c < num_colors G"
+show "length (split G c) = length (colors G)"
+proof-
+  have "num_vertices G = length (colors G)"
+    by (metis \<open>n_vertex G\<close> n_vertex_def)
+  then show ?thesis
+    unfolding split_def Let_def
+    by simp
+qed
+next
+fix G c
+assume "n_vertex G" "c < num_colors G" 
+show "finer (num_vertices G) (color_fun (split G c)) (coloring G)"
+proof (rule cell_subset_finer)
+  show "\<forall>C'\<in>set (cells (num_vertices G) (color_fun (split G c))). \<exists>C\<in>set (cells (num_vertices G) (coloring G)). C' \<subseteq> C"
+  proof safe
+    fix C'
+    assume "C' \<in> set (cells (num_vertices G) (color_fun (split G c)))"
+    show "\<exists>C\<in>set (cells (num_vertices G) (coloring G)). C' \<subseteq> C"
+      sorry
+  qed
+  next
+  show "num_vertices G > 0"
+    sorry
+  next
+  show "all_k_colors (num_vertices G) (coloring G)"
+    sorry
+  next
+  show "all_k_colors (num_vertices G) (color_fun (split G c))"
+    sorry
+  next
+  show "\<forall>p1 p2 c1 c2. cell (num_vertices G) (color_fun (split G c)) c1 \<subseteq> cell (num_vertices G) (coloring G) p1 \<and> cell (num_vertices G) (color_fun (split G c)) c2 \<subseteq> cell (num_vertices G) (coloring G) p2 \<and> c1 < c2 \<longrightarrow> p1 \<le> p2"
+    sorry
+  qed
+next
+  fix G c
+  assume "n_vertex G" "c < num_colors G" "all_k_colors (num_vertices G) (coloring G)"
+  show "all_k_colors (num_vertices G) (color_fun (split G c))"
+    sorry
+next
+  fix p G c
+  assume "n_vertex G" "c < num_colors G"
+  have dom: "perm_dom p = num_vertices G" "is_k_colored G (num_colors G)"
+    sorry  
+  show "split (perm_graph p G) c = perm_reorder p (split G c)"
+  proof-
+    let ?pG = "perm_graph p G"
+    let ?n = "num_vertices G"
+    let ?csp = "cells (num_vertices ?pG) (coloring ?pG)"
+    let ?new_csp = "concat (map (split_cell ?pG (?csp ! c)) ?csp)"
+    let ?cs = "cells ?n (coloring G)"
+    let ?new_cs = "concat (map (split_cell G (?cs ! c)) ?cs)"
+    let ?split = "color_list (num_vertices G) (cells_to_coloring ?new_cs)"
+    let ?splitp = "color_list (num_vertices G) (cells_to_coloring ?new_csp)"
+    let ?ps = "perm_fun_set p"
+    have *: "?csp =  map (perm_fun_set p) ?cs"
+      using cells_perm_graph dom `n_vertex G`
+      by simp
+    have "map (split_cell ?pG (map ?ps ?cs ! c) \<circ> ?ps) ?cs = 
+          map (map (perm_fun_set p) \<circ> split_cell G (?cs ! c)) ?cs"
+    proof (subst map_eq_conv, safe)
+      fix x
+      assume "x \<in> set (?cs)"  
+      then have "\<forall>x\<in>x. x < perm_dom p"
+        using cell_def cells_def dom by fastforce 
+      show "(split_cell ?pG (map ?ps ?cs ! c) \<circ> ?ps) x = 
+            (map (perm_fun_set p) \<circ> split_cell G (?cs ! c)) x" (is "?lhs = ?rhs")
+      proof-
+        have "c < length ?cs"
+          using `c < num_colors G`
+          using \<open>n_vertex G\<close> dom(2) length_cells num_colors_c by force
+        then have "map ?ps ?cs ! c = ?ps (?cs ! c)"
+          by auto
+        then have "?lhs = split_cell ?pG (?ps (?cs ! c)) (?ps x)"
+          by simp
+        also have "... = map ?ps (split_cell G (?cs ! c) x)"
+          using \<open>\<forall>x\<in>x. x < perm_dom p\<close> split_cell_perm by presburger
+        finally show ?thesis
+          by simp
+      qed
+    qed
+    then have "?new_csp = map (perm_fun_set p) ?new_cs"
+      using * cells_perm_graph[OF dom(1) `n_vertex G`]
+      by (metis map_concat map_map)
+    then have "cells_to_coloring ?new_csp = perm_coloring p (cells_to_coloring ?new_cs)"
+      using cells_to_coloring_perm
+      by simp
+    then have "?splitp = perm_reorder p ?split"
+      using dom 
+      by auto
+    then show ?thesis
+      unfolding split_def Let_def
+      by simp
+  qed
+qed
 
 
 end
