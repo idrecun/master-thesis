@@ -537,4 +537,17 @@ lemma perm_reorder_nth [simp]:
   unfolding perm_reorder_def
   by simp
 
+lemma perm_reorder_comp [simp]:
+  assumes "perm_dom p1 = length xs" "perm_dom p2 = length xs"
+  shows "perm_reorder p1 (perm_reorder p2 xs) = perm_reorder (perm_comp p1 p2) xs"
+  using assms
+  unfolding perm_reorder_def
+  by (simp add: perm_fun_perm_inv_range)
+
+lemma perm_reorder_id [simp]:
+  assumes "n = length xs"
+  shows "perm_reorder (perm_id n) xs = xs"
+  unfolding perm_reorder_def
+  by (simp add: assms map_upt_eqI)
+
 end
